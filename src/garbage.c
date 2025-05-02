@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   gc.c                                               :+:      :+:    :+:   */
+/*   garbage.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/05/02 15:38:22 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/05/02 16:14:41 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "../includes/parce.h"
 
-void *gc_malloc(t_gc *gc, size_t size)
+void *gc_malloc(t_list *gc, size_t size)
 {
-    void *ptr = malloc(size);
+    void *ptr;
+	t_list *node;
+
+
+	ptr = malloc(size);
     if (!ptr)
         return NULL;
 
-    t_list *node = ft_lstnew(ptr);
+    node = ft_lstnew(ptr);
     if (!node)
     {
         free(ptr);
