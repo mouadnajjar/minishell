@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/02 09:57:00 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/02 12:42:25 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdlib.h>
+# include <unistd.h>
 
 enum{
     a,
