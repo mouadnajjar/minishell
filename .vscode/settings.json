@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "history.h": "c",
-        "readline.h": "c"
-    }
+		"history.h": "c",
+		"readline.h": "c",
+		"parce.h": "c"
+	}
 }
