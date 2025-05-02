@@ -1,21 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/02 09:34:08 by monajjar         ###   ########.fr       */
+/*   Created: 2025/05/02 09:27:17 by monajjar          #+#    #+#             */
+/*   Updated: 2025/05/02 09:37:14 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# ifndef MINISHELL_H
+#include "../includes/minishell.h"
 
-# define MINISHELL_H
-
-# include <stdio.h>
-
-#include <stdio.h>
-
-#endif
+int main ()
+{
+    printf("this is test\n");
+    return (0);
+}
