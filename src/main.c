@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:17 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/02 16:25:34 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/05/02 16:28:41 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,35 +23,35 @@ int main(void)
     while (1)
     {
         line = readline(PROMPT);
-		if (!input)
+		if (!line)
         {
             write(1, "exit\n", 6);
             break ;
         }
 
-/////////// start the parcing //
-        cmd = parse_input(line);
-////////////////////////////////
+// /////////// start the parcing //
+//         cmd = parse_input(line);
+// ////////////////////////////////
 
-////////// Print the parsed commands//
+// ////////// Print the parsed commands//
 
-		tmp = cmd;
-		while (tmp)
-		{
-			i = 0;
-			while (tmp->args[i])
-			{
-				printf("arg[%d]: %s\n", i, tmp->args[i]);
-				i++;
-			}
-			if (tmp->is_pipe)
-				printf("-> PIPE\n");
-			tmp = tmp->next;
-		}
-        free_cmds(cmd);
-        free(line);
-/////////////////////////////////////
-    }
-    return 0;
+// 		tmp = cmd;
+// 		while (tmp)
+// 		{
+// 			i = 0;
+// 			while (tmp->args[i])
+// 			{
+// 				printf("arg[%d]: %s\n", i, tmp->args[i]);
+// 				i++;
+// 			}
+// 			if (tmp->is_pipe)
+// 				printf("-> PIPE\n");
+// 			tmp = tmp->next;
+// 		}
+//         free_cmds(cmd);
+//         free(line);
+// /////////////////////////////////////
+//     }
+//     return 0;
 }
 
