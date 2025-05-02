@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/02 12:49:33 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/02 15:50:05 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <unistd.h>
 # include <string.h>
 # include <errno.h>
+
+//  Libft
+# include "libft.h"
 
 // System calls
 # include <sys/types.h>

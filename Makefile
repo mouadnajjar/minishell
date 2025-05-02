@@ -1,51 +1,42 @@
 NAME := minishell
 
-SRCS := src/main.c
+
+SRC_DIR := src
+INC_DIR := includes
+LIBFT_DIR := libft
+
+
+SRCS := $(SRC_DIR)/main.c \
+
 OBJS := $(SRCS:.c=.o)
+HEADER := $(INC_DIR)/minishell.h
 
 CC := cc
-CFLAGS := -Wall -Wextra -Werror -I /usr/local/opt/readline/include
-LDFLAGS := -lreadline -L /usr/local/opt/readline/lib
+INCLUDES := -I$(INC_DIR) -I$(LIBFT_DIR) -I/usr/local/opt/readline/include
+CFLAGS := -Wall -Wextra -Werror $(INCLUDES)
+LDFLAGS := -lreadline -L/usr/local/opt/readline/lib
+LIBFT_A := $(LIBFT_DIR)/libft.a
 
-HEADER := includes/minishell.h
 
-all: $(NAME)
+all: $(LIBFT_A) $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LDFLAGS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LDFLAGS) $(LIBFT_A)
 
 %.o: %.c $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(LIBFT_A):
+	$(MAKE) -C $(LIBFT_DIR)
+
 clean:
-	rm -rf $(OBJS)
+	rm -f $(OBJS)
+	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	rm -rf $(NAME)
-NAME := minishell
+	rm -f $(NAME)
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
-SRCS := src/main.c
-OBJS := $(SRCS:.c=.o)
-
-CC := cc
-CFLAGS := -Wall -Wextra -Werror -I /usr/local/opt/readline/include
-LDFLAGS := -lreadline -L /usr/local/opt/readline/lib
-
-HEADER := includes/minishell.h
-
-all: $(NAME)
-
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LDFLAGS)
-
-%.o: %.c $(HEADER)
-	$(CC) $(CFLAGS) -c $< -o $@
-
-clean:
-	rm -rf $(OBJS)
-	
 re: fclean all
-
-.SECONDARY: $(OBJS)
 
 .PHONY: all clean fclean re
