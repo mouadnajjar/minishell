@@ -6,7 +6,7 @@ INC_DIR := includes
 LIBFT_DIR := libft
 
 
-SRCS := $(SRC_DIR)/main.c \
+SRCS := $(SRC_DIR)/main.c $(SRC_DIR)/garbage.c $(SRC_DIR)parce_input.c
 
 OBJS := $(SRCS:.c=.o)
 HEADER := $(INC_DIR)/minishell.h

@@ -6,10 +6,11 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/05/02 16:02:27 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/05/02 16:51:28 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-#include "../includes/parce.h"
+#include "../includes/parser.h"
+
 

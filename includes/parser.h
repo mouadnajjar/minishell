@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parce.h                                            :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/05/02 16:20:34 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/05/02 16:52:19 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 #include <errno.h>
 #include "libft.h"
 
+# include "minishell.h"
+
 // typedef struct s_cmd
 // {
 //     char    **args;
@@ -35,8 +37,8 @@ t_cmd   *parse_input(const char *input);
 void    free_cmds(t_cmd *cmd);
 
 
-void gc_malloc(void *ptr);
-void gc_free(void *ptr);
+void *gc_malloc(t_list *gc, size_t size);
+void gc_free_all(t_list *gc);
 
 #endif
 
