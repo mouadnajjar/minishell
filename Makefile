@@ -23,7 +23,7 @@ all: $(LIBFT_A) $(NAME)
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LDFLAGS) $(LIBFT_A)
 
-%.o: %.c $(HEADER)
+%.o: %.c $(HEADER_P) $(HEADER_m)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT_A):
