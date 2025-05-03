@@ -1,24 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   memory_free.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/02 13:07:22 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/02 16:00:16 by monajjar         ###   ########.fr       */
+/*   Created: 2025/05/03 09:52:32 by monajjar          #+#    #+#             */
+/*   Updated: 2025/05/03 10:00:56 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
-#include "../includes/executor.h"
+#include "../../includes/minishell.h"
 
-char    **copy_env(char **envp)
+void	free_2d_array(char **arr)
 {
-    //test
-}
+	int	i;
 
-void    free_env(char **env)
-{
-    
+	if (!arr)
+		return ;
+	i = 0;
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
 }

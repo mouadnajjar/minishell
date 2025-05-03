@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/02 15:50:05 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/03 09:58:54 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,8 @@ typedef struct s_cmd {
     int				is_pipe;
     struct s_cmd	*next;
 } 					t_cmd;
+
+//-------------------------execution-> implement-----------------------//
+char	*get_cmmand_path(char *cmd, char **envp);
 
 #endif
