@@ -1,27 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.c                                         :+:      :+:    :+:   */
+/*   memory_free.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/02 16:38:50 by monajjar         ###   ########.fr       */
+/*   Created: 2025/05/03 09:52:32 by monajjar          #+#    #+#             */
+/*   Updated: 2025/05/03 10:00:56 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../includes/minishell.h"
-#include"../includes/executor.h"
+#include "../../includes/minishell.h"
 
-int     execute_command(t_cmd *cmd, char **envp)
+void	free_2d_array(char **arr)
 {
-    pid_t   pid;
+	int	i;
 
-    pid = fork();
-    if (pid == 0)
-    {
-        //checkmate
-    }
-    waitpid(pid, NULL, 0);
-    return(0);
+	if (!arr)
+		return ;
+	i = 0;
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
 }

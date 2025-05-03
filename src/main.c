@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:17 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/02 16:51:20 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/03 11:54:52 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,11 @@
 int main (int ac, char **av, char **envp)
 {
     char    *input;
+    char    **env_copy;
     (void)ac;
     (void)av;
+    
+    env_copy = copy_env(envp);
     while (1)
     {
         input = readline(PROMPT);
@@ -27,14 +30,11 @@ int main (int ac, char **av, char **envp)
             break ;
         }
         if (*input)
+        {
             add_history(input);
+            execute_command(input, env_copy);
+        }
         free(input);
-    }
-    char **check = copy_env(envp);
-    
-    for (int i = 0; check[i]; i++)
-    {
-        printf("%s\n", check[i]);
     }
     return (0);
 }
