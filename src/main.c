@@ -6,7 +6,11 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:17 by monajjar          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/05/03 12:21:45 by monajjar         ###   ########.fr       */
+=======
+/*   Updated: 2025/05/05 16:32:54 by monajjar         ###   ########.fr       */
+>>>>>>> 55e2a902c0f339be6a352840399cdc22f7bfa727
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +38,8 @@ int main (int ac, char **av, char **envp)
             add_history(input);
             execute_command(input, env_copy);
         }
+        // if (ft_strncmp(input, "env") == 0)
+            
         free(input);
     }
     return (0);

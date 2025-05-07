@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 09:51:40 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/03 11:48:28 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/05 16:43:19 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,20 @@
 
 char	**split_paths(char **envp)
 {
-	int	i;
+	int		i;
+	char	*default_path;
 
+	default_path = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin";
+	if (!envp)
+		return (ft_split(default_path, ':'));
 	i = 0;
 	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5) != 0)
 		i++;
 	if (!envp[i])
-		return (NULL);
+		return (ft_split(default_path, ':'));
 	return (ft_split(envp[i] + 5, ':'));
 }
+
 
 char	*get_cmmand_path(char *cmd, char **envp)
 {
