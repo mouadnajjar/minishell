@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:17 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/05 16:32:54 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/07 15:44:23 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ int main (int ac, char **av, char **envp)
         {
             add_history(input);
             execute_command(input, env_copy);
-        }
-        // if (ft_strncmp(input, "env") == 0)
-            
+        }            
         free(input);
     }
     return (0);
