@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/05/02 16:52:19 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/05/02 17:00:53 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #ifndef PARSER_H
 # define PARSER_H
 
+# include "minishell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <readline/readline.h>
@@ -23,14 +24,20 @@
 #include <errno.h>
 #include "libft.h"
 
-# include "minishell.h"
+typedef enum {
+    TOKEN_WORD,
+    TOKEN_PIPE,
+    TOKEN_REDIR_IN,
+    TOKEN_REDIR_OUT,
+    TOKEN_APPEND,
+    TOKEN_HEREDOC
+} t_token_type;
 
-// typedef struct s_cmd
-// {
-//     char    **args;
-//     int     pipe;
-//     struct s_cmd *next;
-// }   t_cmd;
+typedef struct s_token {
+    char            *value;
+    t_token_type    type;
+    struct s_token  *next;
+} t_token;
 
 
 t_cmd   *parse_input(const char *input);
