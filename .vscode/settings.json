@@ -3,6 +3,8 @@
 		"history.h": "c",
 		"readline.h": "c",
 		"parce.h": "c",
-		"unistd.h": "c"
+		"unistd.h": "c",
+		"minishell.h": "c",
+		"parser.h": "c"
 	}
 }
