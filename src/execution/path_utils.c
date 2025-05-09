@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 09:51:40 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/05 16:43:19 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:40:45 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,28 @@ char	*get_cmmand_path(char *cmd, char **envp)
 	}
 	free_2d_array(c.paths);
 	return (NULL);
+}
+
+void	run_command(char **argv, char **envp)
+{
+	char	*cmd_path;
+	
+	if (!argv || !argv[0])
+	{
+		ft_putstr_fd("minishell : empty command\n", 2);
+		exit (EXIT_FAILURE);
+	}
+	cmd_path = get_cmmand_path(argv[0], envp);
+	if (!cmd_path)
+	{
+		ft_putstr_fd("minishell : comnmand not found :", 2);
+		ft_putstr_fd(argv[0], 2);
+		ft_putstr_fd("\n", 2);
+		exit (127);
+	}
+	execve(cmd_path, argv, envp);
+	perror("execve");
+	free(cmd_path);
+	exit(EXIT_FAILURE);
+	
 }

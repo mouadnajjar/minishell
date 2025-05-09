@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 13:07:22 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/03 10:00:26 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:41:16 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,4 @@ char    **copy_env(char **envp)
     }
     new_env[i] = NULL;
     return (new_env);
-}
-
-void    free_env(char **env)
-{
-    int i;
-    
-    i = 0;
-    while (env[i])
-        free(env[i]);
-    free(env);
 }

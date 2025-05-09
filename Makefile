@@ -6,7 +6,7 @@ INC_DIR := includes
 LIBFT_DIR := libft
 
 
-SRCS := $(SRC_DIR)/main.c $(SRC_DIR)/execution/env.c  $(SRC_DIR)/execution/path_utils.c $(SRC_DIR)/execution/memory_free.c $(SRC_DIR)/execution/executor.c\
+SRCS := $(SRC_DIR)/main.c $(SRC_DIR)/execution/env.c  $(SRC_DIR)/execution/path_utils.c $(SRC_DIR)/execution/memory_free.c $(SRC_DIR)/execution/executor.c $(SRC_DIR)/execution/redirection.c $(SRC_DIR)/execution/helper_execution.c $(SRC_DIR)/execution/builtins/builtin_echo.c $(SRC_DIR)/execution/builtins/built_in_utils.c \
 
 OBJS := $(SRCS:.c=.o)
 HEADER := $(INC_DIR)/minishell.h
@@ -27,7 +27,7 @@ $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT_A):
-	$(MAKE) -C $(LIBFT_DIR)
+	$(MAKE) -C $(LIBFT_DIR) bonus
 
 clean:
 	rm -f $(OBJS)

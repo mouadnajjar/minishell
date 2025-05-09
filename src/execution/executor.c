@@ -6,43 +6,73 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/07 15:44:33 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/09 17:18:40 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"../../includes/minishell.h"
 #include"../../includes/executor.h"
 
-void     execute_command(char *cmd, char **envp)
+static void child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2], char **envp)
 {
-    char    **args;
-    char    *cmd_path;
-    int     status;
-    pid_t   pid;
-
-    args = ft_split(cmd, ' ');
-    if (!args || !args[0])
-        return ;
-    cmd_path = get_cmmand_path(args[0], envp);
-    if (!cmd_path)
+	if (prev_fd != -1)
 	{
-		ft_putstr_fd("minishell: command not found: ", 2);
-		ft_putendl_fd(args[0], 2);
-		free_2d_array(args);
-		return ;
+		dup2(prev_fd, STDIN_FILENO);
+		close(prev_fd);
 	}
-    pid = fork();
-    if (pid == 0)
-    {
-        execve(cmd_path, args, envp);
-        perror("execve");
-        exit(EXIT_FAILURE);
-    }
-    else
-    {
-        waitpid(pid, &status, 0);
-    }
-    free(cmd_path);
-    free_2d_array(args);
+	if (cmd_list->is_pipe)
+	{
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
+	}
+	apply_redirections(cmd_list->redirs);
+	run_command(cmd_list->argv, envp);
+	exit(EXIT_FAILURE);
 }
 
+static void	fork_and_exec_command(t_cmd *cmd_list, pid_t *pids, int i, t_exec_ctx *ctx)
+{
+	if (is_built_in(cmd_list->argv[0]) && !cmd_list->is_pipe)
+	{
+		exec_echo(cmd_list);
+		return ;
+	}
+
+	if (cmd_list->is_pipe && pipe(ctx->pipefd) == -1)
+	{
+		perror("pipe");
+		exit(EXIT_FAILURE);
+	}
+	pids[i] = fork();
+	if (pids[i] == -1)
+	{
+		perror("fork");
+		exit (EXIT_FAILURE);
+	}
+	if (pids[i] == 0)
+		child_process(cmd_list, ctx->prev_fd, ctx->pipefd, ctx->envp);
+}
+
+void	execute_commands(t_cmd *cmd_list, char **envp)
+{
+	t_exec_ctx	ctx;
+    int		cmd_counts;
+	int		i;
+	pid_t	*pids;
+    
+	ctx.prev_fd = -1;
+	ctx.envp = envp;
+	cmd_counts = getsize(cmd_list);
+	pids = allocate_pid(cmd_counts);
+	i = 0;
+    while (cmd_list)
+    {
+		fork_and_exec_command(cmd_list, pids, i, &ctx);
+        ctx.prev_fd = close_and_update_pipe(cmd_list, ctx.prev_fd, ctx.pipefd);
+		cmd_list = cmd_list->next;
+		i++;
+	}	
+	wait_pids(pids, cmd_counts);
+	free (pids);
+}

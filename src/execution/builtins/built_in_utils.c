@@ -1,38 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   memory_free.c                                      :+:      :+:    :+:   */
+/*   built_in_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/03 09:52:32 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/09 16:31:46 by monajjar         ###   ########.fr       */
+/*   Created: 2025/05/09 16:01:49 by monajjar          #+#    #+#             */
+/*   Updated: 2025/05/09 17:19:25 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../../includes/minishell.h"
+#include "../../../includes/executor.h"
 
-void	free_2d_array(char **arr)
+int	is_built_in(char *line)
 {
-	int	i;
-
-	if (!arr)
-		return ;
-	i = 0;
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
+	if (!line)
+		return (0);
+    if (ft_strncmp(line, "echo", 5) == 0)
+		return (1);
+	return (0);
 }
 
-void    free_env(char **env)
-{
-    int i;
-    
-    i = 0;
-    while (env[i])
-	{
-        free(env[i]);
-		i++;
-	}
-    free(env);
-}
