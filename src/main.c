@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:17 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/09 16:37:08 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/10 15:43:54 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,13 +109,15 @@ int main(int ac, char **av, char **envp)
     char    *input;
     char    **env_copy;
     t_cmd   *cmds;
+	char	*prompt;
     (void)ac;
     (void)av;
     
+	prompt = GREEN_BOLD PROMPT RESET;
     env_copy = copy_env(envp);
     while (1)
     {
-        input = readline(PROMPT);
+        input = readline(prompt);
         if (!input)
         {
             write(1, "exit\n", 6); 

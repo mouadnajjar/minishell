@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 09:51:40 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/07 17:40:45 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/10 12:55:03 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,4 @@ void	run_command(char **argv, char **envp)
 	perror("execve");
 	free(cmd_path);
 	exit(EXIT_FAILURE);
-	
 }

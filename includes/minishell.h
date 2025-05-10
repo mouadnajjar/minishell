@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/08 13:59:26 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/10 15:41:30 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@
 
 // Prompt
 # define PROMPT "minishell$ "
+# define GREEN_BOLD "\001\033[1;32m\002"
+# define RESET      "\001\033[0m\002"
 
 typedef enum {
     IN,        // < (input redirection)
