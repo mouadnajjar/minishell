@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/05/09 16:54:30 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:13:16 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,10 +96,10 @@ t_cmd	*parser(t_token *tokens)
 			if (!current_cmd)
 				return (NULL);
 		}
-		if (current->type == TOKEN_WORD)
-		{
-			if (word_token(current, &argv_list) < 0)
-				return (NULL);
+		if (current->type == TOKEN_WORD || current->type == TOKEN_QUOTE_SINGLE || current->type == TOKEN_QUOTE_DOUBLE)
+        {
+            if (word_token(current, &argv_list) < 0)
+                return (NULL);
 		}
 		else if (current->type == TOKEN_REDIR_OUT
 			|| current->type == TOKEN_REDIR_IN || current->type == TOKEN_APPEND
@@ -127,22 +127,25 @@ t_cmd	*parser(t_token *tokens)
 	return (head);
 }
 
-t_cmd	*parse_input(const char *input)
+t_cmd *parse_input(const char *input)
 {
-	t_token	*tokens;
-	t_cmd	*cmd;
-	t_token	*tmp;
+    t_token *tokens;
+    t_cmd *cmd;
+    t_token *tmp;
 
-	tokens = lexer(input);
-	cmd = NULL;
-	if (!tokens)
-		return (NULL);
-	tmp = tokens;
-	while (tmp)
-	{
-		printf("Token: %s (type: %d)\n", tmp->value, tmp->type);
-		tmp = tmp->next;
-	}
-	cmd = parser(tokens);
-	return (cmd);
+    tokens = lexer(input);
+    cmd = NULL;
+    if (!tokens)
+    {
+        ft_putstr_fd("minishell: unclosed quote\n", 2);
+        return (NULL);
+    }
+    tmp = tokens;
+    while (tmp)
+    {
+        printf("Token: %s (type: %d)\n", tmp->value, tmp->type);
+        tmp = tmp->next;
+    }
+    cmd = parser(tokens);
+    return (cmd);
 }
