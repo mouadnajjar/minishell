@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 13:07:22 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/07 17:41:16 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/13 14:18:37 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char    **copy_env(char **envp)
     i = 0;
     while (envp[i])
         i++;
-    new_env = malloc((i + 1) * sizeof(char *));
+    new_env = malloc(sizeof(char *) * (i + 1));
     if (!new_env)
         return (NULL);
     i = 0;

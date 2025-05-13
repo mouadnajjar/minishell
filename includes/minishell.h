@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/10 15:41:30 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/13 18:44:24 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ typedef enum {
 
 typedef struct s_redirect {
     char            *target;    // File or delimiter (e.g., "file.txt" or "EOF")
-    t_redir_type    type;       // Type of redirection (IN, OUT, APPEND, HEREDOC)
+    t_redir_type    type;     // Type of redirection (IN, OUT, APPEND, HEREDOC)
+    int             fd;
 } t_redirect;
 
 typedef struct s_cmd {
@@ -60,5 +61,5 @@ typedef struct s_cmd {
 
 //-------------------------execution-> implement-----------------------//
 char	*get_cmmand_path(char *cmd, char **envp);
-void	execute_commands(t_cmd *cmd_list, char **envp);
+void	execute_commands(t_cmd *cmd_list, char ***envp);
 #endif

@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:50:03 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/10 14:41:59 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:14:11 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,35 +55,6 @@ void	handle_append_redir(char *file)
 	close(fd);
 }
 
-void	handle_herdoc(char *delimiter)
-{
-	int		pipefd[2];
-	char	*line;
-
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
-	while (1)
-	{
-		line = readline("> ");
-		if (!line || ((ft_strlen(line) == ft_strlen(delimiter))
-			&& (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)))
-			break ;
-		//if (line && *line)
-			//add_history(line);
-		write(pipefd[1], line, ft_strlen(line));
-		write(pipefd[1], "\n", 1);
-		free (line);
-	}
-	free(line);
-	close (pipefd[1]);
-	dup2(pipefd[0], STDIN_FILENO);
-	close (pipefd[0]);
-}
-
-
 void	apply_redirections(t_redirect *redirs)
 {
 	int	i;
@@ -97,8 +68,11 @@ void	apply_redirections(t_redirect *redirs)
 			handle_output_redir(redirs[i].target);
 		else if (redirs[i].type == APPEND)
 			handle_append_redir(redirs[i].target);
-		else if (redirs[i].type == HEREDOC)
-			handle_herdoc(redirs[i].target);
+		else if (redirs[i].type == HEREDOC && redirs[i].fd != -1)
+		{
+			dup2(redirs[i].fd, STDIN_FILENO);
+			close(redirs[i].fd);
+		}
 		i++;
 	}
 }

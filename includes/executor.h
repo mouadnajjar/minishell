@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/09 17:18:31 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/13 18:44:59 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,17 @@ int		getsize(t_cmd *lst);
 void    wait_pids (pid_t *pids, int cmd_counts);
 pid_t 	*allocate_pid(int size);
 int		close_and_update_pipe(t_cmd *cmd, int prev_fd, int pipefd[2]);
+char	*ft_strjoin_3(const char *s1, const char *s2, const char *s3);
 //-----------------------------------------------//
 
 //------------------built-in---------------------//
-int	is_built_in(char *line);
-int exec_echo(t_cmd *cmd);
+int		is_built_in(char *line);
+int		exec_builtins(t_cmd *cmd, char ***env);
+int		builtin_echo(char **argv);
+int		get_pwd(void);
+int		builtin_cd(char **argv, char ***env);
+int		ft_realloc_env(char	***env, char *new_var);
+void	update_env(char ***env, char *key, char *value);
 //-----------------------------------------------//
 //--------------------memmory-free-----------------//
 void    free_env(char **env);
