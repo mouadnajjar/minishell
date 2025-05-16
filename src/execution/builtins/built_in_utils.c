@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 16:01:49 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/13 18:54:16 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/17 00:01:44 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,25 @@ int	env_len(char **env)
 		return (0);
 	i = 0;
 	while (env && env[i])
-		i++;
+	i++;
 	return (i);
+}
+
+void	free_env_allocation(int i, char **env, char *var)
+{
+	while (--i >= 0)
+		free(env[i]);
+	free(env);
+	free(var);
 }
 
 int	ft_realloc_env(char	***env, char *new_var)
 {
-	int	i;
+	int		i;
 	char	**new_env;
 
+	if (!new_var)
+		return (0);
 	i = env_len(*env);
 	new_env = malloc(sizeof(char *) * (i + 2));
 	if (!new_env)
@@ -65,19 +75,12 @@ int	ft_realloc_env(char	***env, char *new_var)
 		free(new_var);
 		return (0);
 	}
-	i = 0;
-	while ((*env)[i])
+	i = -1;
+	while ((*env)[++i])
 	{
 		new_env[i] = ft_strdup((*env)[i]);
 		if (!new_env[i])
-		{
-			while (--i >= 0)
-				free(new_env[i]);
-			free(new_env);
-			free(new_var);
-			return (0);
-		}
-		i++;
+			return (free_env_allocation(i, new_env, new_var), 0);
 	}
 	new_env[i] = new_var;
 	new_env[i + 1] = NULL;
