@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 18:03:21 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/13 18:53:20 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/16 17:24:04 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,38 +59,19 @@ int	builtin_cd(char **argv, char ***env)
 {
 	char	*path;
 	char	*oldpath;
-	char	*newpwd;
 
+	if (check_arguments_cd(argv))
+		return (1);
 	oldpath = getcwd(NULL, 0);
-	if (!oldpath)
+	if (check_null(oldpath, "minishell: cd"))
+		return (1);
+	path = get_cd_path(argv, env);
+	if (change_directory(path))
 	{
-		perror("minishell: cd");
+		free (oldpath);
 		return (1);
 	}
-	if (!argv[1])
-		path = get_env_value(*env, "HOME");
-	else if (ft_strncmp(argv[1], "-", 1) == 0)
-	{
-		path = get_env_value(*env, "OLDPWD");
-		if (path)
-			ft_putendl_fd(path, 1);
-	}
-	else
-		path = argv[1];
-
-	if (!path || chdir(path) != 0)
-	{
-		perror("minishell: cd");
-		free(oldpath);
-		return (1);
-	}
-	newpwd = getcwd(NULL, 0);
-	if (newpwd)
-	{
-		update_env(env, "OLDPWD", oldpath);
-		update_env(env, "PWD", newpwd);
-		free(newpwd);
-	}
+	update_cd_env(env, oldpath);
 	free(oldpath);
 	return (0);
 }

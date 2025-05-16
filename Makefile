@@ -17,6 +17,7 @@ EXEC = $(SRC_DIR)/main.c \
 	   $(SRC_DIR)/execution/builtins/built_ins.c \
 	   $(SRC_DIR)/execution/builtins/builtin_pwd.c \
 	   $(SRC_DIR)/execution/builtins/builtin_cd.c \
+	   $(SRC_DIR)/execution/builtins/cd_helpers.c \
 
 SRCS :=  $(EXEC) \
 

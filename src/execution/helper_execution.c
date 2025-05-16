@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:34:37 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/09 16:11:27 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/15 14:59:07 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,14 @@ int	close_and_update_pipe(t_cmd *cmd, int prev_fd, int pipefd[2])
 		return (pipefd[0]);
 	}
 return (-1);
+}
+
+int	check_null(char *str, char	*msg)
+{
+	if (!str)
+	{
+		ft_putendl_fd(msg, 2);
+		return (1);
+	}
+	return (0);
 }
