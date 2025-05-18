@@ -3,6 +3,7 @@
         "history.h": "c",
         "readline.h": "c",
         "executor.h": "c",
-        "minishell.h": "c"
+        "minishell.h": "c",
+        "wait.h": "c"
     }
 }

@@ -6,7 +6,7 @@
 /*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 16:01:49 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/17 00:01:44 by mouad            ###   ########.fr       */
+/*   Updated: 2025/05/17 20:15:42 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ void	free_env_allocation(int i, char **env, char *var)
 	while (--i >= 0)
 		free(env[i]);
 	free(env);
-	free(var);
+	if (var)
+		free(var);
 }
 
 int	ft_realloc_env(char	***env, char *new_var)

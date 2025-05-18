@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/16 17:23:51 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/17 20:10:46 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ int 	check_arguments_cd(char **argv);
 char    *get_cd_path(char **argv, char ***env);
 int 	change_directory(char *path);
 void	update_cd_env(char ***env, char *oldpwd);
+int		env_len(char **env);
+void	free_env_allocation(int i, char **env, char *var);
+
 //-----------------------------------------------//
 
 //------------------built-in---------------------//
