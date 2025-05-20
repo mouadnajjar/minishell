@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/17 20:10:46 by mouad            ###   ########.fr       */
+/*   Updated: 2025/05/19 15:46:46 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ char    *get_cd_path(char **argv, char ***env);
 int 	change_directory(char *path);
 void	update_cd_env(char ***env, char *oldpwd);
 int		env_len(char **env);
-void	free_env_allocation(int i, char **env, char *var);
-
+void    print_export_error(char *arg);
+void    handle_export_assigment(char *arg, char ***env);
 //-----------------------------------------------//
 
 //------------------built-in---------------------//
@@ -64,10 +64,12 @@ int		builtin_cd(char **argv, char ***env);
 int		ft_realloc_env(char	***env, char *new_var);
 void	update_env(char ***env, char *key, char *value);
 char 	*get_env_value(char **env, const char *key);
+int		builtin_export(char **argv, char ***env);
 //-----------------------------------------------//
 //--------------------memmory-free-----------------//
 void    free_env(char **env);
 void	free_2d_array(char **arr);
+void	free_env_allocation(int i, char **env, char *var);
 //-------------------------------------------------//
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 16:01:49 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/17 20:15:42 by mouad            ###   ########.fr       */
+/*   Updated: 2025/05/20 13:37:09 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int	is_built_in(char *line)
 	if (ft_strncmp(line, "pwd", 3) == 0)
 		return (1);
 	if (ft_strncmp(line, "cd", 2) == 0)
+		return (1);
+	if (ft_strncmp(line, "export", 6) == 0)
 		return (1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:23:58 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/13 18:45:30 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/18 17:17:21 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,7 @@ int exec_builtins(t_cmd *cmd, char ***env)
 		return (get_pwd());
 	if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
 		return (builtin_cd(cmd->argv, env));
+	if (ft_strncmp(cmd->argv[0], "export", 6) == 0)
+		return (builtin_export(cmd->argv, env));
 	return (0);	
 }

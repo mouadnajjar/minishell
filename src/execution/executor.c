@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/13 18:45:18 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/20 13:49:53 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ static void child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2], char **en
 		close(pipefd[1]);
 	}
 	apply_redirections(cmd_list->redirs);
+	if (!cmd_list->argv || !cmd_list->argv[0])
+		exit(EXIT_SUCCESS);
 	run_command(cmd_list->argv, envp);
 	exit(EXIT_FAILURE);
 }

@@ -60,21 +60,82 @@ char    **dup_2d(char   **env)
     return (new_env);
 }
 
-void    print_sorted_export(char **env)
+void    print_sorted_env(char **env)
 {
     char    **copy;
+    char    *equal_start;
     int     i;
 
     copy = dup_2d(env);
-    sorting_env(env);
+    sorting_env(copy);
     i = 0;
-    while(env[i])
+    while(copy[i])
     {
-        
+        equal_start = ft_strchr(copy[i], '=');
+        if (equal_start)
+        {
+            *equal_start = '\0';
+            ft_printf("declare -x %s=\"%s\"\n", copy[i], equal_start + 1);
+            *equal_start = '=';
+        }
+        else
+            ft_printf("declare -x %s\n", copy[i]);
+        i++;
     }
+    free_2d_array(copy);
+}
+
+int is_valid_identifier(char *str)
+{
+    int i = 0;
+    char *key;
+    char *eq;
+    
+    eq = ft_strchr(str, '=');
+    if (eq && eq > str && *(eq - 1) == '+')
+        key = ft_substr(str, 0, (eq - str) - 1);
+    else if (eq)
+        key = ft_substr(str, 0, (eq - str));
+    else
+        key = ft_strdup(str);
+    if (!key)
+        return (0);
+    if (!ft_isalpha(key[0]) && key[0] != '_')
+        return (free(key), 0);
+    i = 1;
+    while (key[i])
+    {
+        if (!ft_isalnum(key[i]) && key[i] != '_')
+            return (free(key), 0);
+        i++;
+    }
+    free(key);
+    return (1);
 }
 
 int builtin_export(char **argv, char ***env)
 {
+    int     i;
+    int     status;
 
+    if (!argv[1])
+    {
+        print_sorted_env(*env);
+        return (0);
+    }
+    i = 1;
+    status = 0;
+    while (argv[i])
+    {
+
+        if (!is_valid_identifier(argv[i]))
+        {
+            print_export_error(argv[i]);
+		    status = 1;
+        }
+        else
+            handle_export_assigment(argv[i], env);
+        i++;
+    }
+    return (status);
 }

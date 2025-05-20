@@ -4,6 +4,8 @@
         "readline.h": "c",
         "executor.h": "c",
         "minishell.h": "c",
-        "wait.h": "c"
-    }
+        "wait.h": "c",
+        "type_traits": "c"
+    },
+    "makefile.configureOnOpen": false
 }
