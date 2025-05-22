@@ -1,40 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   garbage.c                                          :+:      :+:    :+:   */
+/*   tokenize_help.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/05/13 17:06:48 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/05/21 21:02:24 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-#include "../includes/executor.h"
 #include "../includes/parser.h"
 
-void *gc_malloc(t_list **gc, size_t size)
+size_t	skip_whitespace(const char *input, size_t i)
 {
-    void *ptr;
-    t_list *node;
-
-    ptr = malloc(size);
-    if (!ptr)
-        return NULL;
-
-    node = ft_lstnew(ptr);
-    if (!node)
-    {
-        free(ptr);
-        return NULL;
-    }
-    ft_lstadd_back(gc, node);
-    return ptr;
+	while (ft_isspace(input[i]))
+		i++;
+	return (i);
+}
+bool is_quote(char c)
+{
+    return (c == '\'' || c == '"');
 }
 
-void gc_free_all(t_list **gc)
-{
-    ft_lstclear(gc, free);
-    *gc = NULL;
-}

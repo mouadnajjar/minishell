@@ -6,44 +6,43 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/05/12 15:13:16 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:31:16 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../includes/parser.h"
 
-int	word_token(t_token *current, t_list **argv_list)
+int word_token(t_token *current, t_list **argv_list)
 {
-	t_list	*node;
+    t_list *node;
+    char *value;
 
-	node = gc_malloc(&gc, sizeof(t_list));
-	if (!node)
-		return (-1);
-	node->content = current->value;
-	node->next = NULL;
-	ft_lstadd_back(argv_list, node);
-	return (0);
-}
+    if (current->type == TOKEN_QUOTE_SINGLE)
+    {
+        value = ft_strdup(current->value);
+        if (!value)
+            return (-1);
+    }
+    else if (current->type == TOKEN_QUOTE_DOUBLE || current->type == TOKEN_WORD)
+    {
+        value = expand_variables(current->value);
+        if (!value)
+            return (-1);
+    }
+    else
+        return (-1);
 
-int	redirection_token(t_token **current, t_list **redir_list)
-{
-	t_redirect	*redir;
-	t_list		*node;
-
-	redir = gc_malloc(&gc, sizeof(t_redirect));
-	if (!redir || !(*current)->next || (*current)->next->type != TOKEN_WORD)
-		return (-1);
-	redir->target = (*current)->next->value;
-	redir->type = get_redir_type((*current)->type);
-	node = gc_malloc(&gc, sizeof(t_list));
-	if (!node)
-		return (-1);
-	node->content = redir;
-	node->next = NULL;
-	ft_lstadd_back(redir_list, node);
-	*current = (*current)->next;
-	return (0);
+    node = gc_malloc(&gc, sizeof(t_list));
+    if (!node)
+    {
+        free(value);
+        return (-1);
+    }
+    node->content = value;
+    node->next = NULL;
+    ft_lstadd_back(argv_list, node);
+    return (0);
 }
 
 int	finalize_cmd(t_cmd **current_cmd, t_list **argv_list, t_list **redir_list,
@@ -132,6 +131,8 @@ t_cmd *parse_input(const char *input)
     t_token *tokens;
     t_cmd *cmd;
     t_token *tmp;
+	t_cmd *current;
+	int cmd_index;
 
     tokens = lexer(input);
     cmd = NULL;
@@ -141,11 +142,60 @@ t_cmd *parse_input(const char *input)
         return (NULL);
     }
     tmp = tokens;
+	printf("=== Tokens ===\n");
     while (tmp)
     {
         printf("Token: %s (type: %d)\n", tmp->value, tmp->type);
         tmp = tmp->next;
     }
+	printf("=== End of Tokens ===\n");
     cmd = parser(tokens);
+	int i = 0;
+
+	if (cmd)
+    {
+        printf("=== Parsed Commands ===\n");
+        current = cmd;
+        cmd_index = 0;
+        while (current)
+        {
+            printf("Command %d:\n", cmd_index);
+            printf("  argv:\n");
+            for (i = 0; current->argv && current->argv[i]; i++)
+                printf("    arg[%d] = %s\n", i, current->argv[i]);
+            if (!current->argv || !current->argv[0])
+                printf("    (no arguments)\n");
+            printf("  redirs:\n");
+            for (i = 0; current->redirs && current->redirs[i].target; i++)
+                printf("    redir[%d] = %s (type: %s)\n", i, current->redirs[i].target,
+                       redir_type_to_str(current->redirs[i].type));
+            if (!current->redirs || !current->redirs[0].target)
+                printf("    (no redirections)\n");
+            printf("  is_pipe: %d\n", current->is_pipe);
+            printf("  next: %s\n", current->next ? "present" : "none");
+            current = current->next;
+            cmd_index++;
+        }
+		printf("=== End of Parsed Commands ===\n");
+		printf("============================================\n");
+    }
+    else
+    {
+        printf("=== Parsed Commands ===\nNo commands parsed\n");
+    }
     return (cmd);
+}
+const char *redir_type_to_str(t_redir_type type)
+{
+    if (type == IN)
+        return ("IN");
+    if (type == OUT)
+        return ("OUT");
+    if (type == APPEND)
+        return ("APPEND");
+    if (type == HEREDOC)
+        return ("HEREDOC");
+    if (type == TRUNCATE)
+        return ("TRUNCATE");
+    return ("UNKNOWN");
 }

@@ -1,0 +1,2 @@
+SRCS := $(PARC) $(EXEC)
+OBJS := $(SRCS:.c=.o)

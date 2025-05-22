@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/05/09 15:49:42 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:50:57 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,36 +44,34 @@ t_cmd	*init_cmd(void)
 	cmd->next = NULL;
 	return (cmd);
 }
-
 char	**list_to_argv(t_list *argv_list)
 {
-	size_t	argc;
-	char	**argv;
-	t_list	*tmp;
-	size_t	i;
+    size_t	argc = 0;
+    t_list	*tmp = argv_list;
 
-	argc = ft_lstsize(argv_list);
-	argv = gc_malloc(&gc, sizeof(char *) * (argc + 1));
-	if (!argv)
-		return (NULL);
-	tmp = argv_list;
-	i = 0;
-	while (i < argc)
-	{
-		argv[i] = ft_strdup(tmp->content);
-		if (!argv[i])
-		{
-			while (i > 0)
-				free(argv[--i]);
-			free(argv);
-			return (NULL);
-		}
-		tmp = tmp->next;
-		i++;
-	}
-	argv[i] = NULL;
-	ft_lstclear(&argv_list, NULL);
-	return (argv);
+    // Count non-empty arguments
+    while (tmp)
+    {
+        char *s = (char *)tmp->content;
+        if (s && s[0] != '\0')
+            argc++;
+        tmp = tmp->next;
+    }
+    char **argv = gc_malloc(&gc, sizeof(char *) * (argc + 1));
+    if (!argv)
+        return (NULL);
+    tmp = argv_list;
+    size_t i = 0;
+    while (tmp)
+    {
+        char *s = (char *)tmp->content;
+        if (s && s[0] != '\0')
+            argv[i++] = s;
+        tmp = tmp->next;
+    }
+    argv[i] = NULL;
+    ft_lstclear(&argv_list, NULL);
+    return (argv);
 }
 
 t_redirect	*list_to_redirs(t_list *redir_list)
@@ -117,6 +115,26 @@ t_redir_type get_redir_type(t_token_type token_type)
 		return APPEND;
 	if (token_type == TOKEN_HEREDOC)
 		return HEREDOC;
-	return -1; // error
+	return -1;
+}
+
+int	redirection_token(t_token **current, t_list **redir_list)
+{
+	t_redirect	*redir;
+	t_list		*node;
+
+	redir = gc_malloc(&gc, sizeof(t_redirect));
+	if (!redir || !(*current)->next || (*current)->next->type != TOKEN_WORD)
+		return (-1);
+	redir->target = (*current)->next->value;
+	redir->type = get_redir_type((*current)->type);
+	node = gc_malloc(&gc, sizeof(t_list));
+	if (!node)
+		return (-1);
+	node->content = redir;
+	node->next = NULL;
+	ft_lstadd_back(redir_list, node);
+	*current = (*current)->next;
+	return (0);
 }
 

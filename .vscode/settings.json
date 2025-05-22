@@ -5,6 +5,7 @@
 		"parce.h": "c",
 		"unistd.h": "c",
 		"minishell.h": "c",
-		"parser.h": "c"
+		"parser.h": "c",
+		"executor.h": "c"
 	}
 }

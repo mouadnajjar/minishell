@@ -1,41 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_substr.c                                        :+:      :+:    :+:   */
+/*   memory_free.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/26 14:55:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/20 14:46:55 by ahlahfid         ###   ########.fr       */
+/*   Created: 2025/05/03 09:52:32 by monajjar          #+#    #+#             */
+/*   Updated: 2025/05/13 14:32:03 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../includes/minishell.h"
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+void	free_2d_array(char **arr)
 {
-	size_t		i;
-	size_t		sl;
-	char		*substr;
+	int	i;
 
-	if (!s)
-		return (0);
-	sl = ft_strlen(s);
-	if (start >= sl)
-		len = 0;
-	else if (start + len > sl)
-	{
-		len = sl - start;
-	}
-	substr = malloc((len + 1) * sizeof(char));
-	if (!substr)
-		return (0);
+	if (!arr)
+		return ;
 	i = 0;
-	while (i < len)
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
+}
+
+void    free_env(char **env)
+{
+    int i;
+
+    i = 0;
+    while (env[i])
 	{
-		substr[i] = s[start + i];
+        free(env[i]);
 		i++;
 	}
-	substr[len] = '\0';
-	return (substr);
+    free(env);
 }
