@@ -13,6 +13,7 @@ EXEC = $(SRC_DIR)/main.c \
 	   $(SRC_DIR)/execution/executor.c \
 	   $(SRC_DIR)/execution/redirection.c \
 	   $(SRC_DIR)/execution/helper_execution.c \
+	   $(SRC_DIR)/execution/signals.c \
 	   $(SRC_DIR)/execution/builtins/builtin_echo.c \
 	   $(SRC_DIR)/execution/builtins/built_in_utils.c \
 	   $(SRC_DIR)/execution/builtins/built_ins.c \
@@ -21,6 +22,8 @@ EXEC = $(SRC_DIR)/main.c \
 	   $(SRC_DIR)/execution/builtins/cd_helpers.c \
 	   $(SRC_DIR)/execution/builtins/builtin_export.c \
 	   $(SRC_DIR)/execution/builtins/export_helper.c \
+	   $(SRC_DIR)/execution/builtins/builtin_unset.c \
+	   $(SRC_DIR)/execution/builtins/builtin_env.c \
 
 SRCS :=  $(EXEC) \
 

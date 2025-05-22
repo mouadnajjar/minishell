@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:17 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/13 18:42:36 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/21 15:49:25 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ int main(int ac, char **av, char **envp)
     env_copy = copy_env(envp);
     while (1)
     {
+		set_signals();
         input = readline(prompt);
         if (!input)
         {
@@ -157,8 +158,8 @@ int main(int ac, char **av, char **envp)
         }
         if (*input)
             add_history(input);
-       cmds = parse_simple_input(input); // use your fake parser
-	   execute_commands(cmds, &env_copy);     // run your real executor         
+       cmds = parse_simple_input(input); // fake parser
+	   execute_commands(cmds, &env_copy);     // real executor         
 	   free(input);
     }
 	free_env(env_copy);

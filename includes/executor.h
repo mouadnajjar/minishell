@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/19 15:46:46 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:49:37 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,10 @@ void	apply_redirections(t_redirect *redirs);
 char    **copy_env(char **envp);
 //------------------------------------------------//
 
+//---------------exits--signals-------------------//
+void	set_signals(void);
+//------------------------------------------------//
+
 
 //---------------------HELPERS--------------------//
 int		getsize(t_cmd *lst);
@@ -65,6 +69,8 @@ int		ft_realloc_env(char	***env, char *new_var);
 void	update_env(char ***env, char *key, char *value);
 char 	*get_env_value(char **env, const char *key);
 int		builtin_export(char **argv, char ***env);
+int 	builtin_unset(char **argv, char ***env);
+int 	builtin_env(char **argv, char **env);
 //-----------------------------------------------//
 //--------------------memmory-free-----------------//
 void    free_env(char **env);
