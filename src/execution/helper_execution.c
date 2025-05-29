@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper_execution.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:34:37 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/16 22:29:27 by mouad            ###   ########.fr       */
+/*   Updated: 2025/05/29 14:12:15 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void    wait_pids(pid_t *pids, int cmd_counts)
 {
     int i;
     int	status;
+	
     i = 0;
     while (i < cmd_counts)
     {

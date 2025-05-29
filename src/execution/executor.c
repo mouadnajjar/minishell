@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/21 19:03:32 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/29 14:12:06 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,29 @@ static void	fork_and_exec_command(t_cmd *cmd_list, pid_t *pids, int i, t_exec_ct
 		child_process(cmd_list, ctx->prev_fd, ctx->pipefd, ctx->envp);
 }
 
+void	run_builtin_parent(t_cmd *cmd, char ***envp, pid_t *pids)
+{
+	int	saved_in;
+	int	saved_out;
+
+	saved_in = dup(STDIN_FILENO);
+	saved_out = dup(STDOUT_FILENO);
+	if (saved_in == -1 || saved_out == -1)
+	{
+		perror("dup");
+        if (pids)
+			free(pids);
+		exit(EXIT_FAILURE);
+	}
+	apply_redirections(cmd->redirs);
+	exec_builtins(cmd, envp);
+	dup2(saved_in, STDIN_FILENO);
+	dup2(saved_out, STDOUT_FILENO);
+	close(saved_in);
+	close(saved_out);
+	free(pids);
+}
+
 void	execute_commands(t_cmd *cmd_list, char ***envp)
 {
 	t_exec_ctx	ctx;
@@ -66,7 +89,7 @@ void	execute_commands(t_cmd *cmd_list, char ***envp)
     {
 		if (is_built_in(cmd_list->argv[0]) && !cmd_list->is_pipe)
 		{
-			exec_builtins(cmd_list, envp);
+			run_builtin_parent(cmd_list, envp, pids);
 			return ;
 		}
 		else
