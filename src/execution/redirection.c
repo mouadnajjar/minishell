@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:50:03 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/10 14:41:59 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/05/25 13:40:11 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 void	handle_input_redir(char *file)
 {
 	int	fd;
-	
+
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 	{
@@ -30,7 +30,7 @@ void	handle_input_redir(char *file)
 void	handle_output_redir(char *file)
 {
 	int	fd;
-	
+
 	fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
@@ -44,7 +44,7 @@ void	handle_output_redir(char *file)
 void	handle_append_redir(char *file)
 {
 	int	fd;
-	
+
 	fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{

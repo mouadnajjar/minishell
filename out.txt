@@ -1,3 +1,0 @@
-outfileshell.txt
-outfile.txt
-out.txt

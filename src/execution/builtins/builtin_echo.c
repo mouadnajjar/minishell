@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 16:19:46 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/21 18:20:23 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/05/22 17:40:00 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ int	builtin_echo(char **argv)
 	while (argv[i])
 	{
 		ft_putstr_fd(argv[i], 1);
-		if (argv[i + 1])
-			write(1, " ", 1);
+		 if (argv[i + 1])
+		 	write(1, " ", 1);
 		i++;
 	}
 	if (newline)

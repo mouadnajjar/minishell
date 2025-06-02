@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/05/22 15:50:57 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/05/25 13:26:52 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,23 +118,32 @@ t_redir_type get_redir_type(t_token_type token_type)
 	return -1;
 }
 
-int	redirection_token(t_token **current, t_list **redir_list)
+int redirection_token(t_token **current, t_list **redir_list)
 {
-	t_redirect	*redir;
-	t_list		*node;
+    t_redirect *redir;
+    t_list *node;
 
-	redir = gc_malloc(&gc, sizeof(t_redirect));
-	if (!redir || !(*current)->next || (*current)->next->type != TOKEN_WORD)
-		return (-1);
-	redir->target = (*current)->next->value;
-	redir->type = get_redir_type((*current)->type);
-	node = gc_malloc(&gc, sizeof(t_list));
-	if (!node)
-		return (-1);
-	node->content = redir;
-	node->next = NULL;
-	ft_lstadd_back(redir_list, node);
-	*current = (*current)->next;
-	return (0);
+    // Validate current token and next token
+    if (!*current || !(*current)->next || (*current)->next->type != TOKEN_WORD)
+        return (-1);
+
+    redir = gc_malloc(&gc, sizeof(t_redirect));
+    if (!redir)
+        return (-1);
+
+    redir->target = (*current)->next->value; // Save filename
+    redir->type = get_redir_type((*current)->type);
+
+    node = gc_malloc(&gc, sizeof(t_list));
+    if (!node)
+        return (-1);
+
+    node->content = redir;
+    node->next = NULL;
+    ft_lstadd_back(redir_list, node);
+
+    *current = (*current)->next->next;  // Skip both the redirection token and filename
+    return (0);
 }
+
 

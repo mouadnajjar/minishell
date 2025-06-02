@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/05/21 17:21:28 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/02 14:31:18 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,4 +135,15 @@ void handle_dollar(const char *str, size_t *i, char **result, size_t *j)
     {
         (*result)[(*j)++] = '$';
     }
+}
+
+char *ft_strjoin_free(char *s1, const char *s2)
+{
+    if (!s1) // Handle uninitialized s1
+        s1 = ft_strdup(""); // Initialize to an empty string
+    char *joined = ft_strjoin(s1, s2);
+    if (joined && s1) {
+        free(s1); // Free the old s1
+    }
+    return joined;
 }

@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/12 19:05:31 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/05/25 13:37:03 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,7 @@ int exec_echo(t_cmd *cmd);
 void    free_env(char **env);
 void	free_2d_array(char **arr);
 //-------------------------------------------------//
+/////////////////////////////////////////////////////
+void apply_redirections(t_redirect *redirs);
 
 #endif

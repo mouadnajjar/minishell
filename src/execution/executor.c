@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/09 17:18:40 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/02 15:07:06 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,20 @@
 
 static void child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2], char **envp)
 {
-	if (prev_fd != -1)
-	{
-		dup2(prev_fd, STDIN_FILENO);
-		close(prev_fd);
-	}
-	if (cmd_list->is_pipe)
-	{
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[0]);
-		close(pipefd[1]);
-	}
-	apply_redirections(cmd_list->redirs);
-	run_command(cmd_list->argv, envp);
-	exit(EXIT_FAILURE);
+    if (prev_fd != -1)
+    {
+        dup2(prev_fd, STDIN_FILENO);
+        close(prev_fd);
+    }
+    if (cmd_list->is_pipe)
+    {
+        dup2(pipefd[1], STDOUT_FILENO);
+        close(pipefd[0]);
+        close(pipefd[1]);
+    }
+    apply_redirections(cmd_list->redirs); // Apply redirections before running the command
+    run_command(cmd_list->argv, envp);
+    exit(EXIT_FAILURE);
 }
 
 static void	fork_and_exec_command(t_cmd *cmd_list, pid_t *pids, int i, t_exec_ctx *ctx)
@@ -60,7 +60,7 @@ void	execute_commands(t_cmd *cmd_list, char **envp)
     int		cmd_counts;
 	int		i;
 	pid_t	*pids;
-    
+
 	ctx.prev_fd = -1;
 	ctx.envp = envp;
 	cmd_counts = getsize(cmd_list);
@@ -72,7 +72,7 @@ void	execute_commands(t_cmd *cmd_list, char **envp)
         ctx.prev_fd = close_and_update_pipe(cmd_list, ctx.prev_fd, ctx.pipefd);
 		cmd_list = cmd_list->next;
 		i++;
-	}	
+	}
 	wait_pids(pids, cmd_counts);
 	free (pids);
 }

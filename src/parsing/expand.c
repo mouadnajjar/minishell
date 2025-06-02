@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/05/22 16:30:19 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/02 15:47:13 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,146 +78,135 @@ void	handle_unbraced_variable(const char *str, size_t *i, char **result,
 	free(var);
 }
 
-char *expand_variables(const char *str)
+char	*expand_variables(const char *str)
 {
-    size_t i = 0, j = 0;
-    char *result;
-    size_t len;
-    int in_single_quote = 0;
-    int in_double_quote = 0;
-    bool escaped = false;
+	char		*result;
+	const char	*p = str;
+	char		*var_name;
+	char		*value;
 
-    len = compute_expanded_length(str);
-    result = gc_malloc(&gc, len + 1);
-    if (!result)
-        return (NULL);
-    ft_memset(result, 0, len + 1);
+	result = ft_strdup("");  // Start with an empty string
+	if (!result)
+		return (NULL);
 
-    while (str[i])
-    {
-        if (!escaped && str[i] == '\\')
-        {
-            escaped = true;
-            i++;
-            continue;
-        }
+	while (*p)
+	{
+		if (*p == '$')
+		{
+			p++;  // Move past the $
+			size_t var_len = 0;
+			while (p[var_len] && (ft_isalnum(p[var_len]) || p[var_len] == '_'))
+				var_len++;
+			if (var_len == 0)  // Handle case of isolated $ (e.g., echo $)
+			{
+				result = ft_strjoin_free(result, "$");
+				continue;
+			}
 
-        // If we see a single-quote:
-        if (!escaped && str[i] == '\'' && !in_double_quote)
-        {
-            // Toggle in_single_quote so that expansions won't happen inside
-            in_single_quote = !in_single_quote;
+			var_name = ft_substr(p, 0, var_len);
+			if (!var_name)
+			{
+				free(result);
+				return (NULL);
+			}
 
-            // Also KEEP the quote in the final string:
-            result[j++] = str[i++];
+			value = get_env_var(g_shell.envp, var_name);
+			free(var_name);
+			if (value)
+				result = ft_strjoin_free(result, value);
+			else
+				result = ft_strjoin_free(result, "");
 
-            // Do not lose the quote, so don't continue.
-            // Let the next iteration proceed with the updated i.
-            continue;
-        }
-        // If we see a double-quote:
-        else if (!escaped && str[i] == '"' && !in_single_quote)
-        {
-            // Toggle
-            in_double_quote = !in_double_quote;
+			p += var_len;  // 🚨 Move p forward by variable name length
+		}
+		else
+		{
+			char *single_char = ft_substr(p, 0, 1);
+			if (!single_char)
+			{
+				free(result);
+				return (NULL);
+			}
+			result = ft_strjoin_free(result, single_char);
+			free(single_char);
+			p++;
+		}
+	}
 
-            // Also keep the literal "
-            result[j++] = str[i++];
-
-            continue;
-        }
-
-        // If we are inside single quotes, expansions do NOT occur,
-        // so any '$' you see is literal.
-        if (in_single_quote)
-        {
-            // Just copy the character over
-            result[j++] = str[i++];
-            escaped = false;
-        }
-        // Otherwise, if we see a '$' and we are not in single quotes:
-        else if (!escaped && str[i] == '$')
-        {
-            // do your existing handle_dollar(...) logic
-            i++;
-            handle_dollar(str, &i, &result, &j);
-        }
-        else
-        {
-            // Normal character
-            if (escaped && str[i] != '$' && str[i] != '"' && str[i] != '\\')
-                result[j++] = '\\';  // preserve backslash if it was meaningless
-            result[j++] = str[i++];
-            escaped = false;
-        }
-    }
-    result[j] = '\0';
-    return (result);
+	return (result);
 }
 
-size_t compute_expanded_length(const char *str)
+
+
+size_t	compute_expanded_length(const char *str)
 {
-    size_t len = 0;
-    size_t i = 0;
-    int in_single_quote = 0;
-    int in_double_quote = 0;
-    bool escaped = false;
+	size_t	len;
+	size_t	i;
+	int		in_single_quote;
+	int		in_double_quote;
+	bool	escaped;
 
-    while (str[i])
-    {
-        if (!escaped && str[i] == '\\')
-        {
-            escaped = true;
-            i++;
-            len++; // Count the backslash
-            continue;
-        }
-
-        if (!escaped && str[i] == '\'' && !in_double_quote)
-        {
-            in_single_quote = !in_single_quote;
-            i++;
-            continue;
-        }
-        else if (!escaped && str[i] == '"' && !in_single_quote)
-        {
-            in_double_quote = !in_double_quote;
-            i++;
-            continue;
-        }
-
-        if (in_single_quote)
-        {
-            len++;
-            i++;
-        }
-        else if (!escaped && str[i] == '$' && !in_single_quote)
-        {
-            i++;
-            len += handle_dollar_expansion(str, &i);
-        }
-        else
-        {
-            if (escaped && str[i] != '$' && str[i] != '"' && str[i] != '\\')
-                len++; // Count the backslash
-            len++;
-            i++;
-            escaped = false;
-        }
-    }
-    return (len);
+	len = 0;
+	i = 0;
+	in_single_quote = 0;
+	in_double_quote = 0;
+	escaped = false;
+	while (str[i])
+	{
+		if (!escaped && str[i] == '\\')
+		{
+			escaped = true;
+			i++;
+			len++; // Count the backslash
+			continue ;
+		}
+		if (!escaped && str[i] == '\'' && !in_double_quote)
+		{
+			in_single_quote = !in_single_quote;
+			i++;
+			continue ;
+		}
+		else if (!escaped && str[i] == '"' && !in_single_quote)
+		{
+			in_double_quote = !in_double_quote;
+			i++;
+			continue ;
+		}
+		if (in_single_quote)
+		{
+			len++;
+			i++;
+		}
+		else if (!escaped && str[i] == '$' && !in_single_quote)
+		{
+			i++;
+			len += handle_dollar_expansion(str, &i);
+		}
+		else
+		{
+			if (escaped && str[i] != '$' && str[i] != '"' && str[i] != '\\')
+				len++; // Count the backslash
+			len++;
+			i++;
+			escaped = false;
+		}
+	}
+	return (len);
 }
-size_t ft_numlen(int num)
+size_t	ft_numlen(int num)
 {
-    size_t len = 1;
+	size_t	len;
 
-    if (num < 0) {
-        len++; // account for minus sign
-        num = -num;
-    }
-    while (num > 9) {
-        num /= 10;
-        len++;
-    }
-    return len;
+	len = 1;
+	if (num < 0)
+	{
+		len++; // account for minus sign
+		num = -num;
+	}
+	while (num > 9)
+	{
+		num /= 10;
+		len++;
+	}
+	return (len);
 }
