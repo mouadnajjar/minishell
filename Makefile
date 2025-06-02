@@ -24,6 +24,7 @@ EXEC = $(SRC_DIR)/main.c \
 	   $(SRC_DIR)/execution/builtins/export_helper.c \
 	   $(SRC_DIR)/execution/builtins/builtin_unset.c \
 	   $(SRC_DIR)/execution/builtins/builtin_env.c \
+	   $(SRC_DIR)/execution/builtins/builtin_exit.c \
 
 SRCS :=  $(EXEC) \
 

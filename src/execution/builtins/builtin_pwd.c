@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:07:20 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/12 15:47:38 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/02 11:58:46 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int get_pwd(void)
     if (!cwd)
     {
         perror("minishell: pwd");
+        g_exit_status = 1;
         return (1);
     }
     ft_putendl_fd(cwd, 1);

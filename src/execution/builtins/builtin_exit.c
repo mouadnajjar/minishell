@@ -6,12 +6,12 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 14:51:29 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/27 15:09:28 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/02 14:00:06 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
-#include "../../includes/executor.h"
+#include "./../includes/minishell.h"
+#include "./../includes/executor.h"
 
 int is_valid_exit_code(const char *str)
 {
@@ -36,11 +36,11 @@ int builtin_exit(char **args)
     i = 0;
     ft_putendl_fd("exit", STDOUT_FILENO);
     if (!args[1])
-        exit(/*global_exit_code*/);
+        exit(g_exit_status);
     if (!is_valid_exit_code(args[1]))
     {
         ft_putstr_fd("minishell: exit: ", 2);
-        ft_putstr_fd(argv[1], 2);
+        ft_putstr_fd(args[1], 2);
         ft_putendl_fd(": numeric argument required", 2);
         exit(255);
     }

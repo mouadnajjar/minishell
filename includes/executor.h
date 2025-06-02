@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/22 16:49:37 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/02 14:39:41 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,13 @@ typedef struct s_exec_ctx
 
 //---------------execution-fucntions--------------//
 void	run_command(char **argv, char **envp);
-void	apply_redirections(t_redirect *redirs);
+int	apply_redirections(t_redirect *redirs);
 char    **copy_env(char **envp);
 //------------------------------------------------//
 
 //---------------exits--signals-------------------//
 void	set_signals(void);
 //------------------------------------------------//
-
 
 //---------------------HELPERS--------------------//
 int		getsize(t_cmd *lst);
@@ -57,6 +56,7 @@ void	update_cd_env(char ***env, char *oldpwd);
 int		env_len(char **env);
 void    print_export_error(char *arg);
 void    handle_export_assigment(char *arg, char ***env);
+void    update_shell_level(char ***envp);
 //-----------------------------------------------//
 
 //------------------built-in---------------------//
@@ -71,6 +71,7 @@ char 	*get_env_value(char **env, const char *key);
 int		builtin_export(char **argv, char ***env);
 int 	builtin_unset(char **argv, char ***env);
 int 	builtin_env(char **argv, char **env);
+int 	builtin_exit(char **args);
 //-----------------------------------------------//
 //--------------------memmory-free-----------------//
 void    free_env(char **env);

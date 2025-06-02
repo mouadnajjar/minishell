@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:17 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/21 15:49:25 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/02 14:20:12 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ t_cmd	*parse_simple_input(char *input)
 	return (head);
 }
 
+int 	g_exit_status = 0;
 
 int main(int ac, char **av, char **envp)
 {
@@ -147,9 +148,10 @@ int main(int ac, char **av, char **envp)
     
 	prompt = GREEN_BOLD PROMPT RESET;
     env_copy = copy_env(envp);
+	update_shell_level(&env_copy);
+	set_signals();
     while (1)
     {
-		set_signals();
         input = readline(prompt);
         if (!input)
         {
@@ -163,5 +165,5 @@ int main(int ac, char **av, char **envp)
 	   free(input);
     }
 	free_env(env_copy);
-    return (0);
+    return (g_exit_status);
 }

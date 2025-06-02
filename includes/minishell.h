@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/18 13:51:17 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/02 12:35:11 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@
 # define PROMPT "minishell$ "
 # define GREEN_BOLD "\001\033[1;32m\002"
 # define RESET      "\001\033[0m\002"
+
+extern int	g_exit_status; // Global variable to store exit status
 
 typedef enum {
     IN,        // < (input redirection)

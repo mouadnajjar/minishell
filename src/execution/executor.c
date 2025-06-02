@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/29 14:12:06 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/02 14:43:49 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 static void child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2], char **envp)
 {
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	if (prev_fd != -1)
 	{
 		dup2(prev_fd, STDIN_FILENO);
@@ -26,7 +28,8 @@ static void child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2], char **en
 		close(pipefd[0]);
 		close(pipefd[1]);
 	}
-	apply_redirections(cmd_list->redirs);
+	if (apply_redirections(cmd_list->redirs) != 0)
+		exit(EXIT_FAILURE);
 	if (!cmd_list->argv || !cmd_list->argv[0])
 	exit(EXIT_SUCCESS);
 	run_command(cmd_list->argv, envp);
@@ -64,7 +67,11 @@ void	run_builtin_parent(t_cmd *cmd, char ***envp, pid_t *pids)
 			free(pids);
 		exit(EXIT_FAILURE);
 	}
-	apply_redirections(cmd->redirs);
+	if (apply_redirections(cmd->redirs) != 0)
+	{
+		g_exit_status = 1;
+		return ;
+	}
 	exec_builtins(cmd, envp);
 	dup2(saved_in, STDIN_FILENO);
 	dup2(saved_out, STDOUT_FILENO);

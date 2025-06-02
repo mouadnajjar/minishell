@@ -6,12 +6,30 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 13:07:22 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/13 14:18:37 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/02 14:21:10 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include "../../includes/executor.h"
+
+void    update_shell_level(char ***envp)
+{
+    char    *shell_level;
+    char    *new_shell_level;
+    int     level;
+
+    shell_level = get_env_value(*envp, "SHLVL");
+    if (!shell_level)
+        level = 1;
+    else
+        level = ft_atoi(shell_level) + 1;
+    if (level < 0)
+        level = 0;
+    new_shell_level = ft_itoa(level);
+    update_env(envp, "SHLVL", new_shell_level);
+    free(new_shell_level);
+}
 
 char    **copy_env(char **envp)
 {

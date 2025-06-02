@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:34:37 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/29 14:12:15 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/02 14:13:04 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,20 @@ void    wait_pids(pid_t *pids, int cmd_counts)
     while (i < cmd_counts)
     {
         waitpid(pids[i], &status, 0);
+		if (i == cmd_counts - 1)
+		{
+			if (WIFEXITED(status))
+				g_exit_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+			{
+				int sig = WTERMSIG(status);
+				g_exit_status = 128 + sig;
+				if (sig == SIGINT)
+					write(1, "\n", 1);
+				else if (sig == SIGQUIT)
+                    write(1, "Quit (core dumped)\n", 19);
+			}
+		}
         i++;
     }
 }
@@ -73,6 +87,7 @@ int	check_null(char *str, char	*msg)
 	if (!str)
 	{
 		ft_putendl_fd(msg, 2);
+		g_exit_status = 1;
 		return (1);
 	}
 	return (0);

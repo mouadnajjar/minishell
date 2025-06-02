@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 17:08:38 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/22 14:38:11 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/02 11:53:36 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int check_arguments_cd(char **argv)
     if (argv[1] && argv[2])
 	{
 		ft_putendl_fd("minishell: cd: too many arguments", 2);
+		g_exit_status = 1;
 		return (1);
 	}
 	return (0);
@@ -50,6 +51,7 @@ int change_directory(char *path)
 	if (!path || chdir(path) != 0)
 	{
 		perror("minishell: cd");
+		g_exit_status = 1;
 		return (1);
 	}
 	return (0);
