@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/02 15:47:13 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/03 21:23:39 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,65 +78,64 @@ void	handle_unbraced_variable(const char *str, size_t *i, char **result,
 	free(var);
 }
 
-char	*expand_variables(const char *str)
+char *expand_variables(const char *str)
 {
-	char		*result;
-	const char	*p = str;
-	char		*var_name;
-	char		*value;
+    char *result = ft_strdup("");
+    if (!result)
+        return NULL;
 
-	result = ft_strdup("");  // Start with an empty string
-	if (!result)
-		return (NULL);
+    const char *p = str;
 
-	while (*p)
-	{
-		if (*p == '$')
-		{
-			p++;  // Move past the $
-			size_t var_len = 0;
-			while (p[var_len] && (ft_isalnum(p[var_len]) || p[var_len] == '_'))
-				var_len++;
-			if (var_len == 0)  // Handle case of isolated $ (e.g., echo $)
-			{
-				result = ft_strjoin_free(result, "$");
-				continue;
-			}
+    while (*p)
+    {
+        if (*p == '$')
+        {
+            p++;
+            size_t var_len = 0;
+            while (p[var_len] && (ft_isalnum(p[var_len]) || p[var_len] == '_'))
+                var_len++;
 
-			var_name = ft_substr(p, 0, var_len);
-			if (!var_name)
-			{
-				free(result);
-				return (NULL);
-			}
+            if (var_len == 0)
+            {
+                result = ft_strjoin_free(result, "$");
+                if (!result) return NULL;
+                continue;
+            }
 
-			value = get_env_var(g_shell.envp, var_name);
-			free(var_name);
-			if (value)
-				result = ft_strjoin_free(result, value);
-			else
-				result = ft_strjoin_free(result, "");
+            char *var_name = ft_substr(p, 0, var_len);
+            if (!var_name)
+            {
+                free(result);
+                return NULL;
+            }
 
-			p += var_len;  // 🚨 Move p forward by variable name length
-		}
-		else
-		{
-			char *single_char = ft_substr(p, 0, 1);
-			if (!single_char)
-			{
-				free(result);
-				return (NULL);
-			}
-			result = ft_strjoin_free(result, single_char);
-			free(single_char);
-			p++;
-		}
-	}
+            char *value = get_env_var(g_shell.envp, var_name);
+            free(var_name);
 
-	return (result);
+            result = ft_strjoin_free(result, value ? value : "");
+            if (!result) return NULL;
+
+            p += var_len;
+        }
+        else
+        {
+            char *single_char = ft_substr(p, 0, 1);
+            if (!single_char)
+            {
+                free(result);
+                return NULL;
+            }
+
+            result = ft_strjoin_free(result, single_char);
+            free(single_char);
+            if (!result) return NULL;
+
+            p++;
+        }
+    }
+
+    return result;
 }
-
-
 
 size_t	compute_expanded_length(const char *str)
 {

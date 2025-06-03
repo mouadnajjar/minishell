@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/02 15:23:05 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/03 21:23:32 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,93 +87,89 @@ int	finalize_cmd(t_cmd **current_cmd, t_list **argv_list, t_list **redir_list,
 	return (0);
 }
 
-static char	*expand_argument(t_token *token)
+char *expand_argument(t_token *token)
 {
-	char	*expanded;
+    if (!token || !token->value)
+        return NULL;
 
-	if (!token || !token->value)
-		return (NULL);
-	if (token->type == TOKEN_QUOTE_SINGLE)
-		return (ft_strdup(token->value));
-	expanded = expand_variables(token->value);
-	if (expanded)
-		return (expanded);
-	return (ft_strdup(token->value));
+    if (token->can_expand == 0)
+        return ft_strdup(token->value);
+
+    char *expanded = expand_variables(token->value);
+    if (expanded)
+        return expanded;
+
+    return ft_strdup(token->value);
 }
 
-t_cmd	*parser(t_token *tokens)
+t_cmd *parser(t_token *tokens)
 {
-	t_cmd	*head = NULL;
-	t_cmd	*current_cmd = NULL;
-	t_token	*current = tokens;
-	t_list	*argv_list = NULL;
-	t_list	*redir_list = NULL;
-	t_list	*node;
+    t_cmd *head = NULL, *current_cmd = NULL;
+    t_token *current = tokens;
+    t_list *argv_list = NULL, *redir_list = NULL;
 
-	while (current)
-	{
-		if (!current_cmd)
-		{
-			current_cmd = init_cmd();
-			if (!current_cmd)
-			{
-				gc_free_all(&gc); // Free all tracked allocations
-				return (NULL);
-			}
-		}
+    while (current)
+    {
+        if (!current_cmd)
+        {
+            current_cmd = init_cmd();
+            if (!current_cmd)
+                return NULL;
+        }
 
-		if (current->type == TOKEN_WORD || current->type == TOKEN_QUOTE_SINGLE
-			|| current->type == TOKEN_QUOTE_DOUBLE)
-		{
-			node = ft_lstnew(expand_argument(current));
-			if (!node)
-			{
-				gc_free_all(&gc); // Free all tracked allocations
-				return (NULL);
-			}
-			ft_lstadd_back(&argv_list, node);
-		}
-		else if (current->type == TOKEN_REDIR_OUT
-			|| current->type == TOKEN_REDIR_IN || current->type == TOKEN_APPEND
-			|| current->type == TOKEN_HEREDOC)
-		{
-			if (redirection_token(&current, &redir_list) < 0)
-			{
-				gc_free_all(&gc); // Free all tracked allocations
-				return (NULL);
-			}
-			continue;
-		}
-		else if (current->type == TOKEN_PIPE)
-		{
-			current_cmd->is_pipe = 1;
-			if (finalize_cmd(&current_cmd, &argv_list, &redir_list, &head) < 0)
-			{
-				gc_free_all(&gc); // Free all tracked allocations
-				return (NULL);
-			}
-			current_cmd = init_cmd();
-			if (!current_cmd)
-			{
-				gc_free_all(&gc); // Free all tracked allocations
-				return (NULL);
-			}
-		}
+        if (current->type == TOKEN_WORD || current->type == TOKEN_QUOTE_SINGLE || current->type == TOKEN_QUOTE_DOUBLE)
+        {
+            char *arg = ft_strdup("");
+            do {
+                char *expanded = expand_argument(current);
+                char *tmp = ft_strjoin(arg, expanded);
+                free(arg);
+                free(expanded);
+                arg = tmp;
 
-		current = current->next;
-	}
+                if (!current->merge_next)
+                    break;
 
-	if (current_cmd)
-	{
-		if (finalize_cmd(&current_cmd, &argv_list, &redir_list, &head) < 0)
-		{
-			gc_free_all(&gc); // Free all tracked allocations
-			return (NULL);
-		}
-	}
+                current = current->next;
+            } while (current && (current->type == TOKEN_WORD || current->type == TOKEN_QUOTE_SINGLE || current->type == TOKEN_QUOTE_DOUBLE));
 
-	return (head);
+            t_list *node = ft_lstnew(arg);
+            if (!node)
+                return NULL;
+            ft_lstadd_back(&argv_list, node);
+
+            if (!current || !current->merge_next)
+                current = current->next;
+            continue;
+        }
+        else if (current->type == TOKEN_REDIR_OUT || current->type == TOKEN_REDIR_IN || current->type == TOKEN_APPEND || current->type == TOKEN_HEREDOC)
+        {
+            if (redirection_token(&current, &redir_list) < 0)
+                return NULL;
+            continue;
+        }
+        else if (current->type == TOKEN_PIPE)
+        {
+            current_cmd->is_pipe = 1;
+            if (finalize_cmd(&current_cmd, &argv_list, &redir_list, &head) < 0)
+                return NULL;
+            current_cmd = init_cmd();
+            if (!current_cmd)
+                return NULL;
+        }
+        current = current->next;
+    }
+
+    if (current_cmd)
+    {
+        if (finalize_cmd(&current_cmd, &argv_list, &redir_list, &head) < 0)
+            return NULL;
+    }
+
+    return head;
 }
+
+
 
 t_cmd	*parse_input(const char *input)
 {

@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/02 15:40:57 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/03 21:21:20 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ typedef struct s_token {
     char            *value;
     t_token_type    type;
     struct s_token  *next;
+	int can_expand;
+	int merge_next;
 } t_token;
 
 extern t_list *gc;
@@ -65,6 +67,8 @@ t_cmd	*init_cmd(void);
 char	**list_to_argv(t_list *argv_list);
 t_redir_type	get_redir_type(t_token_type token_type);
 void	free_cmds(t_cmd *cmd);
+
+// merge_adjacent_tokens
 
 char *ft_strjoin_free(char *s1, const char *s2);
 

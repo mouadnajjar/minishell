@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/05/25 13:26:52 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/02 20:59:49 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,30 +49,34 @@ char	**list_to_argv(t_list *argv_list)
     size_t	argc = 0;
     t_list	*tmp = argv_list;
 
-    // Count non-empty arguments
+    // Count all arguments, including empty strings
     while (tmp)
     {
         char *s = (char *)tmp->content;
-        if (s && s[0] != '\0')
+        if (s)
             argc++;
         tmp = tmp->next;
     }
+
     char **argv = gc_malloc(&gc, sizeof(char *) * (argc + 1));
     if (!argv)
         return (NULL);
+
     tmp = argv_list;
     size_t i = 0;
     while (tmp)
     {
         char *s = (char *)tmp->content;
-        if (s && s[0] != '\0')
+        if (s)  // 🔥 Include empty strings
             argv[i++] = s;
         tmp = tmp->next;
     }
+
     argv[i] = NULL;
     ft_lstclear(&argv_list, NULL);
-    return (argv);
+    return argv;
 }
+
 
 t_redirect	*list_to_redirs(t_list *redir_list)
 {
