@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 17:08:38 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/02 11:53:36 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/10 14:07:04 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,21 @@ int check_arguments_cd(char **argv)
 
 char    *get_cd_path(char **argv, char ***env)
 {
-    char *oldpwd;
+    //char *oldpwd;
     
-    if (!argv[1] || (argv[1][0] == '~' && argv[1][1] == '\0')
-		|| (ft_strncmp(argv[1], "--", 3) == 0))
+    if (!argv[1])
 		return (get_env_value(*env, "HOME"));
-	else if (ft_strncmp(argv[1], "-", 2) == 0)
-	{
-		oldpwd = get_env_value(*env, "OLDPWD");
-		if (!oldpwd)
-		{
-			ft_putendl_fd("minishell: cd: OLDPWD not set", 2);
-			return (NULL);
-		}
-		ft_putendl_fd(oldpwd, 1);
-		return (oldpwd);
-	}
+	// else if (ft_strncmp(argv[1], "-", 2) == 0)
+	// {
+	// 	oldpwd = get_env_value(*env, "OLDPWD");
+	// 	if (!oldpwd)
+	// 	{
+	// 		ft_putendl_fd("minishell: cd: OLDPWD not set", 2);
+	// 		return (NULL);
+	// 	}
+	// 	ft_putendl_fd(oldpwd, 1);
+	// 	return (oldpwd);
+	// }
 	else
 		return (argv[1]);
 }
