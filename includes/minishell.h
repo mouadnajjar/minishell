@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/02 12:35:11 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/11 16:44:01 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,57 +14,64 @@
 # define MINISHELL_H
 
 // C standard libs
+# include <errno.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <unistd.h>
 # include <string.h>
-# include <errno.h>
+# include <unistd.h>
 
-//  Libft
+// Libft
 # include "libft.h"
 
-//  printf
+// printf
 # include "ft_printf.h"
 
 // System calls
-# include <sys/types.h>
-# include <sys/wait.h>
 # include <fcntl.h>
 # include <signal.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
 // Readline
-# include <readline/readline.h>
 # include <readline/history.h>
+# include <readline/readline.h>
 
 // Prompt
 # define PROMPT "minishell$ "
 # define GREEN_BOLD "\001\033[1;32m\002"
-# define RESET      "\001\033[0m\002"
+# define RESET "\001\033[0m\002"
 
-extern int	g_exit_status; // Global variable to store exit status
+// Global variable to store exit status
+extern int	g_exit_status;
 
-typedef enum {
-    IN,        // < (input redirection)
-    OUT,       // > (output redirection)
-    APPEND,    // >> (output redirection in append mode)
-    TRUNCATE, // > (output redirection in truncate mode)
-    HEREDOC    // << (here-doc)
+// Enum for redirection types
+typedef enum e_redir_type
+{
+	IN,// < (input redirection)
+	OUT,// > (output redirection)
+	APPEND,// >> (output redirection in append mode)
+	TRUNCATE,// > (output redirection in truncate mode)
+	HEREDOC// << (here-doc)
 } t_redir_type;
+// Struct for redirection
+typedef struct	s_redirect
+{
+	char			*target;// File or delimiter (e.g., "file.txt" or "EOF")
+	t_redir_type	type;// Type of redirection (IN, OUT, APPEND, HEREDOC)
+	int				fd;// File descriptor
+}	t_redirect;
 
-typedef struct s_redirect {
-    char            *target;    // File or delimiter (e.g., "file.txt" or "EOF")
-    t_redir_type    type;     // Type of redirection (IN, OUT, APPEND, HEREDOC)
-    int             fd;
-} t_redirect;
+// Struct for command
+typedef struct s_cmd
+{
+	char			**argv;// Command and arguments
+	t_redirect		*redirs;// Array of redirections
+	int				is_pipe;// Flag for pipe
+	struct s_cmd	*next;// Next command in pipeline
+}	t_cmd;
 
-typedef struct s_cmd {
-    char            **argv;     // Command and arguments
-    t_redirect      *redirs;    // Array of redirections
-    int             is_pipe;    // Flag for pipe
-    struct s_cmd    *next;      // Next command in pipeline
-} t_cmd;
-
-//-------------------------execution-> implement-----------------------//
+// Execution functions
 char	*get_cmmand_path(char *cmd, char **envp);
 void	execute_commands(t_cmd *cmd_list, char ***envp);
+
 #endif

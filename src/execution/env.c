@@ -10,44 +10,44 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
 #include "../../includes/executor.h"
+#include "../../includes/minishell.h"
 
-void    update_shell_level(char ***envp)
+void	update_shell_level(char ***envp)
 {
-    char    *shell_level;
-    char    *new_shell_level;
-    int     level;
+	char	*shell_level;
+	char	*new_shell_level;
+	int		level;
 
-    shell_level = get_env_value(*envp, "SHLVL");
-    if (!shell_level)
-        level = 1;
-    else
-        level = ft_atoi(shell_level) + 1;
-    if (level < 0)
-        level = 0;
-    new_shell_level = ft_itoa(level);
-    update_env(envp, "SHLVL", new_shell_level);
-    free(new_shell_level);
+	shell_level = get_env_value(*envp, "SHLVL");
+	if (!shell_level)
+		level = 1;
+	else
+		level = ft_atoi(shell_level) + 1;
+	if (level < 0)
+		level = 0;
+	new_shell_level = ft_itoa(level);
+	update_env(envp, "SHLVL", new_shell_level);
+	free(new_shell_level);
 }
 
-char    **copy_env(char **envp)
+char	**copy_env(char **envp)
 {
-    char    **new_env;
-    size_t     i;
+	char	**new_env;
+	size_t	i;
 
-    i = 0;
-    while (envp[i])
-        i++;
-    new_env = malloc(sizeof(char *) * (i + 1));
-    if (!new_env)
-        return (NULL);
-    i = 0;
-    while(envp[i])
-    {
-        new_env[i] = ft_strdup(envp[i]);
-        i++;
-    }
-    new_env[i] = NULL;
-    return (new_env);
+	i = 0;
+	while (envp[i])
+		i++;
+	new_env = malloc(sizeof(char *) * (i + 1));
+	if (!new_env)
+		return (NULL);
+	i = 0;
+	while (envp[i])
+	{
+		new_env[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	new_env[i] = NULL;
+	return (new_env);
 }

@@ -24,15 +24,15 @@ void	free_2d_array(char **arr)
 	free(arr);
 }
 
-void    free_env(char **env)
+void	free_env(char **env)
 {
-    int i;
-    
-    i = 0;
-    while (env[i])
+	int	i;
+
+	i = 0;
+	while (env[i])
 	{
-        free(env[i]);
+		free(env[i]);
 		i++;
 	}
-    free(env);
+	free(env);
 }

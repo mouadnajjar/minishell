@@ -10,20 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
 #include "../../includes/executor.h"
+#include "../../includes/minishell.h"
 
-void sigint_handler(int signum)
+void	sigint_handler(int signum)
 {
-    (void)signum;
-    if (waitpid(-1, NULL, WNOHANG) == 0)
-        return;
-
-    g_exit_status = 130;
-    write(1, "\n", 1);
-    rl_on_new_line();
-    rl_replace_line("", 0);
-    rl_redisplay();
+	(void)signum;
+	if (waitpid(-1, NULL, WNOHANG) == 0)
+		return ;
+	g_exit_status = 130;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
 void	set_signals(void)

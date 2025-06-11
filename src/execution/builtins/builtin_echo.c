@@ -10,13 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
 #include "../../../includes/executor.h"
+#include "../../../includes/minishell.h"
 
 int	check_flag(char *cmd)
 {
 	int	i;
-	
+
 	if (!cmd || cmd[0] != '-' || cmd[1] != 'n')
 		return (0);
 	i = 2;
@@ -33,7 +33,7 @@ int	builtin_echo(char **argv)
 {
 	int	i;
 	int	newline;
-	
+
 	i = 1;
 	newline = 1;
 	while (argv[i] && check_flag(argv[i]))
@@ -52,4 +52,3 @@ int	builtin_echo(char **argv)
 		write(1, "\n", 1);
 	return (0);
 }
-

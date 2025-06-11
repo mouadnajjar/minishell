@@ -10,23 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
 #include "../../../includes/executor.h"
+#include "../../../includes/minishell.h"
 
-char *get_env_value(char **env, const char *key)
+char	*get_env_value(char **env, const char *key)
 {
-    int i;
-    int len;
-    
-    len = ft_strlen(key);
-    i = 0;
-    while (env[i])
-    {
-        if (!ft_strncmp(env[i], key, len) && env[i][len] == '=')
-            return (env[i] + len + 1);
-        i++;
-    }
-    return (NULL);
+	int	i;
+	int	len;
+
+	len = ft_strlen(key);
+	i = 0;
+	while (env[i])
+	{
+		if (!ft_strncmp(env[i], key, len) && env[i][len] == '=')
+			return (env[i] + len + 1);
+		i++;
+	}
+	return (NULL);
 }
 
 void	update_env(char ***env, char *key, char *value)
@@ -54,7 +54,6 @@ void	update_env(char ***env, char *key, char *value)
 		return ;
 }
 
-
 int	builtin_cd(char **argv, char ***env)
 {
 	char	*path;
@@ -68,11 +67,10 @@ int	builtin_cd(char **argv, char ***env)
 	path = get_cd_path(argv, env);
 	if (change_directory(path))
 	{
-		free (oldpath);
+		free(oldpath);
 		return (1);
 	}
 	update_cd_env(env, oldpath);
 	free(oldpath);
 	return (0);
 }
-

@@ -10,11 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
 #include "../../../includes/executor.h"
+#include "../../../includes/minishell.h"
 
-int exec_builtins(t_cmd *cmd, char ***env)
+int	exec_builtins(t_cmd *cmd, char ***env)
 {
+	int	exit_status;
+
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (1);
 	if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
@@ -31,11 +33,10 @@ int exec_builtins(t_cmd *cmd, char ***env)
 		return (builtin_env(cmd->argv, *env));
 	if (ft_strncmp(cmd->argv[0], "exit", 4) == 0)
 	{
-		int exit_status = builtin_exit(cmd->argv);
+		exit_status = builtin_exit(cmd->argv);
 		if (exit_status != 0)
 			return (exit_status);
 		exit(g_exit_status);
 	}
-
 	return (0);
 }

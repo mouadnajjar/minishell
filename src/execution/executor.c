@@ -10,10 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../../includes/minishell.h"
-#include"../../includes/executor.h"
+#include "../../includes/executor.h"
+#include "../../includes/minishell.h"
 
-static void child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2], char **envp)
+static void	child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2],
+		char **envp)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
@@ -31,12 +32,13 @@ static void child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2], char **en
 	if (apply_redirections(cmd_list->redirs) != 0)
 		exit(EXIT_FAILURE);
 	if (!cmd_list->argv || !cmd_list->argv[0])
-	exit(EXIT_SUCCESS);
+		exit(EXIT_SUCCESS);
 	run_command(cmd_list->argv, envp);
 	exit(EXIT_FAILURE);
 }
 
-static void	fork_and_exec_command(t_cmd *cmd_list, pid_t *pids, int i, t_exec_ctx *ctx)
+static void	fork_and_exec_command(t_cmd *cmd_list, pid_t *pids, int i,
+		t_exec_ctx *ctx)
 {
 	if (cmd_list->is_pipe && pipe(ctx->pipefd) == -1)
 	{
@@ -47,7 +49,7 @@ static void	fork_and_exec_command(t_cmd *cmd_list, pid_t *pids, int i, t_exec_ct
 	if (pids[i] == -1)
 	{
 		perror("fork");
-		exit (EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	if (pids[i] == 0)
 		child_process(cmd_list, ctx->prev_fd, ctx->pipefd, ctx->envp);
@@ -63,7 +65,7 @@ void	run_builtin_parent(t_cmd *cmd, char ***envp, pid_t *pids)
 	if (saved_in == -1 || saved_out == -1)
 	{
 		perror("dup");
-        if (pids)
+		if (pids)
 			free(pids);
 		exit(EXIT_FAILURE);
 	}
@@ -83,17 +85,17 @@ void	run_builtin_parent(t_cmd *cmd, char ***envp, pid_t *pids)
 void	execute_commands(t_cmd *cmd_list, char ***envp)
 {
 	t_exec_ctx	ctx;
-    int		cmd_counts;
-	int		i;
-	pid_t	*pids;
-    
+	int			cmd_counts;
+	int			i;
+	pid_t		*pids;
+
 	ctx.prev_fd = -1;
 	ctx.envp = *envp;
 	cmd_counts = getsize(cmd_list);
 	pids = allocate_pid(cmd_counts);
 	i = 0;
-    while (cmd_list)
-    {
+	while (cmd_list)
+	{
 		if (is_built_in(cmd_list->argv[0]) && !cmd_list->is_pipe)
 		{
 			run_builtin_parent(cmd_list, envp, pids);
@@ -101,10 +103,10 @@ void	execute_commands(t_cmd *cmd_list, char ***envp)
 		}
 		else
 			fork_and_exec_command(cmd_list, pids, i, &ctx);
-        ctx.prev_fd = close_and_update_pipe(cmd_list, ctx.prev_fd, ctx.pipefd);
+		ctx.prev_fd = close_and_update_pipe(cmd_list, ctx.prev_fd, ctx.pipefd);
 		cmd_list = cmd_list->next;
 		i++;
-	}	
+	}
 	wait_pids(pids, cmd_counts);
-	free (pids);
+	free(pids);
 }

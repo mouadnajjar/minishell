@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../../includes/minishell.h"
-#include"../../includes/executor.h"
+#include "../../includes/executor.h"
+#include "../../includes/minishell.h"
 
 char	**split_paths(char **envp)
 {
@@ -28,7 +28,6 @@ char	**split_paths(char **envp)
 		return (ft_split(default_path, ':'));
 	return (ft_split(envp[i] + 5, ':'));
 }
-
 
 char	*get_cmmand_path(char *cmd, char **envp)
 {
@@ -52,7 +51,7 @@ char	*get_cmmand_path(char *cmd, char **envp)
 			free_2d_array(c.paths);
 			return (c.path);
 		}
-		free (c.path);
+		free(c.path);
 		c.j++;
 	}
 	free_2d_array(c.paths);
@@ -62,11 +61,11 @@ char	*get_cmmand_path(char *cmd, char **envp)
 void	run_command(char **argv, char **envp)
 {
 	char	*cmd_path;
-	
+
 	if (!argv || !argv[0])
 	{
 		ft_putstr_fd("minishell : empty command\n", 2);
-		exit (EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	cmd_path = get_cmmand_path(argv[0], envp);
 	if (!cmd_path)
@@ -74,7 +73,7 @@ void	run_command(char **argv, char **envp)
 		ft_putstr_fd("minishell : comnmand not found :", 2);
 		ft_putstr_fd(argv[0], 2);
 		ft_putstr_fd("\n", 2);
-		exit (127);
+		exit(127);
 	}
 	execve(cmd_path, argv, envp);
 	perror("execve");

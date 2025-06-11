@@ -10,14 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
 #include "../../../includes/executor.h"
+#include "../../../includes/minishell.h"
 
 int	is_built_in(char *line)
 {
 	if (!line)
 		return (0);
-    if (ft_strncmp(line, "echo", 4) == 0)
+	if (ft_strncmp(line, "echo", 4) == 0)
 		return (1);
 	if (ft_strncmp(line, "pwd", 3) == 0)
 		return (1);
@@ -34,30 +34,30 @@ int	is_built_in(char *line)
 	return (0);
 }
 
-char *ft_strjoin_3(const char *s1, const char *s2, const char *s3)
+char	*ft_strjoin_3(const char *s1, const char *s2, const char *s3)
 {
 	char	*tmp;
 	char	*final;
-	
+
 	tmp = ft_strjoin(s1, s2);
 	if (!tmp)
 		return (NULL);
 	final = ft_strjoin(tmp, s3);
-	free (tmp);
+	free(tmp);
 	if (!final)
-		return(NULL);
+		return (NULL);
 	return (final);
 }
 
 int	env_len(char **env)
 {
 	int	i;
-	
+
 	if (!env)
 		return (0);
 	i = 0;
 	while (env && env[i])
-	i++;
+		i++;
 	return (i);
 }
 
@@ -70,7 +70,7 @@ void	free_env_allocation(int i, char **env, char *var)
 		free(var);
 }
 
-int	ft_realloc_env(char	***env, char *new_var)
+int	ft_realloc_env(char ***env, char *new_var)
 {
 	int		i;
 	char	**new_env;

@@ -10,50 +10,50 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
 #include "../../../includes/executor.h"
+#include "../../../includes/minishell.h"
 
 static int	find_env_index(char **env, const char *key)
 {
-    int i;
-    int len;
+	int	i;
+	int	len;
 
-    len = ft_strlen(key);
-    i = 0;
-    while (env[i])
-    {
-        if (!ft_strncmp(env[i], key, len) && env[i][len] == '=')
-            return (i);
-        i++;
-    }
-    return (-1);
+	len = ft_strlen(key);
+	i = 0;
+	while (env[i])
+	{
+		if (!ft_strncmp(env[i], key, len) && env[i][len] == '=')
+			return (i);
+		i++;
+	}
+	return (-1);
 }
 
-static void    remove_env_and_shift(char ***env, int index)
+static void	remove_env_and_shift(char ***env, int index)
 {
-    free((*env)[index]);
-    while ((*env)[index])
-    {
-        (*env)[index] = (*env)[index + 1];
-        index++;
-    }
+	free((*env)[index]);
+	while ((*env)[index])
+	{
+		(*env)[index] = (*env)[index + 1];
+		index++;
+	}
 }
 
-int builtin_unset(char **argv, char ***env)
+int	builtin_unset(char **argv, char ***env)
 {
-    int i;
-    int inx;
+	int	i;
+	int	inx;
 
-    i = 1;
-    while (argv[i])
-    {
-        if (ft_isalpha(argv[i][0]) || argv[i][0] == '_')
-        {
-            inx = find_env_index(*env, argv[i]);
-            if (inx != -1)
-                remove_env_and_shift(env, inx);
-        }
-        i++;
-    }
-    return (0);
+	i = 1;
+	while (argv[i])
+	{
+		if (ft_isalpha(argv[i][0]) || argv[i][0] == '_')
+		{
+			inx = find_env_index(*env, argv[i]);
+			if (inx != -1)
+				remove_env_and_shift(env, inx);
+		}
+		i++;
+	}
+	return (0);
 }

@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../../includes/minishell.h"
-#include"../../includes/executor.h"
+#include "../../includes/executor.h"
+#include "../../includes/minishell.h"
 
 int	getsize(t_cmd *lst)
 {
@@ -30,44 +30,45 @@ int	getsize(t_cmd *lst)
 	return (i);
 }
 
-void    wait_pids(pid_t *pids, int cmd_counts)
+void	wait_pids(pid_t *pids, int cmd_counts)
 {
-    int i;
-    int	status;
-	
-    i = 0;
-    while (i < cmd_counts)
-    {
-        waitpid(pids[i], &status, 0);
+	int	i;
+	int	status;
+	int	sig;
+
+	i = 0;
+	while (i < cmd_counts)
+	{
+		waitpid(pids[i], &status, 0);
 		if (i == cmd_counts - 1)
 		{
 			if (WIFEXITED(status))
 				g_exit_status = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
 			{
-				int sig = WTERMSIG(status);
+				sig = WTERMSIG(status);
 				g_exit_status = 128 + sig;
 				if (sig == SIGINT)
 					write(1, "\n", 1);
 				else if (sig == SIGQUIT)
-                    write(1, "Quit (core dumped)\n", 19);
+					write(1, "Quit (core dumped)\n", 19);
 			}
 		}
-        i++;
-    }
+		i++;
+	}
 }
 
-pid_t *allocate_pid(int size)
+pid_t	*allocate_pid(int size)
 {
-    pid_t *pids;
-    
-    pids = malloc (sizeof(pid_t) * (size));
+	pid_t	*pids;
+
+	pids = malloc(sizeof(pid_t) * (size));
 	if (!pids)
 	{
 		perror("malloc");
-		exit (EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
-    return (pids);
+	return (pids);
 }
 
 int	close_and_update_pipe(t_cmd *cmd, int prev_fd, int pipefd[2])
@@ -79,10 +80,10 @@ int	close_and_update_pipe(t_cmd *cmd, int prev_fd, int pipefd[2])
 		close(pipefd[1]);
 		return (pipefd[0]);
 	}
-return (-1);
+	return (-1);
 }
 
-int	check_null(char *str, char	*msg)
+int	check_null(char *str, char *msg)
 {
 	if (!str)
 	{

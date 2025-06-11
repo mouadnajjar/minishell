@@ -10,19 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
 #include "../../includes/executor.h"
+#include "../../includes/minishell.h"
 
 void	handle_input_redir(char *file)
 {
 	int	fd;
-	
+
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 	{
 		perror(file);
 		g_exit_status = 1;
-        return;
+		return ;
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
@@ -31,13 +31,13 @@ void	handle_input_redir(char *file)
 void	handle_output_redir(char *file)
 {
 	int	fd;
-	
+
 	fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
 		perror(file);
 		g_exit_status = 1;
-        return;
+		return ;
 	}
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
@@ -46,13 +46,13 @@ void	handle_output_redir(char *file)
 void	handle_append_redir(char *file)
 {
 	int	fd;
-	
+
 	fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
 		perror(file);
 		g_exit_status = 1;
-        return;
+		return ;
 	}
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
@@ -71,18 +71,18 @@ int	apply_redirections(t_redirect *redirs)
 			handle_output_redir(redirs[i].target);
 		else if (redirs[i].type == APPEND)
 			handle_append_redir(redirs[i].target);
-			else if (redirs[i].type == HEREDOC && redirs[i].fd != -1)
+		else if (redirs[i].type == HEREDOC && redirs[i].fd != -1)
+		{
+			if (dup2(redirs[i].fd, STDIN_FILENO) == -1)
 			{
-				if (dup2(redirs[i].fd, STDIN_FILENO) == -1)
-				{
-					perror("dup2");
-					return (1);
-				}
-				close(redirs[i].fd);
-			}
-			if (g_exit_status == 1)
+				perror("dup2");
 				return (1);
-			i++;
+			}
+			close(redirs[i].fd);
 		}
-		return (0);
+		if (g_exit_status == 1)
+			return (1);
+		i++;
+	}
+	return (0);
 }

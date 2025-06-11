@@ -10,21 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/minishell.h"
 #include "../../../includes/executor.h"
+#include "../../../includes/minishell.h"
 
-int get_pwd(void)
+int	get_pwd(void)
 {
-    char    *cwd;
-    
-    cwd = getcwd(NULL, 0);
-    if (!cwd)
-    {
-        perror("minishell: pwd");
-        g_exit_status = 1;
-        return (1);
-    }
-    ft_putendl_fd(cwd, 1);
-    free (cwd);
-    return (0);
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+	{
+		perror("minishell: pwd");
+		g_exit_status = 1;
+		return (1);
+	}
+	ft_putendl_fd(cwd, 1);
+	free(cwd);
+	return (0);
 }
