@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 18:03:21 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/21 13:43:03 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/13 16:52:28 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,15 @@ int	builtin_cd(char **argv, char ***env)
 	if (check_arguments_cd(argv))
 		return (1);
 	oldpath = getcwd(NULL, 0);
-	if (check_null(oldpath, "minishell: cd"))
-		return (1);
+	if (!oldpath)
+	{
+		oldpath = ft_strdup(get_env_value(*env, "PWD"));
+		if (!oldpath)
+		{
+			ft_putendl_fd("minishell: cd: failed to retrieve PWD", 2);
+			return (1);
+		}
+	}
 	path = get_cd_path(argv, env);
 	if (change_directory(path))
 	{

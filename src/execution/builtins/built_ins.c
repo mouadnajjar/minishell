@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 13:23:58 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/02 13:55:08 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:04:10 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	exec_builtins(t_cmd *cmd, char ***env)
 	if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
 		return (builtin_echo(cmd->argv));
 	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
-		return (get_pwd());
+		return (get_pwd(*env));
 	if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
 		return (builtin_cd(cmd->argv, env));
 	if (ft_strncmp(cmd->argv[0], "export", 6) == 0)

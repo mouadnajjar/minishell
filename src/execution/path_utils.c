@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 09:51:40 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/02 12:07:49 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/12 15:28:02 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	run_command(char **argv, char **envp)
 	cmd_path = get_cmmand_path(argv[0], envp);
 	if (!cmd_path)
 	{
-		ft_putstr_fd("minishell : comnmand not found :", 2);
+		ft_putstr_fd("minishell : command not found :", 2);
 		ft_putstr_fd(argv[0], 2);
 		ft_putstr_fd("\n", 2);
 		exit(127);

@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/02 14:39:41 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:02:27 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void		update_shell_level(char ***envp);
 int			is_built_in(char *line);
 int			exec_builtins(t_cmd *cmd, char ***env);
 int			builtin_echo(char **argv);
-int			get_pwd(void);
+int			get_pwd(char **env);
 int			builtin_cd(char **argv, char ***env);
 int			ft_realloc_env(char ***env, char *new_var);
 void		update_env(char ***env, char *key, char *value);
@@ -72,6 +72,7 @@ int			builtin_export(char **argv, char ***env);
 int			builtin_unset(char **argv, char ***env);
 int			builtin_env(char **argv, char **env);
 int			builtin_exit(char **args);
+
 //-----------------------------------------------//
 //--------------------memmory-free-----------------//
 void		free_env(char **env);
