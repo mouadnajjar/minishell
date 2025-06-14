@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 14:51:29 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/13 13:52:28 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/14 16:21:46 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	builtin_exit(char **args)
 	if (args[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", 2);
+		g_exit_status = 1;
 		return (1);
 	}
 	exit_code = ft_atoi(args[1]);

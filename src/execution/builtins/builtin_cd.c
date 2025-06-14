@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 18:03:21 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/13 16:52:28 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/14 16:19:04 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ int	builtin_cd(char **argv, char ***env)
 		if (!oldpath)
 		{
 			ft_putendl_fd("minishell: cd: failed to retrieve PWD", 2);
+			g_exit_status = 1;
 			return (1);
 		}
 	}

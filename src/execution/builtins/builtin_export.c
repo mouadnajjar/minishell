@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 16:35:27 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/11 16:35:29 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/14 18:10:45 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,5 +138,6 @@ int	builtin_export(char **argv, char ***env)
 			handle_export_assigment(argv[i], env);
 		i++;
 	}
+	g_exit_status = status;
 	return (status);
 }

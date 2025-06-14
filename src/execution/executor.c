@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/13 14:54:02 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/14 13:59:12 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,10 @@ static void	child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2],
 		exit(EXIT_FAILURE);
 	if (!cmd_list->argv || !cmd_list->argv[0])
 		exit(EXIT_SUCCESS);
-	run_command(cmd_list->argv, envp);
+	if (is_built_in(cmd_list->argv[0]))
+		exec_builtins(cmd_list, &envp);
+	else
+		run_command(cmd_list->argv, envp);
 	exit(EXIT_FAILURE);
 }
 

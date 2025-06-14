@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:50:03 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/02 14:42:46 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/14 16:18:33 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	apply_redirections(t_redirect *redirs)
 		{
 			if (dup2(redirs[i].fd, STDIN_FILENO) == -1)
 			{
-				perror("dup2");
+				ft_putendl_fd("dup2", 2);
 				return (1);
 			}
 			close(redirs[i].fd);
