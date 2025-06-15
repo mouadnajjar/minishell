@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/13 17:02:27 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/15 14:36:40 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int			builtin_export(char **argv, char ***env);
 int			builtin_unset(char **argv, char ***env);
 int			builtin_env(char **argv, char **env);
 int			builtin_exit(char **args);
-
+void		initialize_env(char ***envp);
 //-----------------------------------------------//
 //--------------------memmory-free-----------------//
 void		free_env(char **env);

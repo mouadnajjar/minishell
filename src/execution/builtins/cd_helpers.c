@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 17:08:38 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/13 16:44:41 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/15 14:41:42 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,7 @@ void	update_cd_env(char ***env, char *oldpwd)
 		update_env(env, "PWD", newpwd);
 	if (get_env_value(*env, "OLDPWD"))
 		update_env(env, "OLDPWD", oldpwd);
+	else
+		ft_realloc_env(env, ft_strjoin_3("OLDPWD", "=", oldpwd));
 	free(newpwd);
 }

@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:17 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/14 17:32:31 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/15 14:37:18 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,7 @@ int	main(int ac, char **av, char **envp)
 	prompt = GREEN_BOLD PROMPT RESET;
 	env_copy = copy_env(envp);
 	update_shell_level(&env_copy);
+	initialize_env(&env_copy);
 	set_signals();
 	while (1)
 	{

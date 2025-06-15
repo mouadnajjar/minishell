@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 13:07:22 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/02 14:21:10 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/15 14:43:42 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,21 @@ char	**copy_env(char **envp)
 	}
 	new_env[i] = NULL;
 	return (new_env);
+}
+
+void	initialize_env(char ***envp)
+{
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	if (cwd)
+	{
+		update_env(envp, "PWD", cwd);
+		free(cwd);
+	}
+	else
+	{
+		update_env(envp, "PWD", "/");
+	}
+	update_env(envp, "_", "/home/monajjar/Desktop/minishelll/./minishell");
 }
