@@ -6,144 +6,123 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/02 14:31:18 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:29:16 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../includes/parser.h"
-#include "../includes/executor.h"
 
-size_t	handle_quoted_dollar(const char *str, size_t *i)
+char	*get_env_var(const char *name)
 {
-	if (str[*i] == '\'' && str[*i + 1] == '$')
-	{
-		*i += 2;
-		return (1);
-	}
-	return (0);
-}
-
-size_t	get_var_length(char *var)
-{
-	char	*value;
+	int		i;
 	size_t	len;
 
-	if (!var)
-		return (0);
-	value = get_env_var(g_shell.envp, var);
-	if (value)
-	{
-		len = ft_strlen(value);
-		printf("Var: %s, Value len: %zu\n", var, len);
-		free(var);
-		return (len);
-	}
-	free(var);
-	return (0);
-}
-char	*get_env_var(char **envp, const char *var)
-{
-	size_t	len;
-	size_t	i;
-
-	len = ft_strlen(var);
+	len = ft_strlen(name);
 	i = 0;
-	while (envp && envp[i])
+	while (g_shell.envp[i])
 	{
-		if (ft_strncmp(envp[i], var, len) == 0 && envp[i][len] == '=')
-		{
-			return (envp[i] + len + 1);
-		}
+		if (!ft_strncmp(g_shell.envp[i], name, len)
+			&& g_shell.envp[i][len] == '=')
+			return (&g_shell.envp[i][len + 1]);
 		i++;
 	}
 	return (NULL);
 }
 
-char	*extract_var_name(const char *str, size_t *i, int braced_flag)
+char	*get_env_name(const char *src, size_t i, size_t *var_len)
 {
-	size_t	start;
-	char	*var;
+	char	*name;
 
-	start = *i;
-	if (braced_flag)
+	*var_len = 0;
+	while (src[i + *var_len] && (ft_isalnum(src[i + *var_len]) || src[i
+				+ *var_len] == '_'))
+		(*var_len)++;
+	name = gc_alloc(*var_len + 1, &gc);
+	ft_strlcpy(name, &src[i], *var_len + 1);
+	return (name);
+}
+
+size_t	get_expanded_var_len(const char *src, size_t *i)
+{
+	size_t	var_len;
+	char	*name;
+	char	*val;
+
+	var_len = 0;
+	name = get_env_name(src, *i, &var_len);
+	val = get_env_var(name);
+	*i += var_len - 1;
+	if (val)
+		return (ft_strlen(val));
+	return (0);
+}
+
+size_t	get_exit_status_len(void)
+{
+	char	*num;
+	size_t	len;
+
+	num = ft_itoa(g_shell.last_exit_status);
+	len = ft_strlen(num);
+	gc_add(num, &gc);
+	return (len);
+}
+
+size_t	get_expanded_length(const char *src)
+{
+	size_t	len;
+	size_t	i;
+
+	len = 0;
+	i = 0;
+	while (src[i])
 	{
-		(*i)++;
-		start = *i;
-		while (str[*i] && str[*i] != '}')
-			(*i)++;
-		if (!str[*i])
-			return (NULL);
+		if (src[i] == '$')
+		{
+			i++;
+			if (src[i] == '?')
+				len += get_exit_status_len();
+			else
+				len += get_expanded_var_len(src, &i);
+		}
+		else
+			len++;
+		i++;
 	}
-	else
-		while (ft_isalnum(str[*i]) || str[*i] == '_')
-			(*i)++;
-	var = ft_substr(str, start, *i - start);
-	if (braced_flag && str[*i] == '}')
-		(*i)++;
-	return (var);
+	return (len);
 }
 
-size_t handle_dollar_expansion(const char *str, size_t *i)
-{
-    size_t add_len = 0;
-
-    if (str[*i] == '?') // Special case for $?
-    {
-        add_len = ft_numlen(g_shell.last_exit_status);
-        (*i)++;
-    }
-    else if (str[*i] == '{')
-    {
-        (*i)++;
-        while (str[*i] && str[*i] != '}')
-            (*i)++;
-        if (str[*i] == '}')
-        {
-            add_len = get_var_length(extract_var_name(str, i, 1));
-            (*i)++;
-        }
-    }
-    else if (ft_isalnum(str[*i]) || str[*i] == '_')
-    {
-        add_len = get_var_length(extract_var_name(str, i, 0));
-    }
-    else
-    {
-        add_len = 1; // Just the $ character
-    }
-
-    return (add_len);
-}
-
-void handle_dollar(const char *str, size_t *i, char **result, size_t *j)
-{
-    if (str[*i] == '?') // Handle $?
-    {
-        handle_exit_status(result, j);
-        (*i)++;
-    }
-    else if (str[*i] == '{') // Handle ${VAR}
-    {
-        handle_braced_variable(str, i, result, j);
-    }
-    else if (ft_isalnum(str[*i]) || str[*i] == '_') // Handle $VAR
-    {
-        handle_unbraced_variable(str, i, result, j);
-    }
-    else // Just a $ with no valid variable
-    {
-        (*result)[(*j)++] = '$';
-    }
-}
-
-char *ft_strjoin_free(char *s1, const char *s2)
-{
-    if (!s1) // Handle uninitialized s1
-        s1 = ft_strdup(""); // Initialize to an empty string
-    char *joined = ft_strjoin(s1, s2);
-    if (joined && s1) {
-        free(s1); // Free the old s1
-    }
-    return joined;
-}
+// size_t	get_expanded_length(const char *src)
+// {
+// 	size_t	len = 0;
+//     size_t i = 0;
+//     while (src[i])
+//     {
+//         if (src[i] == '$')
+//         {
+//             i++;
+//             if (src[i] == '?')
+//             {
+//                 len += ft_strlen(ft_itoa(g_shell.last_exit_status));
+//             }
+//             else
+//             {
+//                 size_t var_len = 0;
+//                 while (src[i + var_len] && (ft_isalnum(src[i + var_len])
+// 		|| src[i + var_len] == '_'))
+//                     var_len++;
+//                 char *name = gc_alloc(var_len + 1, &gc);
+//                 ft_strlcpy(name, &src[i], var_len + 1);
+//                 char *val = get_env_var(name);
+//                 if (val)
+//                     len += ft_strlen(val);
+//                 i += var_len - 1;
+//             }
+//         }
+//         else
+//             len++;
+//         i++;
+//     }
+// 	return (len);
+// }

@@ -6,10 +6,9 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/03 21:21:20 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/15 14:50:52 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef PARSER_H
 # define PARSER_H
@@ -26,80 +25,131 @@
 #include <errno.h>
 #include "libft.h"
 
+#define MAX_HEREDOCS 16
 
-typedef enum {
-    TOKEN_WORD,          // 0: Regular word
-    TOKEN_PIPE,          // 1: |
-    TOKEN_REDIR_OUT,     // 2: >
-    TOKEN_REDIR_IN,      // 3: <
-    TOKEN_APPEND,        // 4: >>
-    TOKEN_HEREDOC,       // 5: <<
-    TOKEN_QUOTE_SINGLE,  // 6: Single-quoted string
-    TOKEN_QUOTE_DOUBLE   // 7: Double-quoted string
-} t_token_type;
+typedef enum e_token_type {
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIR_IN,
+	TOKEN_REDIR_OUT,
+	TOKEN_REDIR_APPEND,
+	TOKEN_HEREDOC,
+	TOKEN_SINGLE_QUOTE,
+	TOKEN_DOUBLE_QUOTE,
+    TOKEN_INVALID,
+}	t_token_type;
+
+typedef enum e_parse_error
+{
+	ERR_NONE = 0,
+	ERR_UNCLOSED_QUOTE,
+	ERR_UNEXPECTED_TOKEN,
+	ERR_HEREDOC_DELIM,
+	ERR_EMPTY_COMMAND,
+	ERR_NEAR_NEWLINE,
+	ERR_INVALID_TOKEN
+
+}	t_parse_error;
 
 typedef struct s_token {
-    char            *value;
-    t_token_type    type;
-    struct s_token  *next;
-	int can_expand;
-	int merge_next;
-} t_token;
+	char			*value;
+	t_token_type	type;
+	bool			can_expand;
+	bool		is_heredoc_delim;
+    int             start_index;
+    int             end_index;
+}	t_token;
 
+typedef struct s_gc_node {
+	void				*ptr;
+	struct s_gc_node	*next;
+}	t_gc_node;
+
+//GC
 extern t_list *gc;
 
-void	free_cmds(t_cmd *cmd);
-int		ft_isspace(int c);
-
-//garbage
-void	*gc_malloc(t_list **gc, size_t size);
+// === Memory Management (GC) ===
+void	*gc_alloc(size_t size, t_list **gc);
+char	*gc_strdup(const char *s, t_list **gc);
+char	*gc_substr(const char *s, unsigned int start, size_t len, t_list **gc);
+void	gc_add(void *ptr, t_list **gc);
 void	gc_free_all(t_list **gc);
-void	gc_add(t_list **gc, void *ptr);
 
-//parse_input
-t_cmd	*parser(t_token *tokens);
+// === Tokenization & Parsing ===
+t_list	*split_input(const char *input);
+t_token	*extract_quoted(const char *input, size_t *i);
+t_token	*extract_special(const char *input, size_t *i);
+t_token	*extract_word(const char *input, size_t *i);
+int		is_word_end(char c);
+int		ft_isspace(char c);
+int		is_special(const char *s);
+int		is_quoted(const char *s);
+int		split_word_token(const char *input, size_t *i, t_list **tokens);
+int		split_special_token(const char *input, size_t *i, t_list **tokens);
+int		split_quoted_token(const char *input, size_t *i, t_list **tokens);
+
+// === Token Utilities ===
+void	print_tokens(t_list *tokens);
+void	print_cmds(t_cmd *cmd);
+void	print_parse_error(t_parse_error code, char *c);
+
+// === Command Building ===
 t_cmd	*parse_input(const char *input);
-int word_token(t_token *current, t_list **argv_list, t_token **out_next);
-t_token	*handle_word_token(const char *input, size_t *i);
-int		redirection_token(t_token **current, t_list **redir_list);
-int		finalize_cmd(t_cmd **current_cmd, t_list **argv_list, t_list **redir_list, t_cmd **head);
-t_cmd	*init_cmd(void);
-char	**list_to_argv(t_list *argv_list);
-t_redir_type	get_redir_type(t_token_type token_type);
-void	free_cmds(t_cmd *cmd);
+t_cmd	*build_single_cmd(t_list **tokens);
+t_cmd	*build_commands(t_list *tokens);
+t_cmd	*init_cmd_struct(t_list **tokens);
+int		count_args(t_list *tokens);
+int		count_redirections(t_list *tokens);
+int		add_redirection(t_redirect *redir, t_token *redir_op, t_token *target);
+int		is_invalid_redir(const char *s);
+int		is_valid_redirection(const char *s);
+t_redir_type	get_redir_type(t_token_type type);
 
-// merge_adjacent_tokens
+// === Command Parsing Helpers ===
+int		handle_redirection_token(t_cmd *cmd, int *redir_i, t_list **tokens);
+void	handle_word_token(t_cmd *cmd, char *value, int *arg_i);
+int		handle_pipe_token(t_list **tokens, t_cmd *cmd);
+int		parse_cmd_tokens(t_cmd *cmd, t_list **tokens, int *arg_i, int *redir_i);
+int		check_pipe_start(t_list *tokens);
 
-char *ft_strjoin_free(char *s1, const char *s2);
+// === Token Merging ===
+void	merge_adjacent_words(t_list **tokens, const char *input);
+void	merge_tokens(t_list *curr, t_token *a, t_token *b);
+int		has_no_space_between(t_token *a, t_token *b, const char *input);
 
-//lexer
-t_token	*lexer(const char *input);
-t_token	*create_token(t_token_type type, const char *value, size_t len);
-t_token *handle_special_token(const char *input, size_t *i);
-size_t	skip_whitespace(const char *input, size_t i);
-t_redirect	*list_to_redirs(t_list *redir_list);
+// === Expansion ===
+void	expand_tokens(t_list *tokens);
+char	*expand_value(const char *src);
+size_t	get_expanded_length(const char *src);
+char	*get_env_var(const char *name);
+char	*get_env_name(const char *src, size_t i, size_t *var_len);
+size_t	get_expanded_var_len(const char *src, size_t *i);
+size_t	get_exit_status_len(void);
+void	copy_char(char *dst, const char *src, size_t *i, size_t *j);
+void	append_dollar(char *dst, size_t *j);
+void	expand_status(char *dst, size_t *j);
+char	*get_var_name(const char *src, size_t i, size_t *out_len);
+void	append_var_value(const char *name, char *dst, size_t *j);
+void	handle_dollar_case(const char *src, size_t *i, char *dst, size_t *j);
 
+// === Redirection & Heredoc ===
+void	process_heredocs(t_cmd *cmds);
+void	handle_heredoc(t_redirect *redir);
+t_list	*extract_heredoc_delimiter(const char *input, size_t *i);
+void	init_heredoc_pipe(int *fd);
+int	count_heredocs(t_cmd *cmds);
 
-//expand
-char	*get_env_var(char **envp, const char *var);
-char	*expand_variables(const char *str);
-size_t	handle_quoted_dollar(const char *str, size_t *i);
-char	*extract_var_name(const char *str, size_t *i, int braced_flag);
-size_t	get_var_length(char *var);
-size_t	handle_dollar_expansion(const char *str, size_t *i);
-void	handle_exit_status(char **result, size_t *j);
-void	handle_braced_variable(const char *str, size_t *i, char **result, size_t *j);
-void	handle_unbraced_variable(const char *str, size_t *i, char **result,
-	size_t *j);
-void	handle_dollar(const char *str, size_t *i, char **result, size_t *j);
+// === Quoting Utilities ===
+char	*remove_quotes(const char *str);
+char	*alloc_quoted_value(const char *input, size_t start, size_t len, char quote);
+size_t	get_quoted_length(const char *input, size_t *i, char quote);
+t_token	*create_quoted_token(char *value, size_t start, size_t end, char quote);
 
-//size_t	compute_expanded_length(const char *str);
-size_t ft_numlen(int num);
-
-//debug
-const char *redir_type_to_str(t_redir_type type);
-
-
+// === Operator Utilities ===
+t_token_type	get_operator_type(const char *op);
+char	*get_operator(const char *input, size_t *i);
+t_token_type	validate_and_get_type(char *op);
+t_token	*alloc_word_token(const char *input, size_t start, size_t len);
 
 #endif
 

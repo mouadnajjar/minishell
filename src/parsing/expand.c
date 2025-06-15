@@ -6,206 +6,173 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/03 21:23:39 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:29:22 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../includes/parser.h"
 
-void	handle_exit_status(char **result, size_t *j)
-{
-	char	*status;
-	size_t	k;
-
-	status = ft_itoa(g_shell.last_exit_status);
-	if (!status)
-	{
-		gc_free_all(&gc);
-		return ;
-	}
-	k = 0;
-	while (status[k])
-		(*result)[(*j)++] = status[k++];
-	free(status);
-}
-
-void	handle_braced_variable(const char *str, size_t *i, char **result,
-		size_t *j)
-{
-	size_t	start;
-	char	*var;
-	char	*value;
-	size_t	k;
-
-	(*i)++;
-	start = *i;
-	while (str[*i] && str[*i] != '}')
-		(*i)++;
-	if (str[*i] != '}')
-		return ;
-	var = ft_substr(str, start, *i - start);
-	value = get_env_var(g_shell.envp, var);
-	if (value)
-	{
-		k = 0;
-		while (value[k])
-			(*result)[(*j)++] = value[k++];
-	}
-	free(var);
-	(*i)++;
-}
-
-void	handle_unbraced_variable(const char *str, size_t *i, char **result,
-		size_t *j)
-{
-	size_t	start;
-	char	*var;
-	char	*value;
-	size_t	k;
-
-	start = *i;
-	while (isalnum(str[*i]) || str[*i] == '_')
-		(*i)++;
-	var = ft_substr(str, start, *i - start);
-	value = get_env_var(g_shell.envp, var);
-	if (value)
-	{
-		k = 0;
-		while (value[k])
-			(*result)[(*j)++] = value[k++];
-	}
-	free(var);
-}
-
-char *expand_variables(const char *str)
-{
-    char *result = ft_strdup("");
-    if (!result)
-        return NULL;
-
-    const char *p = str;
-
-    while (*p)
-    {
-        if (*p == '$')
-        {
-            p++;
-            size_t var_len = 0;
-            while (p[var_len] && (ft_isalnum(p[var_len]) || p[var_len] == '_'))
-                var_len++;
-
-            if (var_len == 0)
-            {
-                result = ft_strjoin_free(result, "$");
-                if (!result) return NULL;
-                continue;
-            }
-
-            char *var_name = ft_substr(p, 0, var_len);
-            if (!var_name)
-            {
-                free(result);
-                return NULL;
-            }
-
-            char *value = get_env_var(g_shell.envp, var_name);
-            free(var_name);
-
-            result = ft_strjoin_free(result, value ? value : "");
-            if (!result) return NULL;
-
-            p += var_len;
-        }
-        else
-        {
-            char *single_char = ft_substr(p, 0, 1);
-            if (!single_char)
-            {
-                free(result);
-                return NULL;
-            }
-
-            result = ft_strjoin_free(result, single_char);
-            free(single_char);
-            if (!result) return NULL;
-
-            p++;
-        }
-    }
-
-    return result;
-}
-
-size_t	compute_expanded_length(const char *str)
+char	*get_var_name(const char *src, size_t i, size_t *out_len)
 {
 	size_t	len;
-	size_t	i;
-	int		in_single_quote;
-	int		in_double_quote;
-	bool	escaped;
+	char	*name;
+	size_t	k;
 
 	len = 0;
-	i = 0;
-	in_single_quote = 0;
-	in_double_quote = 0;
-	escaped = false;
-	while (str[i])
+	while (src[i + len] && (ft_isalnum(src[i + len]) || src[i + len] == '_'))
+		len++;
+	name = gc_alloc(len + 1, &gc);
+	k = 0;
+	while (k < len)
 	{
-		if (!escaped && str[i] == '\\')
-		{
-			escaped = true;
-			i++;
-			len++; // Count the backslash
-			continue ;
-		}
-		if (!escaped && str[i] == '\'' && !in_double_quote)
-		{
-			in_single_quote = !in_single_quote;
-			i++;
-			continue ;
-		}
-		else if (!escaped && str[i] == '"' && !in_single_quote)
-		{
-			in_double_quote = !in_double_quote;
-			i++;
-			continue ;
-		}
-		if (in_single_quote)
-		{
-			len++;
-			i++;
-		}
-		else if (!escaped && str[i] == '$' && !in_single_quote)
-		{
-			i++;
-			len += handle_dollar_expansion(str, &i);
-		}
-		else
-		{
-			if (escaped && str[i] != '$' && str[i] != '"' && str[i] != '\\')
-				len++; // Count the backslash
-			len++;
-			i++;
-			escaped = false;
-		}
+		name[k] = src[i + k];
+		k++;
 	}
-	return (len);
+	name[len] = '\0';
+	*out_len = len;
+	return (name);
 }
-size_t	ft_numlen(int num)
+
+void	append_var_value(const char *name, char *dst, size_t *j)
+{
+	char	*val;
+	size_t	k;
+
+	val = get_env_var(name);
+	if (val)
+	{
+		k = 0;
+		while (val[k])
+			dst[(*j)++] = val[k++];
+	}
+}
+
+void	handle_dollar_case(const char *src, size_t *i, char *dst, size_t *j)
 {
 	size_t	len;
+	char	*name;
 
-	len = 1;
-	if (num < 0)
+	(*i)++;
+	if (src[*i] == '\0')
+		append_dollar(dst, j);
+	else if (src[*i] == '?')
 	{
-		len++; // account for minus sign
-		num = -num;
+		expand_status(dst, j);
+		(*i)++;
 	}
-	while (num > 9)
+	else if (ft_isalnum(src[*i]) || src[*i] == '_')
 	{
-		num /= 10;
-		len++;
+		name = get_var_name(src, *i, &len);
+		append_var_value(name, dst, j);
+		*i += len;
 	}
-	return (len);
+	else
+		append_dollar(dst, j);
 }
+
+char	*expand_value(const char *src)
+{
+	char	*dst;
+	size_t	len;
+	size_t	i;
+	size_t	j;
+
+	len = get_expanded_length(src);
+	dst = gc_alloc(len + 1, &gc);
+	i = 0;
+	j = 0;
+	while (src[i])
+	{
+		if (src[i] == '$')
+			handle_dollar_case(src, &i, dst, &j);
+		else
+			copy_char(dst, src, &i, &j);
+	}
+	dst[j] = '\0';
+	return (dst);
+}
+
+void	expand_tokens(t_list *tokens)
+{
+	t_token	*tok;
+	char	*expanded;
+
+	while (tokens)
+	{
+		tok = (t_token *)tokens->content;
+		if (tok->type == TOKEN_WORD && tok->can_expand
+			&& !tok->is_heredoc_delim)
+		{
+			expanded = expand_value(tok->value);
+			tok->value = gc_strdup(expanded, &gc);
+		}
+		tokens = tokens->next;
+	}
+}
+
+// char	*expand_value(const char *src)
+// {
+// 	size_t final_len = get_expanded_length(src);
+// 	char *result = gc_alloc(final_len + 1, &gc);
+// 	size_t j = 0;
+
+// 	size_t i = 0;
+// 	while (src[i])
+// 	{
+// 		if (src[i] == '$')
+// 		{
+// 			i++;
+// 			if (src[i] == '\0')
+// 			{
+// 				result[j++] = '$'; // case: lone $
+// 				break ;
+// 			}
+// 			else if (src[i] == '?')
+// 			{
+// 				char *num = ft_itoa(g_shell.last_exit_status);
+// 				gc_add(num, &gc);
+// 				size_t k = 0;
+// 				while (num[k])
+// 					result[j++] = num[k++];
+// 			}
+// 			else if (ft_isalnum(src[i]) || src[i] == '_')
+// 			{
+// 				size_t var_len = 0;
+// 				while (src[i + var_len] && (ft_isalnum(src[i + var_len])
+// 						|| src[i + var_len] == '_'))
+// 					var_len++;
+// 				char *name = gc_alloc(var_len + 1, &gc);
+// 				size_t k = 0;
+// 				while (k < var_len)
+// 				{
+// 					name[k] = src[i + k];
+// 					k++;
+// 				}
+// 				name[k] = '\0';
+// 				char *val = get_env_var(name);
+// 				if (val)
+// 				{
+// 					k = 0;
+// 					while (val[k])
+// 						result[j++] = val[k++];
+// 				}
+// 				i += var_len - 1;
+// 			}
+// 			else
+// 			{
+// 				// Not a valid variable name, treat as literal $
+// 				result[j++] = '$';
+// 				i--; // reprocess current char normally
+// 			}
+// 		}
+// 		else
+// 		{
+// 			result[j++] = src[i];
+// 		}
+// 		i++;
+// 	}
+// 	result[j] = '\0';
+// 	// printf("[expand_value] %s => %s\n", src, result); // 🟢 Debug line
+// 	return (result);
+// }

@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/12 19:07:26 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/12 17:06:25 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,24 +34,27 @@
 # include <readline/history.h>
 
 // Prompt
-# define PROMPT "minishell$ "
+# define PROMPT ">|"
 
 typedef enum {
     IN,        // < (input redirection)
     OUT,       // > (output redirection)
-    APPEND,    // >> (output redirection in append mode)
 	TRUNCATE, // > (output redirection in truncate mode)
+    APPEND,    // >> (output redirection in append mode)
     HEREDOC    // << (here-doc)
 } t_redir_type;
 
 typedef struct s_redirect {
-    char            *target;    // File or delimiter (e.g., "file.txt" or "EOF")
-    t_redir_type    type;       // Type of redirection (IN, OUT, APPEND, HEREDOC)
+    char            *target;      // file or delimiter
+    t_redir_type    type;
+    int             quoted;       // HEREDOC: 1 if 'DELIM' or "DELIM"
+    int             heredoc_fd;   // HEREDOC: fd to read content from
 } t_redirect;
 
 typedef struct s_cmd {
     char            **argv;     // Command and arguments
     t_redirect      *redirs;    // Array of redirections
+	int			redir_count;  // ⚠️⚠️NEW added for the number of redirections
     int             is_pipe;    // Flag for pipe
     struct s_cmd    *next;      // Next command in pipeline
 } t_cmd;

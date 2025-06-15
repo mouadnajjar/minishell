@@ -6,12 +6,13 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:50:03 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/25 13:40:11 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/13 14:06:39 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include "../../includes/executor.h"
+#include "../../includes/parser.h"
 
 void	handle_input_redir(char *file)
 {
@@ -55,33 +56,31 @@ void	handle_append_redir(char *file)
 	close(fd);
 }
 
-void	handle_herdoc(char *delimiter)
-{
-	int		pipefd[2];
-	char	*line;
+// void	handle_herdoc(char *delimiter)
+// {
+// 	int		pipefd[2];
+// 	char	*line;
 
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
-	while (1)
-	{
-		line = readline("> ");
-		if (!line || ((ft_strlen(line) == ft_strlen(delimiter))
-			&& (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)))
-			break ;
-		//if (line && *line)
-			//add_history(line);
-		write(pipefd[1], line, ft_strlen(line));
-		write(pipefd[1], "\n", 1);
-		free (line);
-	}
-	free(line);
-	close (pipefd[1]);
-	dup2(pipefd[0], STDIN_FILENO);
-	close (pipefd[0]);
-}
+// 	if (pipe(pipefd) == -1)
+// 	{
+// 		perror("pipe");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	while (1)
+// 	{
+// 		line = readline("> ");
+// 		if (!line || ((ft_strlen(line) == ft_strlen(delimiter))
+// 			&& (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)))
+// 			break ;
+// 		write(pipefd[1], line, ft_strlen(line));
+// 		write(pipefd[1], "\n", 1);
+// 		free (line);
+// 	}
+// 	free(line);
+// 	close (pipefd[1]);
+// 	dup2(pipefd[0], STDIN_FILENO);
+// 	close (pipefd[0]);
+// }
 
 
 void	apply_redirections(t_redirect *redirs)
@@ -98,7 +97,10 @@ void	apply_redirections(t_redirect *redirs)
 		else if (redirs[i].type == APPEND)
 			handle_append_redir(redirs[i].target);
 		else if (redirs[i].type == HEREDOC)
-			handle_herdoc(redirs[i].target);
+		{
+			dup2(redirs[i].heredoc_fd, STDIN_FILENO);
+			close(redirs[i].heredoc_fd);
+		}
 		i++;
 	}
 }

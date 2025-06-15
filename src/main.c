@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:17 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/03 21:00:43 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/12 17:52:22 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,6 @@ int	main(int argc, char **argv, char **envp)
 			execute_commands(cmds, g_shell.envp);
 		free(input);
 	}
+	gc_free_all(&gc);
 	return (0);
 }
