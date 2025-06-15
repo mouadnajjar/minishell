@@ -1,38 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/25 14:21:50 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/11 15:20:04 by monajjar         ###   ########.fr       */
+/*   Created: 2024/11/11 10:14:32 by monajjar          #+#    #+#             */
+/*   Updated: 2024/11/14 10:49:55 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef FT_PRINTF_H
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
-{
-	size_t	i;
-	size_t	j;
-	size_t	d;
-	size_t	s;
+# include <stdarg.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <stddef.h>
 
-	s = ft_strlen(src);
-	if (size == 0 && !dst)
-		return (s);
-	d = ft_strlen(dst);
-	if (d >= size)
-		return (size + s);
-	j = d;
-	i = 0;
-	while (src[i] && i < size - d - 1)
-	{
-		dst[j] = src[i];
-		i++;
-		j++;
-	}
-	dst[j] = '\0';
-	return (d + s);
-}
+# define FT_PRINTF_H
+
+int	ft_printf(const char *fstring, ...);
+int	ft_putstr(char *s);
+int	ft_putchar(char c);
+int	ft_putint(int n);
+int	ft_putunsigned(unsigned int n);
+int	ft_hexa(unsigned long n, char c);
+int	adresse(size_t n);
+
+#endif

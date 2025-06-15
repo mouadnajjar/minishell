@@ -1,38 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/25 14:21:50 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/11 15:20:04 by monajjar         ###   ########.fr       */
+/*   Created: 2025/05/22 16:36:54 by monajjar          #+#    #+#             */
+/*   Updated: 2025/06/15 16:06:59 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../../includes/executor.h"
+#include "../../../includes/minishell.h"
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
+int	builtin_env(char **argv, char **env)
 {
-	size_t	i;
-	size_t	j;
-	size_t	d;
-	size_t	s;
+	int	i;
 
-	s = ft_strlen(src);
-	if (size == 0 && !dst)
-		return (s);
-	d = ft_strlen(dst);
-	if (d >= size)
-		return (size + s);
-	j = d;
 	i = 0;
-	while (src[i] && i < size - d - 1)
+	if (argv[1])
 	{
-		dst[j] = src[i];
-		i++;
-		j++;
+		ft_putendl_fd("minishell: env: too many arguments", 2);
+		g_shell.last_exit_status = 1;
+		return (1);
 	}
-	dst[j] = '\0';
-	return (d + s);
+	while (env[i])
+	{
+		if (ft_strchr(env[i], '='))
+			ft_putendl_fd(env[i], 1);
+		i++;
+	}
+	return (0);
 }

@@ -1,38 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   memory_free.c                                      :+:      :+:    :+:   */
+/*   ft_putstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/03 09:52:32 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/16 22:29:32 by mouad            ###   ########.fr       */
+/*   Created: 2024/11/01 11:34:53 by monajjar          #+#    #+#             */
+/*   Updated: 2024/11/13 12:39:16 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "ft_printf.h"
 
-void	free_2d_array(char **arr)
+static int	ft_strlen(const	char *str)
 {
 	int	i;
 
-	if (!arr)
-		return ;
 	i = 0;
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
+	while (str[i])
+		i++;
+	return (i);
 }
 
-void	free_env(char **env)
+int	ft_putstr(char *s)
 {
-	int	i;
+	int	j;
 
-	i = 0;
-	while (env[i])
+	j = 0;
+	if (!s)
 	{
-		free(env[i]);
-		i++;
+		write(1, "(null)", 6);
+		return (6);
 	}
-	free(env);
+	while (s && s[j])
+	{
+		ft_putchar(s[j]);
+		j++;
+	}
+	return (ft_strlen(s));
 }

@@ -1,38 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   memory_free.c                                      :+:      :+:    :+:   */
+/*   split_help.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/03 09:52:32 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/16 22:29:32 by mouad            ###   ########.fr       */
+/*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
+/*   Updated: 2025/06/14 20:29:54 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../includes/minishell.h"
+#include "../includes/parser.h"
 
-void	free_2d_array(char **arr)
+int	ft_isspace(char c)
 {
-	int	i;
-
-	if (!arr)
-		return ;
-	i = 0;
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
+	return (c == ' ' || c == '\t' || c == '\n'
+		|| c == '\v' || c == '\f' || c == '\r');
 }
 
-void	free_env(char **env)
+int	is_special(const char *s)
 {
-	int	i;
-
-	i = 0;
-	while (env[i])
-	{
-		free(env[i]);
-		i++;
-	}
-	free(env);
+	return (*s == '|' || *s == '<' || *s == '>');
 }

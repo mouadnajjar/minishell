@@ -1,43 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parce.h                                            :+:      :+:    :+:   */
+/*   rm_quotes.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/05/02 16:20:34 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:29:50 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../includes/minishell.h"
+#include "../includes/parser.h"
 
-#ifndef PARSER_H
-# define PARSER_H
+char	*remove_quotes(const char *str)
+{
+	char	*result;
+	int		i;
+	int		j;
+	char	quote;
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <string.h>
-#include <unistd.h>
-#include <errno.h>
-#include "libft.h"
-
-// typedef struct s_cmd
-// {
-//     char    **args;
-//     int     pipe;
-//     struct s_cmd *next;
-// }   t_cmd;
-
-
-t_cmd   *parse_input(const char *input);
-void    free_cmds(t_cmd *cmd);
-
-
-void gc_malloc(void *ptr);
-void gc_free(void *ptr);
-
-#endif
-
-
+	i = 0;
+	j = 0;
+	result = gc_alloc(ft_strlen(str) + 1, &gc);
+	while (str[i])
+	{
+		if (str[i] == '\'' || str[i] == '"')
+		{
+			quote = str[i++];
+			while (str[i] && str[i] != quote)
+				result[j++] = str[i++];
+			if (str[i] == quote)
+				i++;
+		}
+		else
+			result[j++] = str[i++];
+	}
+	result[j] = '\0';
+	return (result);
+}

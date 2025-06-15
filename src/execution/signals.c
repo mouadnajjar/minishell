@@ -1,38 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/25 14:21:50 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/11 15:20:04 by monajjar         ###   ########.fr       */
+/*   Created: 2025/05/21 14:09:18 by monajjar          #+#    #+#             */
+/*   Updated: 2025/06/15 16:06:27 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../includes/executor.h"
+#include "../../includes/minishell.h"
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
+void	sigint_handler(int signum)
 {
-	size_t	i;
-	size_t	j;
-	size_t	d;
-	size_t	s;
+	(void)signum;
+	if (waitpid(-1, NULL, WNOHANG) == 0)
+		return ;
+	g_shell.last_exit_status = 130;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
 
-	s = ft_strlen(src);
-	if (size == 0 && !dst)
-		return (s);
-	d = ft_strlen(dst);
-	if (d >= size)
-		return (size + s);
-	j = d;
-	i = 0;
-	while (src[i] && i < size - d - 1)
-	{
-		dst[j] = src[i];
-		i++;
-		j++;
-	}
-	dst[j] = '\0';
-	return (d + s);
+void	set_signals(void)
+{
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 }

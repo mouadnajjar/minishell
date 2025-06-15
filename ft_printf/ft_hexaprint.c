@@ -1,38 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*   ft_hexaprint.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/25 14:21:50 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/11 15:20:04 by monajjar         ###   ########.fr       */
+/*   Created: 2024/11/13 09:55:00 by monajjar          #+#    #+#             */
+/*   Updated: 2024/11/14 14:56:26 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_printf.h"
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
+int	ft_hexa(unsigned long n, char c)
 {
-	size_t	i;
-	size_t	j;
-	size_t	d;
-	size_t	s;
+	int		len;
+	char	*b16;
 
-	s = ft_strlen(src);
-	if (size == 0 && !dst)
-		return (s);
-	d = ft_strlen(dst);
-	if (d >= size)
-		return (size + s);
-	j = d;
-	i = 0;
-	while (src[i] && i < size - d - 1)
+	len = 0;
+	if (c == 'X')
+		b16 = "0123456789ABCDEF";
+	else if (c == 'x')
+		b16 = "0123456789abcdef";
+	if (n < 16)
 	{
-		dst[j] = src[i];
-		i++;
-		j++;
+		len += ft_putchar(b16[n]);
+		return (len);
 	}
-	dst[j] = '\0';
-	return (d + s);
+	else
+	{
+		len += ft_hexa(n / 16, c);
+		len += ft_putchar(b16[n % 16]);
+	}
+	return (len);
 }

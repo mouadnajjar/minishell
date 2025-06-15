@@ -1,38 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcat.c                                       :+:      :+:    :+:   */
+/*   ft_printunsigned.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/25 14:21:50 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/11 15:20:04 by monajjar         ###   ########.fr       */
+/*   Created: 2024/11/13 12:39:36 by monajjar          #+#    #+#             */
+/*   Updated: 2024/11/13 12:40:09 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_printf.h"
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
+static int	ft_countlen(unsigned int i)
 {
-	size_t	i;
-	size_t	j;
-	size_t	d;
-	size_t	s;
+	unsigned int	c;
 
-	s = ft_strlen(src);
-	if (size == 0 && !dst)
-		return (s);
-	d = ft_strlen(dst);
-	if (d >= size)
-		return (size + s);
-	j = d;
-	i = 0;
-	while (src[i] && i < size - d - 1)
+	c = 0;
+	if (i == 0)
+		c++;
+	while (i != 0)
 	{
-		dst[j] = src[i];
-		i++;
-		j++;
+		c++;
+		i = i / 10;
 	}
-	dst[j] = '\0';
-	return (d + s);
+	return (c);
+}
+
+int	ft_putunsigned(unsigned int n)
+{
+	int	count;
+
+	count = ft_countlen(n);
+	if (n > 9)
+	{
+		ft_putunsigned(n / 10);
+		ft_putchar((n % 10) + 48);
+	}
+	else
+		ft_putchar(n + 48);
+	return (count);
 }

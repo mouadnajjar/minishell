@@ -1,15 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_input.c                                      :+:      :+:    :+:   */
+/*   ft_printptr.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/05/02 16:02:27 by ahlahfid         ###   ########.fr       */
+/*   Created: 2024/11/13 12:41:48 by monajjar          #+#    #+#             */
+/*   Updated: 2024/11/14 10:51:27 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
-#include "../includes/parce.h"
+#include "ft_printf.h"
 
+int	adresse(unsigned long n)
+{
+	int	result;
+
+	result = 0;
+	if (n == 0)
+	{
+		ft_putstr("0x0");
+		return (3);
+	}
+	ft_putstr("0x");
+	result += ft_hexa(n, 'x') + 2;
+	return (result);
+}
