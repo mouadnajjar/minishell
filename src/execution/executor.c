@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/15 16:05:06 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/16 16:53:30 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2],
 	if (!cmd_list->argv || !cmd_list->argv[0])
 		exit(EXIT_SUCCESS);
 	if (is_built_in(cmd_list->argv[0]))
-		exec_builtins(cmd_list, &envp);
+		exit(exec_builtins(cmd_list, &envp));
 	else
 		run_command(cmd_list->argv, envp);
 	exit(EXIT_FAILURE);
@@ -91,15 +91,17 @@ void	execute_commands(t_cmd *cmd_list, char ***envp)
 	int			cmd_counts;
 	int			i;
 	pid_t		*pids;
-
+	t_cmd		*tmp;
+	
 	ctx.prev_fd = -1;
 	ctx.envp = *envp;
 	cmd_counts = getsize(cmd_list);
 	pids = allocate_pid(cmd_counts);
 	i = 0;
+	tmp = cmd_list;
 	while (cmd_list)
 	{
-		if (is_built_in(cmd_list->argv[0]) && !cmd_list->is_pipe)
+		if (is_built_in(cmd_list->argv[0]) && tmp->next == NULL)
 		{
 			run_builtin_parent(cmd_list, envp, pids);
 			return ;

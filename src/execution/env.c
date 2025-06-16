@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 13:07:22 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/15 14:43:42 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/16 12:59:46 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,5 +66,5 @@ void	initialize_env(char ***envp)
 	{
 		update_env(envp, "PWD", "/");
 	}
-	update_env(envp, "_", "/home/monajjar/Desktop/minishelll/./minishell");
+	update_env(envp, "_", "_=/usr/bin/env");
 }
