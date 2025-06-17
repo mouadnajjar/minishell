@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:50:03 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/15 16:06:13 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:38:59 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ void	handle_input_redir(char *file)
 	if (fd == -1)
 	{
 		perror(file);
+		gc_free_all();
+		free_env(g_shell.envp);
+		free(g_shell.pids);
 		g_shell.last_exit_status = 1;
 		return ;
 	}
@@ -36,6 +39,9 @@ void	handle_output_redir(char *file)
 	if (fd == -1)
 	{
 		perror(file);
+		gc_free_all();
+		free_env(g_shell.envp);
+		free(g_shell.pids);
 		g_shell.last_exit_status = 1;
 		return ;
 	}
@@ -51,6 +57,9 @@ void	handle_append_redir(char *file)
 	if (fd == -1)
 	{
 		perror(file);
+		gc_free_all();
+		free_env(g_shell.envp);
+		free(g_shell.pids);
 		g_shell.last_exit_status = 1;
 		return ;
 	}

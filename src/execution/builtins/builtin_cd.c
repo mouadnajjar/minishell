@@ -6,12 +6,13 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 18:03:21 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/15 16:06:53 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:06:32 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/executor.h"
 #include "../../../includes/minishell.h"
+#include "../../../includes/parser.h"
 
 char	*get_env_value(char **env, const char *key)
 {
@@ -51,7 +52,10 @@ void	update_env(char ***env, char *key, char *value)
 		i++;
 	}
 	if (!ft_realloc_env(env, new_var))
+	{
+		free(new_var);
 		return ;
+	}
 }
 
 int	builtin_cd(char **argv, char ***env)
@@ -80,5 +84,8 @@ int	builtin_cd(char **argv, char ***env)
 	}
 	update_cd_env(env, oldpath);
 	free(oldpath);
+	free(g_shell.pids);
+	gc_free_all();
+	
 	return (0);
 }

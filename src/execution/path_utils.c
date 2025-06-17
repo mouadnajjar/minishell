@@ -6,12 +6,13 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 09:51:40 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/17 12:29:46 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:22:13 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/executor.h"
 #include "../../includes/minishell.h"
+#include "../../includes/parser.h"
 
 char	**split_paths(char **envp)
 {
@@ -74,6 +75,7 @@ void	run_command(char **argv, char **envp)
 		ft_putstr_fd(argv[0], 2);
 		ft_putstr_fd("\n", 2);
 		free_env(envp);
+		free(g_shell.pids);
 		gc_free_all();
 		exit(127);
 	}

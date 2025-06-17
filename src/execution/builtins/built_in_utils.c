@@ -6,12 +6,13 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 16:01:49 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/02 13:55:22 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:22:06 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/executor.h"
 #include "../../../includes/minishell.h"
+#include "../../../includes/parser.h"
 
 int	is_built_in(char *line)
 {

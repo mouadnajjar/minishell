@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 15:07:20 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/15 16:07:19 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:25:03 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int	get_pwd(char **env)
 		ft_putendl_fd(cwd, 1);
 		free(cwd);
 		g_shell.last_exit_status = 0;
+		gc_free_all();
+		free(g_shell.pids);
 		return (0);
 	}
 	else

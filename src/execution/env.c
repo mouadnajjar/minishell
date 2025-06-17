@@ -6,12 +6,13 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 13:07:22 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/17 12:20:23 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:33:00 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/executor.h"
 #include "../../includes/minishell.h"
+#include "../../includes/parser.h"
 
 void	update_shell_level(char ***envp)
 {

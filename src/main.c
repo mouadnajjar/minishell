@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:17 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/17 12:02:51 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:43:55 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ int	main(int argc, char **argv, char **envp)
 		if (cmds)
 			execute_commands(cmds, &g_shell.envp);
 		free(input);
-		gc_free_all();
 	}
 	gc_free_all();
 	return (0);

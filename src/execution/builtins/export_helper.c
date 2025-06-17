@@ -6,12 +6,13 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 15:17:40 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/22 13:52:26 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:23:05 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/executor.h"
 #include "../../../includes/minishell.h"
+#include "../../../includes/parser.h"
 
 void	print_export_error(char *arg)
 {

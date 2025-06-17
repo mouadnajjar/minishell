@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/17 12:20:51 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:10:38 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,31 +14,38 @@
 #include "../../includes/minishell.h"
 
 static void	child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2],
-		char **envp)
-{
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-	if (prev_fd != -1)
+	char **envp)
 	{
-		dup2(prev_fd, STDIN_FILENO);
-		close(prev_fd);
-	}
-	if (cmd_list->is_pipe)
-	{
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[0]);
-		close(pipefd[1]);
-	}
-	if (apply_redirections(cmd_list->redirs) != 0)
-		exit(EXIT_FAILURE);
+		int	exitos;
+		
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		if (prev_fd != -1)
+		{
+			dup2(prev_fd, STDIN_FILENO);
+			close(prev_fd);
+		}
+		if (cmd_list->is_pipe)
+		{
+			dup2(pipefd[1], STDOUT_FILENO);
+			close(pipefd[0]);
+			close(pipefd[1]);
+		}
+		if (apply_redirections(cmd_list->redirs) != 0)
+		{
+			exit(EXIT_FAILURE);
+		}
 	if (!cmd_list->argv || !cmd_list->argv[0])
-		exit(EXIT_SUCCESS);
-	if (is_built_in(cmd_list->argv[0]))
-		exit(exec_builtins(cmd_list, &envp));
-	else
-		run_command(cmd_list->argv, envp);
 	exit(EXIT_FAILURE);
-	gc_free_all();
+	if (is_built_in(cmd_list->argv[0]))
+	{
+		exitos = exec_builtins(cmd_list, &envp);
+		free_env(g_shell.envp);
+		exit (exitos);
+	}
+	else
+	run_command(cmd_list->argv, envp);
+	exit(EXIT_FAILURE);
 }
 
 static void	fork_and_exec_command(t_cmd *cmd_list, pid_t *pids, int i,
@@ -83,7 +90,6 @@ void	run_builtin_parent(t_cmd *cmd, char ***envp, pid_t *pids)
 	dup2(saved_out, STDOUT_FILENO);
 	close(saved_in);
 	close(saved_out);
-	free(pids);
 }
 
 static void	init_execution_context(t_exec_ctx *ctx, char ***envp)
@@ -103,25 +109,24 @@ void	execute_commands(t_cmd *cmd_list, char ***envp)
 	t_exec_ctx	ctx;
 	int			cmd_counts;
 	int			i;
-	pid_t		*pids;
 	t_cmd		*tmp;
 
 	init_execution_context(&ctx, envp);
 	cmd_counts = getsize(cmd_list);
-	pids = allocate_pid(cmd_counts);
+	g_shell.pids = allocate_pid(cmd_counts);
 	i = 0;
 	tmp = cmd_list;
 	while (cmd_list)
 	{
 		if (is_built_in(cmd_list->argv[0]) && tmp->next == NULL)
 		{
-			run_builtin_parent(cmd_list, envp, pids);
+			run_builtin_parent(cmd_list, envp, g_shell.pids);
 			return ;
 		}
-		process_command(cmd_list, pids, i, &ctx);
+		process_command(cmd_list, g_shell.pids, i, &ctx);
 		cmd_list = cmd_list->next;
 		i++;
 	}
-	wait_pids(pids, cmd_counts);
-	free(pids);
+	wait_pids(g_shell.pids, cmd_counts);
+	free(g_shell.pids);
 }

@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/17 12:04:13 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 13:36:41 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ typedef struct s_shell {
     char            **envp;          // Environment variables
     int             last_exit_status; // Exit status of last command
 	t_list			*gc;
+	pid_t			*pids;
 } t_shell;
 
 extern t_shell g_shell; // Global shell state

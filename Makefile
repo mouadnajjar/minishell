@@ -51,7 +51,7 @@ HEADER := $(INC_DIR)/minishell.h
 
 CC := cc
 INCLUDES := -I$(INC_DIR) -I$(LIBFT_DIR) -I$(PRINTF_DIR) -I/usr/local/opt/readline/include
-CFLAGS := -Wall -Wextra -Werror $(INCLUDES)
+CFLAGS := -Wall -Wextra -Werror $(INCLUDES) -g
 LDFLAGS := -lreadline -L/usr/local/opt/readline/lib
 LIBFT_A := $(LIBFT_DIR)/libft.a
 LIBFTPRINTF := $(PRINTF_DIR)/libftprintf.a

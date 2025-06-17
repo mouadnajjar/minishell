@@ -6,12 +6,13 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 16:35:27 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/15 16:07:27 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 16:31:11 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../includes/executor.h"
 #include "../../../includes/minishell.h"
+#include "../../../includes/parser.h"
 
 void	sorting_env(char **env)
 {
@@ -83,6 +84,8 @@ void	print_sorted_env(char **env)
 			ft_printf("declare -x %s\n", copy[i]);
 		i++;
 	}
+	free(g_shell.pids);
+	gc_free_all();
 	free_2d_array(copy);
 }
 
@@ -139,5 +142,6 @@ int	builtin_export(char **argv, char ***env)
 		i++;
 	}
 	g_shell.last_exit_status = status;
+	free(g_shell.pids);
 	return (status);
 }
