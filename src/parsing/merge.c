@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/14 20:29:44 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/17 11:37:51 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	merge_tokens(t_list *curr, t_token *a, t_token *b)
 	t_list	*to_remove;
 
 	len = ft_strlen(a->value) + ft_strlen(b->value) + 1;
-	merged = gc_alloc(len, &gc);
+	merged = gc_alloc(len);
 	ft_strlcpy(merged, a->value, len);
 	ft_strlcat(merged, b->value, len);
 	a->value = merged;

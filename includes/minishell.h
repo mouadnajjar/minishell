@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/15 16:07:39 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 12:04:13 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,12 @@ typedef struct s_cmd
 typedef struct s_shell {
     char            **envp;          // Environment variables
     int             last_exit_status; // Exit status of last command
+	t_list			*gc;
 } t_shell;
 
 extern t_shell g_shell; // Global shell state
-// Execution functions
-char	*get_cmmand_path(char *cmd, char **envp);
-void	execute_commands(t_cmd *cmd_list, char ***envp);
+
+
+void	gc_free_all(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/14 20:29:22 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/17 11:36:49 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*get_var_name(const char *src, size_t i, size_t *out_len)
 	len = 0;
 	while (src[i + len] && (ft_isalnum(src[i + len]) || src[i + len] == '_'))
 		len++;
-	name = gc_alloc(len + 1, &gc);
+	name = gc_alloc(len + 1);
 	k = 0;
 	while (k < len)
 	{
@@ -71,7 +71,7 @@ void	handle_dollar_case(const char *src, size_t *i, char *dst, size_t *j)
 		append_dollar(dst, j);
 }
 
-char	*expand_value(const char *src)
+char	*expand_value(const char *src, t_token *tok)
 {
 	char	*dst;
 	size_t	len;
@@ -79,15 +79,23 @@ char	*expand_value(const char *src)
 	size_t	j;
 
 	len = get_expanded_length(src);
-	dst = gc_alloc(len + 1, &gc);
+	dst = gc_alloc(len + 1);
 	i = 0;
 	j = 0;
 	while (src[i])
 	{
 		if (src[i] == '$')
+		{
 			handle_dollar_case(src, &i, dst, &j);
+			if (tok)
+            	tok->from_expansion = 1; // Mark token as expanded
+		}
 		else
+		{
+			if (tok)
+            	tok->from_expansion = 0;
 			copy_char(dst, src, &i, &j);
+		}
 	}
 	dst[j] = '\0';
 	return (dst);
@@ -104,8 +112,9 @@ void	expand_tokens(t_list *tokens)
 		if (tok->type == TOKEN_WORD && tok->can_expand
 			&& !tok->is_heredoc_delim)
 		{
-			expanded = expand_value(tok->value);
-			tok->value = gc_strdup(expanded, &gc);
+			expanded = expand_value(tok->value , tok);
+			tok->value = gc_strdup(expanded);
+			// printf("[expand_tokens] %s\n", tok->value); // 🟢 Debug line
 		}
 		tokens = tokens->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 13:07:22 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/16 12:59:46 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 12:20:23 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	initialize_env(char ***envp)
 	if (cwd)
 	{
 		update_env(envp, "PWD", cwd);
+		gc_free_all();
 		free(cwd);
 	}
 	else

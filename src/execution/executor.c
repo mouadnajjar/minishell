@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/16 16:53:30 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 12:20:51 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static void	child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2],
 	else
 		run_command(cmd_list->argv, envp);
 	exit(EXIT_FAILURE);
+	gc_free_all();
 }
 
 static void	fork_and_exec_command(t_cmd *cmd_list, pid_t *pids, int i,
@@ -85,6 +86,18 @@ void	run_builtin_parent(t_cmd *cmd, char ***envp, pid_t *pids)
 	free(pids);
 }
 
+static void	init_execution_context(t_exec_ctx *ctx, char ***envp)
+{
+	ctx->prev_fd = -1;
+	ctx->envp = *envp;
+}
+
+static void	process_command(t_cmd *cmd_list, pid_t *pids, int i, t_exec_ctx *ctx)
+{
+	fork_and_exec_command(cmd_list, pids, i, ctx);
+	ctx->prev_fd = close_and_update_pipe(cmd_list, ctx->prev_fd, ctx->pipefd);
+}
+
 void	execute_commands(t_cmd *cmd_list, char ***envp)
 {
 	t_exec_ctx	ctx;
@@ -92,9 +105,8 @@ void	execute_commands(t_cmd *cmd_list, char ***envp)
 	int			i;
 	pid_t		*pids;
 	t_cmd		*tmp;
-	
-	ctx.prev_fd = -1;
-	ctx.envp = *envp;
+
+	init_execution_context(&ctx, envp);
 	cmd_counts = getsize(cmd_list);
 	pids = allocate_pid(cmd_counts);
 	i = 0;
@@ -106,9 +118,7 @@ void	execute_commands(t_cmd *cmd_list, char ***envp)
 			run_builtin_parent(cmd_list, envp, pids);
 			return ;
 		}
-		else
-			fork_and_exec_command(cmd_list, pids, i, &ctx);
-		ctx.prev_fd = close_and_update_pipe(cmd_list, ctx.prev_fd, ctx.pipefd);
+		process_command(cmd_list, pids, i, &ctx);
 		cmd_list = cmd_list->next;
 		i++;
 	}

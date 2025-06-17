@@ -6,14 +6,14 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/14 20:29:33 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/17 11:37:18 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../includes/parser.h"
 
-t_token	*extract_quoted(const char *input, size_t *i)
+t_token	*extract_quoted( char *input, size_t *i)
 {
 	char	quote;
 	size_t	len;
@@ -22,8 +22,26 @@ t_token	*extract_quoted(const char *input, size_t *i)
 	size_t	start;
 
 	quote = input[*i];
+	if (quote != '\'' || quote != '"')
+	{
+		if (quote == '"')
+			input[*i] = DOUBLE_QUOTES;
+		else
+			input[*i] = SINGLE_QUOTES;
+	}
 	start = ++(*i);
 	len = get_quoted_length(input, i, quote);
+	if (input[*i] == quote)
+	{
+		if (quote != '\'' || quote != '"')
+		{
+			if (quote == '"')
+			input[*i] = DOUBLE_QUOTES;
+			else
+			input[*i] = SINGLE_QUOTES;
+			quote = input[*i];
+		}
+	}
 	if (input[*i] != quote)
 	{
 		print_parse_error(ERR_UNCLOSED_QUOTE, &quote);
@@ -51,7 +69,7 @@ t_token	*extract_special(const char *input, size_t *i)
 	type = validate_and_get_type(op);
 	if (type == TOKEN_INVALID)
 		return (NULL);
-	token = gc_alloc(sizeof(t_token), &gc);
+	token = gc_alloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
 	token->value = op;

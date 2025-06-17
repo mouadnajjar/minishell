@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/14 20:29:16 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/17 11:38:22 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*get_env_name(const char *src, size_t i, size_t *var_len)
 	while (src[i + *var_len] && (ft_isalnum(src[i + *var_len]) || src[i
 				+ *var_len] == '_'))
 		(*var_len)++;
-	name = gc_alloc(*var_len + 1, &gc);
+	name = gc_alloc(*var_len + 1);
 	ft_strlcpy(name, &src[i], *var_len + 1);
 	return (name);
 }
@@ -65,7 +65,7 @@ size_t	get_exit_status_len(void)
 
 	num = ft_itoa(g_shell.last_exit_status);
 	len = ft_strlen(num);
-	gc_add(num, &gc);
+	gc_add(num);
 	return (len);
 }
 

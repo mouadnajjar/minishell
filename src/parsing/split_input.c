@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/14 20:29:57 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/17 11:37:40 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ int	split_word_token(const char *input, size_t *i, t_list **tokens)
 	if (token)
 	{
 		node = ft_lstnew(token);
-		gc_add(node, &gc);
+		gc_add(node);
 		ft_lstadd_back(tokens, node);
 	}
 	return (0);
 }
 
-int	split_special_token(const char *input, size_t *i, t_list **tokens)
+int	split_special_token(char *input, size_t *i, t_list **tokens)
 {
 	t_token	*token;
 	t_list	*node;
@@ -38,7 +38,7 @@ int	split_special_token(const char *input, size_t *i, t_list **tokens)
 	if (!token)
 		return (1);
 	node = ft_lstnew(token);
-	gc_add(node, &gc);
+	gc_add(node);
 	ft_lstadd_back(tokens, node);
 	if (token->type == TOKEN_HEREDOC)
 	{
@@ -49,7 +49,7 @@ int	split_special_token(const char *input, size_t *i, t_list **tokens)
 	return (0);
 }
 
-int	split_quoted_token(const char *input, size_t *i, t_list **tokens)
+int	split_quoted_token(char *input, size_t *i, t_list **tokens)
 {
 	t_token	*token;
 	t_list	*node;
@@ -60,13 +60,13 @@ int	split_quoted_token(const char *input, size_t *i, t_list **tokens)
 	if (token)
 	{
 		node = ft_lstnew(token);
-		gc_add(node, &gc);
+		gc_add(node);
 		ft_lstadd_back(tokens, node);
 	}
 	return (0);
 }
 
-t_list	*split_input(const char *input)
+t_list	*split_input(char *input)
 {
 	t_list	*tokens;
 	size_t	i;
@@ -79,6 +79,7 @@ t_list	*split_input(const char *input)
 			i++;
 		else if (input[i] == '\'' || input[i] == '"')
 		{
+			// printf("%c\n", input[i]); // 🟢 Debug line
 			if (split_quoted_token(input, &i, &tokens))
 				return (NULL);
 		}

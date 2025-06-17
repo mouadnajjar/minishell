@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/15 14:50:52 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/17 12:03:57 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 #include "libft.h"
 
 #define MAX_HEREDOCS 16
+#define DOUBLE_QUOTES -2
+#define SINGLE_QUOTES -1
 
 typedef enum e_token_type {
 	TOKEN_WORD,
@@ -56,28 +58,23 @@ typedef struct s_token {
 	t_token_type	type;
 	bool			can_expand;
 	bool		is_heredoc_delim;
+	bool			from_expansion;
     int             start_index;
     int             end_index;
 }	t_token;
 
-typedef struct s_gc_node {
-	void				*ptr;
-	struct s_gc_node	*next;
-}	t_gc_node;
-
 //GC
-extern t_list *gc;
+// extern t_list *gc;
 
 // === Memory Management (GC) ===
-void	*gc_alloc(size_t size, t_list **gc);
-char	*gc_strdup(const char *s, t_list **gc);
-char	*gc_substr(const char *s, unsigned int start, size_t len, t_list **gc);
-void	gc_add(void *ptr, t_list **gc);
-void	gc_free_all(t_list **gc);
+void	*gc_alloc(size_t size);
+char	*gc_strdup(const char *s);
+char	*gc_substr(const char *s, unsigned int start, size_t len);
+void	gc_add(void *ptr);
 
 // === Tokenization & Parsing ===
-t_list	*split_input(const char *input);
-t_token	*extract_quoted(const char *input, size_t *i);
+t_list	*split_input(char *input);
+t_token	*extract_quoted( char *input, size_t *i);
 t_token	*extract_special(const char *input, size_t *i);
 t_token	*extract_word(const char *input, size_t *i);
 int		is_word_end(char c);
@@ -85,8 +82,8 @@ int		ft_isspace(char c);
 int		is_special(const char *s);
 int		is_quoted(const char *s);
 int		split_word_token(const char *input, size_t *i, t_list **tokens);
-int		split_special_token(const char *input, size_t *i, t_list **tokens);
-int		split_quoted_token(const char *input, size_t *i, t_list **tokens);
+int		split_special_token(char *input, size_t *i, t_list **tokens);
+int		split_quoted_token( char *input, size_t *i, t_list **tokens);
 
 // === Token Utilities ===
 void	print_tokens(t_list *tokens);
@@ -94,7 +91,7 @@ void	print_cmds(t_cmd *cmd);
 void	print_parse_error(t_parse_error code, char *c);
 
 // === Command Building ===
-t_cmd	*parse_input(const char *input);
+t_cmd	*parse_input(char *input);
 t_cmd	*build_single_cmd(t_list **tokens);
 t_cmd	*build_commands(t_list *tokens);
 t_cmd	*init_cmd_struct(t_list **tokens);
@@ -107,7 +104,7 @@ t_redir_type	get_redir_type(t_token_type type);
 
 // === Command Parsing Helpers ===
 int		handle_redirection_token(t_cmd *cmd, int *redir_i, t_list **tokens);
-void	handle_word_token(t_cmd *cmd, char *value, int *arg_i);
+void	handle_word_token(t_cmd *cmd, t_token *tok, int *arg_i);
 int		handle_pipe_token(t_list **tokens, t_cmd *cmd);
 int		parse_cmd_tokens(t_cmd *cmd, t_list **tokens, int *arg_i, int *redir_i);
 int		check_pipe_start(t_list *tokens);
@@ -119,7 +116,7 @@ int		has_no_space_between(t_token *a, t_token *b, const char *input);
 
 // === Expansion ===
 void	expand_tokens(t_list *tokens);
-char	*expand_value(const char *src);
+char	*expand_value(const char *src, t_token	*tok);
 size_t	get_expanded_length(const char *src);
 char	*get_env_var(const char *name);
 char	*get_env_name(const char *src, size_t i, size_t *var_len);
@@ -135,7 +132,7 @@ void	handle_dollar_case(const char *src, size_t *i, char *dst, size_t *j);
 // === Redirection & Heredoc ===
 void	process_heredocs(t_cmd *cmds);
 void	handle_heredoc(t_redirect *redir);
-t_list	*extract_heredoc_delimiter(const char *input, size_t *i);
+t_list	*extract_heredoc_delimiter( char *input, size_t *i);
 void	init_heredoc_pipe(int *fd);
 int	count_heredocs(t_cmd *cmds);
 
@@ -152,5 +149,3 @@ t_token_type	validate_and_get_type(char *op);
 t_token	*alloc_word_token(const char *input, size_t start, size_t len);
 
 #endif
-
-

@@ -6,14 +6,14 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/14 20:29:47 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/16 20:00:59 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../includes/parser.h"
 
-t_cmd	*parse_input(const char *input)
+t_cmd	*parse_input(char *input)
 {
 	t_list	*tokens;
 	t_cmd	*cmds;

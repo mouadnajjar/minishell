@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/15 15:02:32 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/17 12:19:22 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../includes/parser.h"
+#include "../includes/executor.h"
 
 int	count_heredocs(t_cmd *cmds)
 {
@@ -45,7 +46,7 @@ void	process_heredocs(t_cmd *cmds)
 	if (heredoc_count > MAX_HEREDOCS)
 	{
 		ft_putstr_fd("minishell: maximum here-document count exceeded\n", 2);
-		gc_free_all(&gc);
+		gc_free_all();
 		exit(2);
 	}
 	while (cmds)
@@ -67,47 +68,81 @@ void	init_heredoc_pipe(int *fd)
 	if (pipe(fd) == -1)
 	{
 		perror("minishell: pipe");
-		gc_free_all(&gc);
+		gc_free_all();
 		exit(1);
 	}
 }
 
 void	handle_heredoc(t_redirect *redir)
 {
-	char	*line;
-	char	*expanded;
 	int		fd[2];
+	pid_t	pid;
+	int		status;
 
 	init_heredoc_pipe(fd);
-	while (1)
+	pid = fork();// forkit l heredoc process
+	if (pid == -1)
 	{
-		line = readline("> ");
-		if (!line)
-		{
-			print_parse_error(ERR_HEREDOC_DELIM, redir->target);
-			break ;
-		}
-		if (ft_strncmp(line, redir->target, ft_strlen(redir->target) + 1) == 0
-			&& (ft_strlen(line) == ft_strlen(redir->target)))
-			break ;
-		if (redir->quoted == 0)
-			expanded = expand_value(line);
-		else
-			expanded = gc_strdup(line, &gc);
-		write(fd[1], expanded, ft_strlen(expanded));
-		write(fd[1], "\n", 1);
+		perror("fork");
+		exit(EXIT_FAILURE);
 	}
-	close(fd[1]);
-	redir->heredoc_fd = fd[0];
+
+	if (pid == 0) // --- CHILD process
+	{
+		signal(SIGINT, SIG_DFL);
+		char *line;
+		char *expanded;
+
+		close(fd[0]); // close read end
+
+		while (1)
+		{
+			line = readline("> ");
+			if (!line)
+			{
+				print_parse_error(ERR_HEREDOC_DELIM, redir->target);
+				break;
+			}
+			if (ft_strncmp(line, redir->target, ft_strlen(redir->target) + 1) == 0
+						&& (ft_strlen(line) == ft_strlen(redir->target)))
+				break ;
+			if (redir->quoted == 0)
+				expanded = expand_value(line, NULL);
+			else
+				expanded = gc_strdup(line);
+			write(fd[1], expanded, ft_strlen(expanded));
+			write(fd[1], "\n", 1);
+		}
+		close(fd[1]);
+		exit(0);
+	}
+	else
+	{
+		// --- PARENT process ---
+		close(fd[1]); // close write end
+		waitpid(pid, &status, 0);
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		{
+			write(1, "\n", 1); // Print newline like Bash
+			g_shell.last_exit_status = 130; // Ctrl-C
+			close(fd[0]);
+			redir->heredoc_fd = -1;
+		}
+		else
+		{
+			redir->heredoc_fd = fd[0];
+		}
+	}
 }
 
-t_list	*extract_heredoc_delimiter(const char *input, size_t *i)
+
+t_list	*extract_heredoc_delimiter(char *input, size_t *i)
 {
 	t_token	*next;
 	t_list	*node;
 
 	next = NULL;
-	while (input[*i] && ft_isspace(input[*i]))
+	while (input[*i] && ft_isspace(input[*i]) )
 		(*i)++;
 	if (input[*i] == '\'' || input[*i] == '"')
 		next = extract_quoted(input, i);
@@ -117,6 +152,6 @@ t_list	*extract_heredoc_delimiter(const char *input, size_t *i)
 		return (NULL);
 	next->is_heredoc_delim = 1;
 	node = ft_lstnew(next);
-	gc_add(node, &gc);
+	gc_add(node);
 	return (node);
 }

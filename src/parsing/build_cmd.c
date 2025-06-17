@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/14 20:29:11 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/17 11:36:30 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@ t_cmd	*init_cmd_struct(t_list **tokens)
 	t_cmd	*cmd;
 	int		argc;
 
-	cmd = gc_alloc(sizeof(t_cmd), &gc);
+	cmd = gc_alloc(sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
 	cmd->is_pipe = 0;
 	cmd->next = NULL;
 	argc = count_args(*tokens);
-	cmd->argv = gc_alloc(sizeof(char *) * (argc + 1), &gc);
+	cmd->argv = gc_alloc(sizeof(char *) * (argc + 1));
 	cmd->redir_count = count_redirections(*tokens);
-	cmd->redirs = gc_alloc(sizeof(t_redirect) * (cmd->redir_count + 1), &gc);
+	cmd->redirs = gc_alloc(sizeof(t_redirect) * (cmd->redir_count + 1));
 	return (cmd);
 }
 

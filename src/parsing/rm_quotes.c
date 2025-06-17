@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/14 20:29:50 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/17 11:37:22 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ char	*remove_quotes(const char *str)
 
 	i = 0;
 	j = 0;
-	result = gc_alloc(ft_strlen(str) + 1, &gc);
+	result = gc_alloc(ft_strlen(str) + 1);
 	while (str[i])
 	{
-		if (str[i] == '\'' || str[i] == '"')
+		if (str[i] == SINGLE_QUOTES || str[i] == DOUBLE_QUOTES)
 		{
 			quote = str[i++];
 			while (str[i] && str[i] != quote)

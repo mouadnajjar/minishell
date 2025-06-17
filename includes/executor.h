@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/15 14:36:40 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/17 12:04:58 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ typedef struct s_exec_ctx
 void		run_command(char **argv, char **envp);
 int			apply_redirections(t_redirect *redirs);
 char		**copy_env(char **envp);
+void		handle_export_assigment(char *arg, char ***env);
+void		update_shell_level(char ***envp);
 //------------------------------------------------//
 
 //---------------exits--signals-------------------//
@@ -55,8 +57,8 @@ int			change_directory(char *path);
 void		update_cd_env(char ***env, char *oldpwd);
 int			env_len(char **env);
 void		print_export_error(char *arg);
-void		handle_export_assigment(char *arg, char ***env);
-void		update_shell_level(char ***envp);
+char		*get_cmmand_path(char *cmd, char **envp);
+void		execute_commands(t_cmd *cmd_list, char ***envp);
 //-----------------------------------------------//
 
 //------------------built-in---------------------//

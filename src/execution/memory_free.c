@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory_free.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 09:52:32 by monajjar          #+#    #+#             */
-/*   Updated: 2025/05/16 22:29:32 by mouad            ###   ########.fr       */
+/*   Updated: 2025/06/17 11:32:23 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,35 @@ void	free_env(char **env)
 		i++;
 	}
 	free(env);
+}
+
+void free_command_struct(t_cmd	*cmd)
+{
+	int	i;
+	
+	if (!cmd)
+		return ;
+	if (cmd->argv)
+	{
+		i = 0;
+		while (cmd->argv[i])
+		{
+			free(cmd->argv[i]);
+			i++;
+		}
+		free(cmd->argv);
+	}
+}
+
+void	free_command_list(t_cmd *cmd_list)
+{
+	t_cmd *next;
+
+	while (cmd_list)
+	{
+		next = cmd_list->next;
+		free_command_struct(cmd_list);
+		free(cmd_list);
+		cmd_list = next;
+	}
 }

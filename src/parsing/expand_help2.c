@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/14 20:29:19 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/17 11:38:42 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	expand_status(char *dst, size_t *j)
 	size_t	k;
 
 	num = ft_itoa(g_shell.last_exit_status);
-	gc_add(num, &gc);
+	gc_add(num);
 	k = 0;
 	while (num[k])
 		dst[(*j)++] = num[k++];

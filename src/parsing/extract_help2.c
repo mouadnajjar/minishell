@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/15 14:59:04 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/17 11:40:38 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ t_token	*alloc_word_token(const char *input, size_t start, size_t len)
 	char	*word;
 	t_token	*token;
 
-	word = gc_alloc(len + 1, &gc);
+	word = gc_alloc(len + 1);
 	if (!word)
 		return (NULL);
 	ft_strlcpy(word, input + start, len + 1);
-	token = gc_alloc(sizeof(t_token), &gc);
+	token = gc_alloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
 	token->value = word;
@@ -62,7 +62,7 @@ char	*alloc_quoted_value(const char *input, size_t start, size_t len,
 {
 	char	*value;
 
-	value = gc_alloc(len + 3, &gc);
+	value = gc_alloc(len + 3);
 	if (!value)
 		return (NULL);
 	value[0] = quote;
@@ -76,12 +76,13 @@ t_token	*create_quoted_token(char *value, size_t start, size_t end, char quote)
 {
 	t_token	*token;
 
-	token = gc_alloc(sizeof(t_token), &gc);
+	token = gc_alloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
 	token->value = value;
 	token->type = TOKEN_WORD;
-	token->can_expand = (quote == '"');
+	token->can_expand = (quote == DOUBLE_QUOTES);
+	// printf("%d\n", token->can_expand);
 	token->start_index = start;
 	token->end_index = end;
 	return (token);
