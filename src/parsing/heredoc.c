@@ -6,12 +6,13 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/17 15:23:13 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/19 17:17:53 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../includes/parser.h"
+#include "../includes/executor.h"
 
 int	count_heredocs(t_cmd *cmds)
 {
@@ -89,6 +90,7 @@ void	handle_heredoc(t_redirect *redir)
 	if (pid == 0) // --- CHILD process
 	{
 		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);  // Add this
 		char *line;
 		char *expanded;
 
@@ -130,10 +132,12 @@ void	handle_heredoc(t_redirect *redir)
 			g_shell.last_exit_status = 130; // Ctrl-C
 			close(fd[0]);
 			redir->heredoc_fd = -1;
+			g_shell.heredoc_sigint = 1;  // Add this flag
 		}
 		else
 		{
 			redir->heredoc_fd = fd[0];
+			g_shell.heredoc_sigint = 0;  // Add this
 		}
 	}
 }

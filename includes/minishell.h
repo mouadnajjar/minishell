@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/17 13:36:41 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/19 16:50:05 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ typedef struct s_shell {
     int             last_exit_status; // Exit status of last command
 	t_list			*gc;
 	pid_t			*pids;
+	int 			heredoc_sigint;
 } t_shell;
 
 extern t_shell g_shell; // Global shell state
