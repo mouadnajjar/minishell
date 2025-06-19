@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 09:51:40 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/17 15:22:13 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:23:17 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,20 +63,22 @@ void	run_command(char **argv, char **envp)
 {
 	char	*cmd_path;
 
-	if (!argv || !argv[0])
+	if (!argv || !argv[0] || !argv[0][0])
 	{
-		ft_putstr_fd("minishell : empty command\n", 2);
-		exit(EXIT_FAILURE);
+		ft_putstr_fd("minishell : Command '' not found\n", 2);
+		free_env(envp);
+		gc_free_all();
+		free(g_shell.pids);
+		exit(127);
 	}
 	cmd_path = get_cmmand_path(argv[0], envp);
 	if (!cmd_path)
 	{
-		ft_putstr_fd("minishell : command not found :", 2);
+		ft_putstr_fd("minishell : Command not found :", 2);
 		ft_putstr_fd(argv[0], 2);
 		ft_putstr_fd("\n", 2);
 		free_env(envp);
-		free(g_shell.pids);
-		gc_free_all();
+		free_gc_memory();
 		exit(127);
 	}
 	execve(cmd_path, argv, envp);

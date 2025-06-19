@@ -13,6 +13,7 @@ EXEC := $(SRC_DIR)/main.c \
 	   $(SRC_DIR)/execution/redirection.c \
 	   $(SRC_DIR)/execution/helper_execution.c \
 	   $(SRC_DIR)/execution/signals.c \
+	   $(SRC_DIR)/execution/execution_helper.c \
 	   $(SRC_DIR)/execution/builtins/builtin_echo.c \
 	   $(SRC_DIR)/execution/builtins/built_in_utils.c \
 	   $(SRC_DIR)/execution/builtins/built_ins.c \

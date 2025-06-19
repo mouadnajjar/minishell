@@ -1,45 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   memory_free.c                                      :+:      :+:    :+:   */
+/*   execution_helper.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/03 09:52:32 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/19 12:21:26 by monajjar         ###   ########.fr       */
+/*   Created: 2025/06/19 12:26:41 by monajjar          #+#    #+#             */
+/*   Updated: 2025/06/19 12:33:20 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
 #include "../../includes/executor.h"
+#include "../../includes/minishell.h"
+#include "../../includes/parser.h"
 
-void	free_2d_array(char **arr)
+void	init_execution_context(t_exec_ctx *ctx, char ***envp)
 {
-	int	i;
-
-	if (!arr)
-		return ;
-	i = 0;
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
+	ctx->prev_fd = -1;
+	ctx->envp = *envp;
 }
 
-void	free_env(char **env)
+void	process_command(t_cmd *cmd_list, pid_t *pids, int i,
+	t_exec_ctx *ctx)
 {
-	int	i;
-
-	i = 0;
-	while (env[i])
-	{
-		free(env[i]);
-		i++;
-	}
-	free(env);
-}
-
-void	free_gc_memory(void)
-{
-	gc_free_all();
-	free(g_shell.pids);
+	fork_and_exec_command(cmd_list, pids, i, ctx);
+	ctx->prev_fd = close_and_update_pipe(cmd_list, ctx->prev_fd, ctx->pipefd);
 }

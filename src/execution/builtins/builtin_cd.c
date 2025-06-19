@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 18:03:21 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/17 16:06:32 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:37:15 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,32 +60,29 @@ void	update_env(char ***env, char *key, char *value)
 
 int	builtin_cd(char **argv, char ***env)
 {
-	char	*path;
-	char	*oldpath;
+	t_path	paths;
 
 	if (check_arguments_cd(argv))
 		return (1);
-	oldpath = getcwd(NULL, 0);
-	if (!oldpath)
+	paths.old_path = getcwd(NULL, 0);
+	if (!paths.old_path)
 	{
-		oldpath = ft_strdup(get_env_value(*env, "PWD"));
-		if (!oldpath)
+		paths.old_path = ft_strdup(get_env_value(*env, "PWD"));
+		if (!paths.old_path)
 		{
 			ft_putendl_fd("minishell: cd: failed to retrieve PWD", 2);
 			g_shell.last_exit_status = 1;
 			return (1);
 		}
 	}
-	path = get_cd_path(argv, env);
-	if (change_directory(path))
+	paths.path = get_cd_path(argv, env);
+	if (change_directory(paths.path))
 	{
-		free(oldpath);
+		free(paths.old_path);
 		return (1);
 	}
-	update_cd_env(env, oldpath);
-	free(oldpath);
-	free(g_shell.pids);
-	gc_free_all();
-	
+	update_cd_env(env, paths.old_path);
+	free(paths.old_path);
+	free_gc_memory();
 	return (0);
 }

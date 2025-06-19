@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/17 14:54:27 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:34:22 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ typedef struct s_path
 	char	**paths;
 	char	*path;
 	char	*full_path;
+	char	*old_path;
 	int		j;
 }			t_path;
 
@@ -59,6 +60,11 @@ int			env_len(char **env);
 void		print_export_error(char *arg);
 char		*get_cmmand_path(char *cmd, char **envp);
 void		execute_commands(t_cmd *cmd_list, char ***envp);
+void		init_execution_context(t_exec_ctx *ctx, char ***envp);
+void		process_command(t_cmd *cmd_list, pid_t *pids, int i,
+	t_exec_ctx *ctx);
+void		fork_and_exec_command(t_cmd *cmd_list, pid_t *pids, int i,
+		t_exec_ctx *ctx);
 //-----------------------------------------------//
 
 //------------------built-in---------------------//
@@ -80,6 +86,7 @@ void		initialize_env(char ***envp);
 void		free_env(char **env);
 void		free_2d_array(char **arr);
 void		free_env_allocation(int i, char **env, char *var);
+void		free_gc_memory();
 //-------------------------------------------------//
 
 #endif

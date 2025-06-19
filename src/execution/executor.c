@@ -6,37 +6,42 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/17 16:10:38 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/19 12:31:10 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/executor.h"
 #include "../../includes/minishell.h"
 
+static void	setup_child_io(t_cmd *cmd_list, int prev_fd, int pipefd[2])
+{
+	if (prev_fd != -1)
+	{
+		dup2(prev_fd, STDIN_FILENO);
+		close(prev_fd);
+	}
+	if (cmd_list->is_pipe)
+	{
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
+	}
+}
+
 static void	child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2],
 	char **envp)
+{
+	int	exitos;
+
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	setup_child_io(cmd_list, prev_fd, pipefd);
+	if (apply_redirections(cmd_list->redirs) != 0)
 	{
-		int	exitos;
-		
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		if (prev_fd != -1)
-		{
-			dup2(prev_fd, STDIN_FILENO);
-			close(prev_fd);
-		}
-		if (cmd_list->is_pipe)
-		{
-			dup2(pipefd[1], STDOUT_FILENO);
-			close(pipefd[0]);
-			close(pipefd[1]);
-		}
-		if (apply_redirections(cmd_list->redirs) != 0)
-		{
-			exit(EXIT_FAILURE);
-		}
+		exit(EXIT_FAILURE);
+	}
 	if (!cmd_list->argv || !cmd_list->argv[0])
-	exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	if (is_built_in(cmd_list->argv[0]))
 	{
 		exitos = exec_builtins(cmd_list, &envp);
@@ -44,11 +49,11 @@ static void	child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2],
 		exit (exitos);
 	}
 	else
-	run_command(cmd_list->argv, envp);
+		run_command(cmd_list->argv, envp);
 	exit(EXIT_FAILURE);
 }
 
-static void	fork_and_exec_command(t_cmd *cmd_list, pid_t *pids, int i,
+void	fork_and_exec_command(t_cmd *cmd_list, pid_t *pids, int i,
 		t_exec_ctx *ctx)
 {
 	if (cmd_list->is_pipe && pipe(ctx->pipefd) == -1)
@@ -90,18 +95,6 @@ void	run_builtin_parent(t_cmd *cmd, char ***envp, pid_t *pids)
 	dup2(saved_out, STDOUT_FILENO);
 	close(saved_in);
 	close(saved_out);
-}
-
-static void	init_execution_context(t_exec_ctx *ctx, char ***envp)
-{
-	ctx->prev_fd = -1;
-	ctx->envp = *envp;
-}
-
-static void	process_command(t_cmd *cmd_list, pid_t *pids, int i, t_exec_ctx *ctx)
-{
-	fork_and_exec_command(cmd_list, pids, i, ctx);
-	ctx->prev_fd = close_and_update_pipe(cmd_list, ctx->prev_fd, ctx->pipefd);
 }
 
 void	execute_commands(t_cmd *cmd_list, char ***envp)
