@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 14:51:29 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/19 12:59:03 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/23 18:02:16 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	builtin_exit(char **args)
 	if (!is_valid_exit_code(args[1]))
 	{
 		print_exit_message(args[1]);
-		exit(255);
+		exit(2);
 	}
 	if (args[2])
 	{

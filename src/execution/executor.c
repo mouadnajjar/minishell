@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/19 18:35:22 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/23 17:45:55 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2],
 		exit(EXIT_FAILURE);
 	}
 	if (!cmd_list->argv || !cmd_list->argv[0])
-		exit(EXIT_FAILURE);
+		exit(0);
 	if (is_built_in(cmd_list->argv[0]))
 	{
 		exitos = exec_builtins(cmd_list, &envp);
@@ -117,6 +117,11 @@ void	execute_commands(t_cmd *cmd_list, char ***envp)
 			return ;
 		}
 		process_command(cmd_list, g_shell.pids, i, &ctx);
+		if (g_shell.heredoc_sigint)
+  		{
+			set_and_free();
+   			return ;
+  		}
 		cmd_list = cmd_list->next;
 		i++;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/19 18:42:38 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/23 17:45:06 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ void		free_env(char **env);
 void		free_2d_array(char **arr);
 void		free_env_allocation(int i, char **env, char *var);
 void		free_gc_memory();
+void		set_and_free(void);
 //-------------------------------------------------//
 
 #endif

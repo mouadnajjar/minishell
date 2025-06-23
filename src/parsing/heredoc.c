@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/23 15:18:14 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/23 15:41:07 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,15 @@ void	handle_heredoc(t_redirect *redir)
 		while (1)
 		{
 			line = readline("> ");
-			if (!line || g_shell.heredoc_sigint)  // Check interrupt flag
+			if (g_shell.heredoc_sigint)  // Check interrupt flag
 			{
 				print_parse_error(ERR_HEREDOC_DELIM, redir->target);
 				cleanup_heredoc(fd, line);
+			}
+			if (!line) // EOF (Ctrl+D)
+			{
+				print_parse_error(ERR_HEREDOC_DELIM, redir->target);
+				break; // Just break, do not call cleanup_heredoc
 			}
 			if (ft_strncmp(line, redir->target, ft_strlen(redir->target) + 1) == 0
 						&& (ft_strlen(line) == ft_strlen(redir->target)))

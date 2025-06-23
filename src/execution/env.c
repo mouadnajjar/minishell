@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 13:07:22 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/17 15:33:00 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/23 18:23:00 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,5 @@ void	initialize_env(char ***envp)
 	{
 		update_env(envp, "PWD", "/");
 	}
-	update_env(envp, "_", "_=/usr/bin/env");
+	update_env(envp, "_", "/usr/bin/env");
 }
