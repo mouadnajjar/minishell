@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 17:08:38 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/15 16:07:34 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/23 14:57:09 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,23 @@ char	*get_cd_path(char **argv, char ***env)
 
 int	change_directory(char *path)
 {
-	if (!path || chdir(path) != 0)
+	char	*current;
+
+	if (!path)
+	{
+		ft_putendl_fd("minishell: cd: HOME not set", 2);
+		g_shell.last_exit_status = 1;
+		return (1);
+	}
+	current = getcwd(NULL, 0);
+	if (!current && path[0] == '.' && path[1] == '.')
+	{
+		ft_putendl_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory", 2);
+		g_shell.last_exit_status = 1;
+		return (1);
+	}
+	free(current);
+	if (chdir(path) != 0)
 	{
 		perror("minishell: cd");
 		g_shell.last_exit_status = 1;
@@ -49,7 +65,14 @@ void	update_cd_env(char ***env, char *oldpwd)
 
 	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
-		return ;
+	{
+		ft_putendl_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory", 2);
+		if (get_env_value(*env, "OLDPWD"))
+			update_env(env, "OLDPWD", oldpwd);
+		else
+			ft_realloc_env(env, ft_strjoin_3("OLDPWD", "=", oldpwd));
+		return;
+	}
 	if (get_env_value(*env, "PWD"))
 		update_env(env, "PWD", newpwd);
 	if (get_env_value(*env, "OLDPWD"))

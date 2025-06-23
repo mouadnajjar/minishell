@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/19 18:43:29 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/23 15:18:14 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ void	handle_heredoc(t_redirect *redir)
 			line = readline("> ");
 			if (!line || g_shell.heredoc_sigint)  // Check interrupt flag
 			{
+				print_parse_error(ERR_HEREDOC_DELIM, redir->target);
 				cleanup_heredoc(fd, line);
 			}
 			if (ft_strncmp(line, redir->target, ft_strlen(redir->target) + 1) == 0
