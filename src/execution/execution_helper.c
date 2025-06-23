@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:26:41 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/19 17:18:49 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/19 18:35:09 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	process_command(t_cmd *cmd_list, pid_t *pids, int i,
 {
 	if (g_shell.heredoc_sigint)
 	{
+		g_shell.heredoc_sigint = 0;
 		return ;
 	}
 	fork_and_exec_command(cmd_list, pids, i, ctx);

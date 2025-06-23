@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/19 12:34:22 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/19 18:42:38 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void		update_shell_level(char ***envp);
 
 //---------------exits--signals-------------------//
 void		set_signals(void);
+void		sigint_handler(int signum);
 //------------------------------------------------//
 
 //---------------------HELPERS--------------------//

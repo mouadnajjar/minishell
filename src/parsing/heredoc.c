@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/19 17:17:53 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/19 18:43:29 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,9 @@ void	process_heredocs(t_cmd *cmds)
 	if (heredoc_count > MAX_HEREDOCS)
 	{
 		ft_putstr_fd("minishell: maximum here-document count exceeded\n", 2);
+		g_shell.last_exit_status = 2;
 		gc_free_all();
-		exit(2);
+		return ;
 	}
 	while (cmds)
 	{
@@ -56,7 +57,11 @@ void	process_heredocs(t_cmd *cmds)
 		while (r && r[i].target)
 		{
 			if (r[i].type == HEREDOC)
+			{
 				handle_heredoc(&r[i]);
+				if (g_shell.heredoc_sigint)
+					return ;  // Preserve exit status
+			}
 			i++;
 		}
 		cmds = cmds->next;
@@ -71,6 +76,16 @@ void	init_heredoc_pipe(int *fd)
 		gc_free_all();
 		exit(1);
 	}
+}
+
+static void cleanup_heredoc(int *fd, char *line)
+{
+    close(fd[1]);  // Close write end
+    if (line)
+        free(line);
+    gc_free_all();
+    g_shell.last_exit_status = 130;  // Set before exit
+    exit(130);
 }
 
 void	handle_heredoc(t_redirect *redir)
@@ -90,19 +105,17 @@ void	handle_heredoc(t_redirect *redir)
 	if (pid == 0) // --- CHILD process
 	{
 		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);  // Add this
+		signal(SIGQUIT, SIG_DFL);
 		char *line;
 		char *expanded;
 
 		close(fd[0]); // close read end
-
 		while (1)
 		{
 			line = readline("> ");
-			if (!line)
+			if (!line || g_shell.heredoc_sigint)  // Check interrupt flag
 			{
-				print_parse_error(ERR_HEREDOC_DELIM, redir->target);
-				break;
+				cleanup_heredoc(fd, line);
 			}
 			if (ft_strncmp(line, redir->target, ft_strlen(redir->target) + 1) == 0
 						&& (ft_strlen(line) == ft_strlen(redir->target)))
@@ -119,26 +132,34 @@ void	handle_heredoc(t_redirect *redir)
 			free(line);
 		}
 		close(fd[1]);
+		gc_free_all();
 		exit(0);
 	}
 	else
 	{
-		// --- PARENT process ---
-		close(fd[1]); // close write end
+		close(fd[1]);
 		waitpid(pid, &status, 0);
-		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		if (WIFSIGNALED(status))
 		{
-			write(1, "\n", 1); // Print newline like Bash
-			g_shell.last_exit_status = 130; // Ctrl-C
+			write(1, "\n", 1);
+			g_shell.last_exit_status = 130;
 			close(fd[0]);
 			redir->heredoc_fd = -1;
-			g_shell.heredoc_sigint = 1;  // Add this flag
+			g_shell.heredoc_sigint = 1;
+			return;
 		}
-		else
+		if (WIFEXITED(status))
 		{
-			redir->heredoc_fd = fd[0];
-			g_shell.heredoc_sigint = 0;  // Add this
+			g_shell.last_exit_status = WEXITSTATUS(status);  // Get child's exit status
+			if (g_shell.last_exit_status == 130)
+			{
+				close(fd[0]);
+				redir->heredoc_fd = -1;
+				g_shell.heredoc_sigint = 1;
+				return;
+			}
 		}
+		redir->heredoc_fd = fd[0];
 	}
 }
 

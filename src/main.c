@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:17 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/17 15:43:55 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/19 18:12:36 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,5 @@ int	main(int argc, char **argv, char **envp)
 		free(input);
 	}
 	gc_free_all();
-	return (0);
+	return (g_shell.last_exit_status);
 }
