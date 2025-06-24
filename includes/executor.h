@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/23 17:45:06 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/24 15:59:52 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ void		process_command(t_cmd *cmd_list, pid_t *pids, int i,
 	t_exec_ctx *ctx);
 void		fork_and_exec_command(t_cmd *cmd_list, pid_t *pids, int i,
 		t_exec_ctx *ctx);
+int			is_directory(char *pathdir);
+void		execve_error(char *cmd_path);
 //-----------------------------------------------//
 
 //------------------built-in---------------------//

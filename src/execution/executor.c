@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/23 17:45:55 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/24 15:13:34 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,10 +118,10 @@ void	execute_commands(t_cmd *cmd_list, char ***envp)
 		}
 		process_command(cmd_list, g_shell.pids, i, &ctx);
 		if (g_shell.heredoc_sigint)
-  		{
+		{
 			set_and_free();
-   			return ;
-  		}
+			return ;
+		}
 		cmd_list = cmd_list->next;
 		i++;
 	}

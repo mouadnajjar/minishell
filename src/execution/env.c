@@ -3,16 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 13:07:22 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/23 18:23:00 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/24 15:29:03 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/executor.h"
 #include "../../includes/minishell.h"
 #include "../../includes/parser.h"
+
+int	is_directory(char *pathdir)
+{
+	struct stat	statinfo;
+
+	if (stat(pathdir, &statinfo) != 0)
+		return (0);
+	return (S_ISDIR(statinfo.st_mode));
+}
 
 void	update_shell_level(char ***envp)
 {

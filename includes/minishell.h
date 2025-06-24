@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/19 16:50:05 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/24 15:24:31 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # include <signal.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
 
 // Readline
 # include <readline/history.h>

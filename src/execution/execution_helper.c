@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_helper.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:26:41 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/23 17:36:15 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/24 15:59:30 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,12 @@ void	process_command(t_cmd *cmd_list, pid_t *pids, int i,
 		return ;
 	fork_and_exec_command(cmd_list, pids, i, ctx);
 	ctx->prev_fd = close_and_update_pipe(cmd_list, ctx->prev_fd, ctx->pipefd);
+}
+
+void	execve_error(char *cmd_path)
+{
+	perror("execve");
+	g_shell.last_exit_status = 1;
+	free(cmd_path);
+	exit(EXIT_FAILURE);
 }

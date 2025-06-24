@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 17:08:38 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/23 14:57:09 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/24 15:58:29 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,9 @@ int	change_directory(char *path)
 	current = getcwd(NULL, 0);
 	if (!current && path[0] == '.' && path[1] == '.')
 	{
-		ft_putendl_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory", 2);
+		ft_putendl_fd("cd: error retrieving current directory:", 2);
+		ft_putstr_fd(" getcwd: cannot access parent directories:", 2);
+		ft_putendl_fd(" No such file or directory", 2);
 		g_shell.last_exit_status = 1;
 		return (1);
 	}
@@ -66,12 +68,14 @@ void	update_cd_env(char ***env, char *oldpwd)
 	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
 	{
-		ft_putendl_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory", 2);
+		ft_putendl_fd("cd: error retrieving current directory:", 2);
+		ft_putstr_fd(" getcwd: cannot access parent directories:", 2);
+		ft_putendl_fd(" No such file or directory", 2);
 		if (get_env_value(*env, "OLDPWD"))
 			update_env(env, "OLDPWD", oldpwd);
 		else
 			ft_realloc_env(env, ft_strjoin_3("OLDPWD", "=", oldpwd));
-		return;
+		return ;
 	}
 	if (get_env_value(*env, "PWD"))
 		update_env(env, "PWD", newpwd);
