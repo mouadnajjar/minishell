@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 09:51:40 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/24 16:00:13 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/25 23:01:42 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,23 @@
 #include "../../includes/minishell.h"
 #include "../../includes/parser.h"
 
-void	print_dir_not_found(char *path)
+void	print_dir_not_found(char *path, char **envp)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(path, 2);
 	ft_putstr_fd(": Is a directory\n", 2);
+	free_env(envp);
+	free_gc_memory();
 	exit(126);
 }
 
-void	print_command_not_found(char *cmd)
+void	print_command_not_found(char *cmd, char **envp)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(cmd, 2);
 	ft_putstr_fd(": command not found\n", 2);
+	free_env(envp);
+	free_gc_memory();
 	exit(127);
 }
 
@@ -88,16 +92,14 @@ void	run_command(char **argv, char **envp)
 	}
 	if (is_directory(argv[0]))
 	{
-		print_dir_not_found(argv[0]);
+		print_dir_not_found(argv[0], envp);
 		free_env(envp);
 		free_gc_memory();
 	}
 	cmd_path = get_cmmand_path(argv[0], envp);
 	if (!cmd_path)
 	{
-		print_command_not_found(argv[0]);
-		free_env(envp);
-		free_gc_memory();
+		print_command_not_found(argv[0], envp);
 	}
 	execve(cmd_path, argv, envp);
 	execve_error(cmd_path);

@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/24 15:13:34 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:38:38 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,12 @@ static void	child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2],
 		exit(EXIT_FAILURE);
 	}
 	if (!cmd_list->argv || !cmd_list->argv[0])
+	{
+		if (g_shell.envp)
+			free(g_shell.envp);
+		free_gc_memory();
 		exit(0);
+	}
 	if (is_built_in(cmd_list->argv[0]))
 	{
 		exitos = exec_builtins(cmd_list, &envp);
@@ -116,12 +121,9 @@ void	execute_commands(t_cmd *cmd_list, char ***envp)
 			run_builtin_parent(cmd_list, envp, g_shell.pids);
 			return ;
 		}
-		process_command(cmd_list, g_shell.pids, i, &ctx);
+		handle_command_list(cmd_list, &ctx, &i);
 		if (g_shell.heredoc_sigint)
-		{
-			set_and_free();
 			return ;
-		}
 		cmd_list = cmd_list->next;
 		i++;
 	}

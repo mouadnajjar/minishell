@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/24 15:59:52 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:37:47 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void		fork_and_exec_command(t_cmd *cmd_list, pid_t *pids, int i,
 		t_exec_ctx *ctx);
 int			is_directory(char *pathdir);
 void		execve_error(char *cmd_path);
+void		handle_command_list(t_cmd *cmd_list, t_exec_ctx *ctx, int *i);
 //-----------------------------------------------//
 
 //------------------built-in---------------------//

@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:26:41 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/24 15:59:30 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:44:29 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,14 @@ void	execve_error(char *cmd_path)
 	g_shell.last_exit_status = 1;
 	free(cmd_path);
 	exit(EXIT_FAILURE);
+}
+
+void	handle_command_list(t_cmd *cmd_list, t_exec_ctx *ctx, int *i)
+{
+	process_command(cmd_list, g_shell.pids, *i, ctx);
+	if (g_shell.heredoc_sigint)
+	{
+		return ;
+	}
+	(*i)++;
 }
