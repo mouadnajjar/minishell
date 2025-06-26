@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory_free.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 09:52:32 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/23 17:44:42 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/26 15:25:08 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	free_gc_memory(void)
 
 void	set_and_free(void)
 {
-	g_shell.heredoc_sigint = 0;
-	free(g_shell.pids);
+	g_shell.heredoc_sigint = 0; // Reset heredoc interrupt flag
+	if (g_shell.pids)
+		free(g_shell.pids);
 }

@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/26 14:38:38 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/26 15:26:24 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,12 @@ void	execute_commands(t_cmd *cmd_list, char ***envp)
 			run_builtin_parent(cmd_list, envp, g_shell.pids);
 			return ;
 		}
-		handle_command_list(cmd_list, &ctx, &i);
+		process_command(cmd_list, g_shell.pids, i, &ctx);
 		if (g_shell.heredoc_sigint)
+		{
+			set_and_free();
 			return ;
+		}
 		cmd_list = cmd_list->next;
 		i++;
 	}

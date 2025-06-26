@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/26 14:41:58 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/26 15:29:32 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ void	handle_heredoc(t_redirect *redir)
 			write(1, "\n", 1);
 			g_shell.last_exit_status = 130;
 			close(fd[0]);
+			
 			redir->heredoc_fd = -1;
 			g_shell.heredoc_sigint = 1;
 			return;
