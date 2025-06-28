@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 18:03:21 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/19 12:37:15 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/28 16:07:33 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ void	update_env(char ***env, char *key, char *value)
 	i = 0;
 	while ((*env)[i])
 	{
-		if (!ft_strncmp((*env)[i], key, keylen) && (*env)[i][keylen] == '=')
+		if (!ft_strncmp((*env)[i], key, keylen)
+			&& ((*env)[i][keylen] == '=' || (*env)[i][keylen] == '\0'))
 		{
 			free((*env)[i]);
 			(*env)[i] = new_var;

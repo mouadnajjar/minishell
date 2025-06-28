@@ -6,7 +6,7 @@
 #    By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/26 14:17:21 by monajjar          #+#    #+#              #
-#    Updated: 2024/11/06 17:16:30 by monajjar         ###   ########.fr        #
+#    Updated: 2025/06/28 14:18:18 by monajjar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,7 @@ SRCS = ft_atoi.c \
        ft_memchr.c \
        ft_strchr.c \
        ft_strncmp.c \
+       ft_strcmp.c \
        ft_isalpha.c \
        ft_memcmp.c \
        ft_strdup.c \

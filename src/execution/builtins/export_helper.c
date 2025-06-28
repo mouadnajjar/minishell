@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 15:17:40 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/17 15:23:05 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/28 16:29:48 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,28 @@ void	handle_plus_equal(char *arg, char ***env)
 	free(new_value);
 }
 
+static void	handle_existing_var(char ***env, char *key, char *value)
+{
+	int	i;
+
+	i = 0;
+	while ((*env)[i])
+	{
+		if (ft_strcmp((*env)[i], key) == 0)
+		{
+			free((*env)[i]);
+			(*env)[i] = ft_strjoin_3(key, "=", value);
+			free(key);
+			free(value);
+			return ;
+		}
+		i++;
+	}
+	update_env(env, key, value);
+	free(key);
+	free(value);
+}
+
 void	handle_export_assigment(char *arg, char ***env)
 {
 	char	*eq;
@@ -66,10 +88,11 @@ void	handle_export_assigment(char *arg, char ***env)
 		}
 		key = ft_substr(arg, 0, eq - arg);
 		value = ft_strdup(eq + 1);
-		update_env(env, key, value);
-		free(key);
-		free(value);
+		handle_existing_var(env, key, value);
 	}
-	else if (!get_env_value(*env, key))
-		update_env(env, arg, " ");
+	else
+	{
+		if (!get_env_value(*env, arg))
+			ft_realloc_env(env, ft_strdup(arg));
+	}
 }

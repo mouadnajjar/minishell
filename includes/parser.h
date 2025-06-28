@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/17 12:03:57 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/28 13:50:21 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,6 @@ typedef struct s_token {
     int             start_index;
     int             end_index;
 }	t_token;
-
-//GC
-// extern t_list *gc;
 
 // === Memory Management (GC) ===
 void	*gc_alloc(size_t size);
