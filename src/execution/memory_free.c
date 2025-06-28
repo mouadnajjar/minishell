@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 09:52:32 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/28 16:24:42 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/28 17:51:21 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,14 @@ void	set_and_free(void)
 	g_shell.heredoc_sigint = 0;
 	if (g_shell.pids)
 		free(g_shell.pids);
+}
+
+int	check_heredoc_and_clean(void)
+{
+	if (g_shell.heredoc_sigint)
+	{
+		set_and_free();
+		return (1);
+	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/26 15:26:24 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/28 18:11:42 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	child_process(t_cmd *cmd_list, int prev_fd, int pipefd[2],
 	if (!cmd_list->argv || !cmd_list->argv[0])
 	{
 		if (g_shell.envp)
-			free(g_shell.envp);
+			free_env(g_shell.envp);
 		free_gc_memory();
 		exit(0);
 	}
@@ -107,26 +107,21 @@ void	execute_commands(t_cmd *cmd_list, char ***envp)
 	t_exec_ctx	ctx;
 	int			cmd_counts;
 	int			i;
-	t_cmd		*tmp;
 
 	init_execution_context(&ctx, envp);
 	cmd_counts = getsize(cmd_list);
 	g_shell.pids = allocate_pid(cmd_counts);
 	i = 0;
-	tmp = cmd_list;
+	if (is_built_in(cmd_list->argv[0]) && cmd_list->next == NULL)
+	{
+		run_builtin_parent(cmd_list, envp, g_shell.pids);
+		return ;
+	}
 	while (cmd_list)
 	{
-		if (is_built_in(cmd_list->argv[0]) && tmp->next == NULL)
-		{
-			run_builtin_parent(cmd_list, envp, g_shell.pids);
-			return ;
-		}
 		process_command(cmd_list, g_shell.pids, i, &ctx);
-		if (g_shell.heredoc_sigint)
-		{
-			set_and_free();
+		if (check_heredoc_and_clean())
 			return ;
-		}
 		cmd_list = cmd_list->next;
 		i++;
 	}

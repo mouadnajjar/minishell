@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/26 14:37:47 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/28 17:51:39 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ void		free_2d_array(char **arr);
 void		free_env_allocation(int i, char **env, char *var);
 void		free_gc_memory();
 void		set_and_free(void);
+int			check_heredoc_and_clean(void);
 //-------------------------------------------------//
 
 #endif
