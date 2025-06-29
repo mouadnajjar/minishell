@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:26:41 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/26 15:11:47 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/29 13:44:02 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,15 @@ void	handle_command_list(t_cmd *cmd_list, t_exec_ctx *ctx, int *i)
 		return ;
 	}
 	(*i)++;
+}
+
+int	check_heredoc(t_redirect *redirs, int *i)
+{
+	if (dup2(redirs[(*i)].heredoc_fd, STDIN_FILENO) == -1)
+	{
+		ft_putendl_fd("dup2", 2);
+		return (1);
+	}
+	close(redirs[(*i)].heredoc_fd);
+	return (0);
 }

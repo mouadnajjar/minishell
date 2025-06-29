@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:50:03 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/29 12:36:38 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/29 13:42:31 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,12 +99,8 @@ int	apply_redirections(t_redirect *redirs)
 			handle_append_redir(redirs[i].target);
 		else if (redirs[i].type == HEREDOC && redirs[i].heredoc_fd != -1)
 		{
-			if (dup2(redirs[i].heredoc_fd, STDIN_FILENO) == -1)
-			{
-				ft_putendl_fd("dup2", 2);
+			if (check_heredoc(redirs, &i))
 				return (1);
-			}
-			close(redirs[i].heredoc_fd);
 		}
 		if (g_shell.last_exit_status == 1)
 			return (1);
