@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 14:51:29 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/23 18:02:16 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/29 08:18:39 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,17 @@
 
 int	is_valid_exit_code(const char *str)
 {
+	int len;
+	
 	if (!str || !*str)
 		return (0);
 	if (*str == '-' || *str == '+')
 		str++;
+	while (*str == '0')
+		str++;
+	len = ft_strlen(str);
+	if (len >= 19)
+		return (0);
 	while (*str)
 	{
 		if (!ft_isdigit(*str))
@@ -49,9 +56,7 @@ static void	print_error_message(void)
 int	builtin_exit(char **args)
 {
 	long	exit_code;
-	int		i;
 
-	i = 0;
 	ft_putendl_fd("exit", STDOUT_FILENO);
 	if (!args[1])
 	{
