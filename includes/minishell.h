@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/24 15:24:31 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/29 12:20:44 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ typedef struct s_shell {
 	t_list			*gc;
 	pid_t			*pids;
 	int 			heredoc_sigint;
+	int				ambiguous_redirect;
+	char			*ambg_name;
 } t_shell;
 
 extern t_shell g_shell; // Global shell state

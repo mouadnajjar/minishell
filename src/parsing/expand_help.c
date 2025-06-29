@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/17 11:38:22 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/28 16:20:22 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,20 +52,31 @@ size_t	get_expanded_var_len(const char *src, size_t *i)
 	var_len = 0;
 	name = get_env_name(src, *i, &var_len);
 	val = get_env_var(name);
-	*i += var_len - 1;
+	*i += var_len;
 	if (val)
 		return (ft_strlen(val));
 	return (0);
 }
 
-size_t	get_exit_status_len(void)
+size_t	dollar_sign_len(const char *src, size_t *i)
 {
-	char	*num;
 	size_t	len;
 
-	num = ft_itoa(g_shell.last_exit_status);
-	len = ft_strlen(num);
-	gc_add(num);
+	len = 0;
+	(*i)++;
+	if (src[*i] == '?')
+	{
+		len += get_exit_status_len();
+		(*i)++;
+	}
+	else if (ft_isalnum(src[*i]) || src[*i] == '_')
+	{
+		len += get_expanded_var_len(src, i);
+	}
+	else
+	{
+		len++;
+	}
 	return (len);
 }
 
@@ -79,50 +90,12 @@ size_t	get_expanded_length(const char *src)
 	while (src[i])
 	{
 		if (src[i] == '$')
-		{
-			i++;
-			if (src[i] == '?')
-				len += get_exit_status_len();
-			else
-				len += get_expanded_var_len(src, &i);
-		}
+			len += dollar_sign_len(src, &i);
 		else
+		{
 			len++;
-		i++;
+			i++;
+		}
 	}
 	return (len);
 }
-
-// size_t	get_expanded_length(const char *src)
-// {
-// 	size_t	len = 0;
-//     size_t i = 0;
-//     while (src[i])
-//     {
-//         if (src[i] == '$')
-//         {
-//             i++;
-//             if (src[i] == '?')
-//             {
-//                 len += ft_strlen(ft_itoa(g_shell.last_exit_status));
-//             }
-//             else
-//             {
-//                 size_t var_len = 0;
-//                 while (src[i + var_len] && (ft_isalnum(src[i + var_len])
-// 		|| src[i + var_len] == '_'))
-//                     var_len++;
-//                 char *name = gc_alloc(var_len + 1, &gc);
-//                 ft_strlcpy(name, &src[i], var_len + 1);
-//                 char *val = get_env_var(name);
-//                 if (val)
-//                     len += ft_strlen(val);
-//                 i += var_len - 1;
-//             }
-//         }
-//         else
-//             len++;
-//         i++;
-//     }
-// 	return (len);
-// }

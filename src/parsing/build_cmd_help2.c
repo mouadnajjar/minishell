@@ -6,10 +6,11 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/16 19:48:15 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/28 18:05:25 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../includes/executor.h"
 #include "../includes/minishell.h"
 #include "../includes/parser.h"
 
@@ -32,14 +33,25 @@ int	handle_redirection_token(t_cmd *cmd, int *redir_i, t_list **tokens)
 
 void	handle_word_token(t_cmd *cmd, t_token *tok, int *arg_i)
 {
+	char	**split_args;
+	int		i;
+
+	if (tok->from_expansion)
 	{
-		if (tok->from_expansion)
+		split_args = gc_split(tok->value);
+		if (split_args)
 		{
-			cmd->argv[(*arg_i)++] = tok->value;
+			i = 0;
+			while (split_args[i])
+			{
+				if (ft_strlen(split_args[i]) > 0)
+					cmd->argv[(*arg_i)++] = split_args[i];
+				i++;
+			}
 		}
-		else
-			cmd->argv[(*arg_i)++] = remove_quotes(tok->value);
 	}
+	else
+		cmd->argv[(*arg_i)++] = remove_quotes(tok->value);
 }
 
 int	handle_pipe_token(t_list **tokens, t_cmd *cmd)

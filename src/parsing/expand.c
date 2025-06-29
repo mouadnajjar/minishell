@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/19 18:13:08 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/29 12:34:06 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ void	handle_dollar_case(const char *src, size_t *i, char *dst, size_t *j)
 	size_t	len;
 	char	*name;
 
+	g_shell.ambg_name = NULL;
+	g_shell.ambiguous_redirect = 0;
 	(*i)++;
 	if (src[*i] == '\0')
 		append_dollar(dst, j);
@@ -61,10 +63,22 @@ void	handle_dollar_case(const char *src, size_t *i, char *dst, size_t *j)
 		expand_status(dst, j);
 		(*i)++;
 	}
+	else if (ft_isdigit(src[1]) && src[2] == '\0')
+	{
+		g_shell.ambiguous_redirect = 1;
+		g_shell.ambg_name = (char *)src + 1;
+	}
+	else if (ft_isdigit(src[*i]))
+		(*i)++;
 	else if (ft_isalnum(src[*i]) || src[*i] == '_')
 	{
 		name = get_var_name(src, *i, &len);
 		append_var_value(name, dst, j);
+		if (dst[0] == '\0' || gc_count_word(dst) > 1)
+		{
+			g_shell.ambg_name = name;
+			g_shell.ambiguous_redirect = 1;
+		}
 		*i += len;
 	}
 	else
@@ -73,11 +87,10 @@ void	handle_dollar_case(const char *src, size_t *i, char *dst, size_t *j)
 
 char	*expand_value(const char *src, t_token *tok)
 {
-	char	*dst;
-	size_t	len;
-	size_t	i;
-	size_t	j;
+	char		*dst;
 
+	size_t (j),
+	(len), (i);
 	len = get_expanded_length(src);
 	dst = gc_alloc(len + 1);
 	i = 0;
@@ -88,12 +101,12 @@ char	*expand_value(const char *src, t_token *tok)
 		{
 			handle_dollar_case(src, &i, dst, &j);
 			if (tok)
-            	tok->from_expansion = 1; // Mark token as expanded
+				tok->from_expansion = 1;
 		}
 		else
 		{
 			if (tok)
-            	tok->from_expansion = 0;
+				tok->from_expansion = 0;
 			copy_char(dst, src, &i, &j);
 		}
 	}
@@ -112,76 +125,9 @@ void	expand_tokens(t_list *tokens)
 		if (tok->type == TOKEN_WORD && tok->can_expand
 			&& !tok->is_heredoc_delim)
 		{
-			expanded = expand_value(tok->value , tok);
+			expanded = expand_value(tok->value, tok);
 			tok->value = gc_strdup(expanded);
-			// printf("[expand_tokens] %s\n", tok->value); // 🟢 Debug line
 		}
 		tokens = tokens->next;
 	}
 }
-
-// char	*expand_value(const char *src)
-// {
-// 	size_t final_len = get_expanded_length(src);
-// 	char *result = gc_alloc(final_len + 1, &gc);
-// 	size_t j = 0;
-
-// 	size_t i = 0;
-// 	while (src[i])
-// 	{
-// 		if (src[i] == '$')
-// 		{
-// 			i++;
-// 			if (src[i] == '\0')
-// 			{
-// 				result[j++] = '$'; // case: lone $
-// 				break ;
-// 			}
-// 			else if (src[i] == '?')
-// 			{
-// 				char *num = ft_itoa(g_shell.last_exit_status);
-// 				gc_add(num, &gc);
-// 				size_t k = 0;
-// 				while (num[k])
-// 					result[j++] = num[k++];
-// 			}
-// 			else if (ft_isalnum(src[i]) || src[i] == '_')
-// 			{
-// 				size_t var_len = 0;
-// 				while (src[i + var_len] && (ft_isalnum(src[i + var_len])
-// 						|| src[i + var_len] == '_'))
-// 					var_len++;
-// 				char *name = gc_alloc(var_len + 1, &gc);
-// 				size_t k = 0;
-// 				while (k < var_len)
-// 				{
-// 					name[k] = src[i + k];
-// 					k++;
-// 				}
-// 				name[k] = '\0';
-// 				char *val = get_env_var(name);
-// 				if (val)
-// 				{
-// 					k = 0;
-// 					while (val[k])
-// 						result[j++] = val[k++];
-// 				}
-// 				i += var_len - 1;
-// 			}
-// 			else
-// 			{
-// 				// Not a valid variable name, treat as literal $
-// 				result[j++] = '$';
-// 				i--; // reprocess current char normally
-// 			}
-// 		}
-// 		else
-// 		{
-// 			result[j++] = src[i];
-// 		}
-// 		i++;
-// 	}
-// 	result[j] = '\0';
-// 	// printf("[expand_value] %s => %s\n", src, result); // 🟢 Debug line
-// 	return (result);
-// }

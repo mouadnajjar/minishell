@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/17 11:37:51 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/26 22:28:38 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,53 +66,3 @@ void	merge_adjacent_words(t_list **tokens, const char *input)
 		curr = curr->next;
 	}
 }
-
-// void merge_adjacent_words(t_list **tokens, const char *input)
-// {
-// 	t_list *curr = *tokens;
-
-// 	while (curr && curr->next)
-// 	{
-// 		t_token *a = curr->content;
-// 		t_token *b = curr->next->content;
-// 		// Only merge if both are words
-// 		if (a->type == TOKEN_WORD && b->type == TOKEN_WORD)
-// 		{
-// 			// Look between end of a and start of b in original input
-// 			int mid_start = a->end_index + 1;
-// 			int mid_end = b->start_index;
-
-// 			int has_space = 0;
-// 			int i = mid_start;
-// 			while (i < mid_end)
-// 			{
-// 				if (ft_isspace(input[i]))
-// 				{
-// 					has_space = 1;
-// 					break ;
-// 				}
-// 				i++;
-// 			}
-// 			if (!has_space)
-// 			{
-// 				char *merged = gc_alloc(ft_strlen(a->value)
-						// + ft_strlen(b->value) + 1, &gc);
-// 				ft_strlcpy(merged, a->value, ft_strlen(a->value)
-					// + ft_strlen(b->value) + 1);
-// 				ft_strlcat(merged, b->value, ft_strlen(a->value)
-					// + ft_strlen(b->value) + 1);
-// 				//printf("[merge] '%s' + '%s' => '%s'\n", a->value, b->value,
-					// merged); // 🟢 Debug line
-// 				a->value = merged;
-// 				a->can_expand &= b->can_expand;
-// 				a->end_index = b->end_index;
-
-// 					t_list *to_remove = curr->next;
-// 				curr->next = to_remove->next;
-// 				//free(to_remove);
-// 				continue ;
-// 			}
-// 		}
-// 		curr = curr->next;
-// 	}
-// }

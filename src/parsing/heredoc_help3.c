@@ -1,47 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_help2.c                                     :+:      :+:    :+:   */
+/*   heredoc_help3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/28 16:21:09 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/27 18:29:29 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/parser.h"
+#include "../includes/executor.h"
 #include "../includes/minishell.h"
+#include "../includes/parser.h"
 
-void	copy_char(char *dst, const char *src, size_t *i, size_t *j)
+void	heredoc_ctrl_c(int sig)
 {
-	dst[(*j)++] = src[(*i)++];
-}
-
-void	append_dollar(char *dst, size_t *j)
-{
-	dst[(*j)++] = '$';
-}
-
-void	expand_status(char *dst, size_t *j)
-{
-	char	*num;
-	size_t	k;
-
-	num = ft_itoa(g_shell.last_exit_status);
-	gc_add(num);
-	k = 0;
-	while (num[k])
-		dst[(*j)++] = num[k++];
-}
-
-size_t	get_exit_status_len(void)
-{
-	char	*num;
-	size_t	len;
-
-	num = ft_itoa(g_shell.last_exit_status);
-	len = ft_strlen(num);
-	gc_add(num);
-	return (len);
+	(void)sig;
+	if (g_shell.envp)
+		free_env(g_shell.envp);
+	write(1, "\n", 1);
+	gc_free_all();
+	exit(130);
 }

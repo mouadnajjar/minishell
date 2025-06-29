@@ -6,30 +6,12 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/14 20:29:05 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/28 18:17:59 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../includes/parser.h"
-
-int	count_args(t_list *tokens)
-{
-	int		count;
-	t_token	*tok;
-
-	count = 0;
-	while (tokens)
-	{
-		tok = tokens->content;
-		if (tok->type == TOKEN_PIPE)
-			break ;
-		if (tok->type == TOKEN_WORD)
-			count++;
-		tokens = tokens->next;
-	}
-	return (count);
-}
 
 int	add_redirection(t_redirect *redir, t_token *redir_op, t_token *target)
 {
@@ -37,10 +19,7 @@ int	add_redirection(t_redirect *redir, t_token *redir_op, t_token *target)
 	if (redir_op->type == TOKEN_HEREDOC && target->is_heredoc_delim)
 	{
 		redir->quoted = is_quoted(target->value);
-		if (redir->quoted)
-			redir->target = remove_quotes(target->value);
-		else
-			redir->target = remove_quotes(target->value);
+		redir->target = remove_quotes(target->value);
 		redir->heredoc_fd = -1;
 	}
 	else
@@ -87,13 +66,30 @@ int	is_quoted(const char *s)
 	int	i;
 
 	len = ft_strlen(s);
-	i = 1;
-	if (!s || len < 2)
+	i = 0;
+	if (!s)
 		return (0);
 	while (i < len - 1)
 	{
-		if ((s[i] == '\'' && s[len - 1] == '\'') || (s[i] == '"' && s[len
-					- 1] == '"'))
+		if (s[i] == SINGLE_QUOTES || s[i] == DOUBLE_QUOTES)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	is_quoted_origin(const char *s)
+{
+	int	len;
+	int	i;
+
+	len = ft_strlen(s);
+	i = 0;
+	if (!s)
+		return (0);
+	while (i < len)
+	{
+		if (s[i] == '\'' || s[i] == '"')
 			return (1);
 		i++;
 	}

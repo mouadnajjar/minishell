@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/17 11:40:38 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/28 18:36:35 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_token	*alloc_word_token(const char *input, size_t start, size_t len)
 	token->is_heredoc_delim = 0;
 	token->start_index = start;
 	token->end_index = start + len - 1;
+	token->from_expansion = 0;
 	return (token);
 }
 
@@ -39,6 +40,7 @@ t_token_type	validate_and_get_type(char *op)
 	if (!is_valid_redirection(op))
 	{
 		print_parse_error(ERR_UNEXPECTED_TOKEN, op);
+		printf("here\n");
 		return (TOKEN_INVALID);
 	}
 	return (get_operator_type(op));
@@ -75,15 +77,20 @@ char	*alloc_quoted_value(const char *input, size_t start, size_t len,
 t_token	*create_quoted_token(char *value, size_t start, size_t end, char quote)
 {
 	t_token	*token;
+	char	*clean_value;
 
+	clean_value = remove_quotes(value);
+	if (!clean_value)
+		return (NULL);
 	token = gc_alloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
-	token->value = value;
+	token->value = clean_value;
 	token->type = TOKEN_WORD;
 	token->can_expand = (quote == DOUBLE_QUOTES);
-	// printf("%d\n", token->can_expand);
 	token->start_index = start;
 	token->end_index = end;
+	token->from_expansion = 0;
+	token->is_heredoc_delim = 0;
 	return (token);
 }

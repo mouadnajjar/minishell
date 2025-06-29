@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/28 13:50:21 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/29 11:22:22 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ typedef enum e_parse_error
 	ERR_HEREDOC_DELIM,
 	ERR_EMPTY_COMMAND,
 	ERR_NEAR_NEWLINE,
-	ERR_INVALID_TOKEN
+	ERR_INVALID_TOKEN,
+	ERR_MAX_HEREDOCS_EXCEEDED,
 
 }	t_parse_error;
 
@@ -63,11 +64,23 @@ typedef struct s_token {
     int             end_index;
 }	t_token;
 
+typedef struct s_heredoc_extract
+{
+    size_t  start;
+    size_t  curr;
+    t_token *token;
+    char    quote_for_token;
+    char    last_quote;
+    int     has_quotes;
+}   t_heredoc_extract;
+
+
 // === Memory Management (GC) ===
 void	*gc_alloc(size_t size);
 char	*gc_strdup(const char *s);
 char	*gc_substr(const char *s, unsigned int start, size_t len);
 void	gc_add(void *ptr);
+char	**gc_split(char const *s);
 
 // === Tokenization & Parsing ===
 t_list	*split_input(char *input);
@@ -83,9 +96,15 @@ int		split_special_token(char *input, size_t *i, t_list **tokens);
 int		split_quoted_token( char *input, size_t *i, t_list **tokens);
 
 // === Token Utilities ===
-void	print_tokens(t_list *tokens);
-void	print_cmds(t_cmd *cmd);
+// void	print_tokens(t_list *tokens);
+// void	print_cmds(t_cmd *cmd);
 void	print_parse_error(t_parse_error code, char *c);
+void	unclosed_quote(char *str);
+void	heredoc_delim(char *str);
+void	unexpected_token(char *str);
+void	near_newline(void);
+void	empty_command(void);
+void	max_heredocs_exceeded(void);
 
 // === Command Building ===
 t_cmd	*parse_input(char *input);
@@ -93,6 +112,9 @@ t_cmd	*build_single_cmd(t_list **tokens);
 t_cmd	*build_commands(t_list *tokens);
 t_cmd	*init_cmd_struct(t_list **tokens);
 int		count_args(t_list *tokens);
+int		is_pipe_token(t_list *tokens);
+int		is_word_token(t_list *tokens);
+int		count_token_args(t_token *tok);
 int		count_redirections(t_list *tokens);
 int		add_redirection(t_redirect *redir, t_token *redir_op, t_token *target);
 int		is_invalid_redir(const char *s);
@@ -125,6 +147,8 @@ void	expand_status(char *dst, size_t *j);
 char	*get_var_name(const char *src, size_t i, size_t *out_len);
 void	append_var_value(const char *name, char *dst, size_t *j);
 void	handle_dollar_case(const char *src, size_t *i, char *dst, size_t *j);
+size_t	dollar_sign_len(const char *src, size_t *i);
+size_t	gc_count_word(const char *str);
 
 // === Redirection & Heredoc ===
 void	process_heredocs(t_cmd *cmds);
@@ -132,12 +156,28 @@ void	handle_heredoc(t_redirect *redir);
 t_list	*extract_heredoc_delimiter( char *input, size_t *i);
 void	init_heredoc_pipe(int *fd);
 int	count_heredocs(t_cmd *cmds);
+t_token	*extract_quoted_heredoc( char *input, size_t *i);
+t_token	*create_quoted_token_heredoc(char *value, size_t start, size_t end, char quote);
+
+int	is_delimiter_or_eof(t_redirect *redir, char *line);
+void	process_heredoc_line(t_redirect *redir, int write_fd, char *line);
+void     handle_heredoc_child(t_redirect *redir, int *fd);
+void	child_heredoc_loop(t_redirect *redir, int write_fd);
+void	cleanup_heredoc(int *fd, char *line);
+void	heredoc_ctrl_c(int sig);
+t_token	*build_heredoc_token(char *input, size_t start, size_t curr, char quote_for_token);
+
+/* Parent process */
+void	handle_heredoc_parent(t_redirect *redir, int *fd, pid_t pid);
+
 
 // === Quoting Utilities ===
 char	*remove_quotes(const char *str);
 char	*alloc_quoted_value(const char *input, size_t start, size_t len, char quote);
 size_t	get_quoted_length(const char *input, size_t *i, char quote);
 t_token	*create_quoted_token(char *value, size_t start, size_t end, char quote);
+int	is_quoted_origin(const char *s);
+char	*alloc_quoted_value_heredoc(const char *input, size_t start, size_t len);
 
 // === Operator Utilities ===
 t_token_type	get_operator_type(const char *op);

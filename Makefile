@@ -28,22 +28,29 @@ EXEC := $(SRC_DIR)/main.c \
 
 PARC := $(SRC_DIR)/parsing/build_cmd.c \
 	$(SRC_DIR)/parsing/build_cmd_help.c \
-	$(SRC_DIR)/parsing/debug.c \
+	$(SRC_DIR)/parsing/build_cmd_help3.c \
 	$(SRC_DIR)/parsing/expand.c \
 	$(SRC_DIR)/parsing/expand_help.c \
 	$(SRC_DIR)/parsing/extract.c \
 	$(SRC_DIR)/parsing/extract_help.c \
 	$(SRC_DIR)/parsing/gc.c \
+	$(SRC_DIR)/parsing/gc2.c \
 	$(SRC_DIR)/parsing/parse_input.c \
 	$(SRC_DIR)/parsing/split_help.c \
 	$(SRC_DIR)/parsing/split_input.c\
 	$(SRC_DIR)/parsing/rm_quotes.c \
 	$(SRC_DIR)/parsing/merge.c \
 	$(SRC_DIR)/parsing/error.c \
+	$(SRC_DIR)/parsing/error2.c \
 	$(SRC_DIR)/parsing/build_cmd_help2.c \
 	$(SRC_DIR)/parsing/heredoc.c \
 	$(SRC_DIR)/parsing/expand_help2.c \
 	$(SRC_DIR)/parsing/extract_help2.c \
+	$(SRC_DIR)/parsing/heredoc_extract.c \
+	$(SRC_DIR)/parsing/heredoc_extract2.c \
+	$(SRC_DIR)/parsing/heredoc_help2.c \
+	$(SRC_DIR)/parsing/heredoc_help3.c \
+
 
 SRCS :=  $(PARC) $(EXEC) \
 
