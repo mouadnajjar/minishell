@@ -6,15 +6,15 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 14:13:54 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/28 14:17:36 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/30 18:43:16 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int ft_strcmp(const char *s1, const char *s2)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-    int i;
+	int	i;
 
 	i = 0;
 	while (s1[i] && s2[i])
