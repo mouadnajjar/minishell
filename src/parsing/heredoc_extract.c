@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/27 20:43:52 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/30 16:43:05 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,7 @@ t_list	*extract_heredoc_delimiter(char *input, size_t *i)
 	while (input[*i] && ft_isspace(input[*i]))
 		(*i)++;
 	if (is_quoted_origin(input + *i))
-	{
 		next = extract_quoted_heredoc(input, i);
-	}
 	else if (!is_special(input + *i) && input[*i] != '\0')
 		next = extract_word(input, i);
 	if (!next)

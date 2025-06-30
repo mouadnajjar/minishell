@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/29 12:34:06 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/06/30 18:45:36 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,6 @@ void	append_var_value(const char *name, char *dst, size_t *j)
 
 void	handle_dollar_case(const char *src, size_t *i, char *dst, size_t *j)
 {
-	size_t	len;
-	char	*name;
-
 	g_shell.ambg_name = NULL;
 	g_shell.ambiguous_redirect = 0;
 	(*i)++;
@@ -63,33 +60,24 @@ void	handle_dollar_case(const char *src, size_t *i, char *dst, size_t *j)
 		expand_status(dst, j);
 		(*i)++;
 	}
-	else if (ft_isdigit(src[1]) && src[2] == '\0')
+	else if (ft_isdigit(src[*i]))
+		(*i)++;
+	else if (ft_isalnum(src[*i]) || src[*i] == '_')
+		handle_variable_expansion(src, i, dst, j);
+	else
+		append_dollar(dst, j);
+	if (ft_isdigit(src[1]) && src[2] == '\0')
 	{
 		g_shell.ambiguous_redirect = 1;
 		g_shell.ambg_name = (char *)src + 1;
 	}
-	else if (ft_isdigit(src[*i]))
-		(*i)++;
-	else if (ft_isalnum(src[*i]) || src[*i] == '_')
-	{
-		name = get_var_name(src, *i, &len);
-		append_var_value(name, dst, j);
-		if (dst[0] == '\0' || gc_count_word(dst) > 1)
-		{
-			g_shell.ambg_name = name;
-			g_shell.ambiguous_redirect = 1;
-		}
-		*i += len;
-	}
-	else
-		append_dollar(dst, j);
 }
 
 char	*expand_value(const char *src, t_token *tok)
 {
-	char		*dst;
+	char	*dst;
 
-	size_t (j),
+	size_t(j),
 	(len), (i);
 	len = get_expanded_length(src);
 	dst = gc_alloc(len + 1);
