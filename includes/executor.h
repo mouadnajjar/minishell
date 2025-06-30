@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/30 18:44:15 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/30 18:52:15 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,9 @@ char		*get_cmmand_path(char *cmd, char **envp);
 void		execute_commands(t_cmd *cmd_list, char ***envp);
 void		init_execution_context(t_exec_ctx *ctx, char ***envp);
 void		process_command(t_cmd *cmd_list, pid_t *pids, int i,
-			t_exec_ctx *ctx);
+				t_exec_ctx *ctx);
 void		fork_and_exec_command(t_cmd *cmd_list, pid_t *pids, int i,
-			t_exec_ctx *ctx);
+				t_exec_ctx *ctx);
 int			is_directory(char *pathdir);
 void		execve_error(char *cmd_path);
 void		handle_command_list(t_cmd *cmd_list, t_exec_ctx *ctx, int *i);

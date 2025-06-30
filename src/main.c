@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:17 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/25 16:35:25 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/06/30 18:55:18 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,14 @@ static void	handle_exit(void)
 	free_env(g_shell.envp);
 }
 
+static void	init_shell(char **envp)
+{
+	setup_env(envp);
+	update_shell_level(&g_shell.envp);
+	initialize_env(&g_shell.envp);
+	set_signals();
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*input;
@@ -37,18 +45,15 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	prompt =  PROMPT;
-	setup_env(envp);
-	update_shell_level(&g_shell.envp);
-	initialize_env(&g_shell.envp);
-	set_signals();
+	prompt = GREEN_BOLD PROMPT RESET;
+	init_shell(envp);
 	while (1)
 	{
 		input = readline(prompt);
 		if (!input)
 		{
 			handle_exit();
-			break;
+			break ;
 		}
 		if (*input)
 			add_history(input);
