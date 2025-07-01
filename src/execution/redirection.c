@@ -6,7 +6,7 @@
 /*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:50:03 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/29 13:42:31 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/07/01 15:36:47 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,9 @@ static int	check_ambiguous(void)
 		ft_putstr_fd("$", 2);
 		ft_putstr_fd(g_shell.ambg_name, 2);
 		ft_putendl_fd(": ambiguous redirect", 2);
+		free_gc_memory();
+		if (g_shell.envp)
+			free_env(g_shell.envp);
 		g_shell.last_exit_status = 1;
 		g_shell.ambiguous_redirect = 0;
 		return (1);

@@ -1,0 +1,10 @@
+total 140
+drwxr-xr-x 2 monajjar candidates   4096 Jun 30 18:55 ft_printf
+-rw-r--r-- 1 monajjar candidates      0 Jul  1 15:34 haha
+drwxr-xr-x 2 monajjar candidates     59 Jul  1 13:43 includes
+drwxr-xr-x 2 monajjar candidates   4096 Jun 30 18:55 libft
+-rw-r--r-- 1 monajjar candidates      0 Jul  1 15:33 ls
+-rw-r--r-- 1 monajjar candidates   2705 Jun 29 13:29 Makefile
+-rwxr-xr-x 1 monajjar candidates 123120 Jun 30 18:55 minishell
+-rw-r--r-- 1 monajjar candidates    193 Jun 16 11:33 readline.supp
+drwxr-xr-x 4 monajjar candidates     52 Jun 30 18:55 src
