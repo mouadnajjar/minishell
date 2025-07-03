@@ -4,6 +4,7 @@
         "executor.h": "c",
         "libft.h": "c",
         "unistd.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "stat.h": "c"
     }
 }

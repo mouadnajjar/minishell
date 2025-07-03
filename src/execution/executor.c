@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 16:36:02 by monajjar          #+#    #+#             */
-/*   Updated: 2025/07/02 22:45:20 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/03 16:10:34 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,8 @@ void	execute_commands(t_cmd *cmd_list, char ***envp)
 		cmd_list = cmd_list->next;
 		i++;
 	}
+	signal(SIGINT, SIG_IGN);
 	wait_pids(g_shell.pids, cmd_counts);
+	set_signals();
 	free(g_shell.pids);
 }
