@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extract_help2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/07/03 15:47:24 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/03 16:33:37 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ t_token_type	validate_and_get_type(char *op)
 	if (!is_valid_redirection(op))
 	{
 		print_parse_error(ERR_UNEXPECTED_TOKEN, op);
-		printf("here\n");
 		return (TOKEN_INVALID);
 	}
 	return (get_operator_type(op));

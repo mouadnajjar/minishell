@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_help2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/27 19:02:40 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/03 16:33:45 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	cleanup_heredoc(int *fd, char *line)
 	if (line)
 		free(line);
 	gc_free_all();
-	printf("here\n");
 	g_shell.last_exit_status = 130;
 	exit(g_shell.last_exit_status);
 }
