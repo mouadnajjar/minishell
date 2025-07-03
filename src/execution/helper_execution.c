@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper_execution.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:34:37 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/29 13:44:04 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/07/02 23:55:03 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	wait_pids(pid_t *pids, int cmd_counts)
 				if (sig == SIGINT)
 					write(1, "\n", 1);
 				else if (sig == SIGQUIT)
-					write(1, "Quit (core dumped)\n", 19);
+					write(2, "Quit (core dumped)\n", 19);
 			}
 		}
 		i++;

@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/26 22:27:29 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/03 15:46:37 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,11 @@ static int	copy_inside_quotes(const char *str, char *result, int i, int *j)
 	return (i);
 }
 
-char	*remove_quotes(const char *str)
+char	*remove_quotes(const char *str, t_token *tok)
 {
 	char	*result;
-	int		i;
-	int		j;
 
+	int (i), (j);
 	if (!str)
 		return (NULL);
 	result = gc_alloc(ft_strlen(str) + 1);
@@ -41,7 +40,13 @@ char	*remove_quotes(const char *str)
 	while (str[i])
 	{
 		if (str[i] == SINGLE_QUOTES || str[i] == DOUBLE_QUOTES)
+		{
+			if (tok && str[i] == DOUBLE_QUOTES)
+				tok->quoted_2 = 1;
+			else if (tok)
+				tok->quoted_2 = 0;
 			i = copy_inside_quotes(str, result, i, &j);
+		}
 		else
 			result[j++] = str[i++];
 	}

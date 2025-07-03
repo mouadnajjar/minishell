@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/30 19:13:07 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/02 22:14:53 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ typedef struct s_redirect
 	t_redir_type	type;
 	int				heredoc_fd;
 	int				quoted;
+	int				ambiguous_redirect;
+	char			*ambg_name;
 }					t_redirect;
 
 typedef struct s_cmd

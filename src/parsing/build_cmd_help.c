@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/28 18:17:59 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/03 15:48:04 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,18 @@
 
 int	add_redirection(t_redirect *redir, t_token *redir_op, t_token *target)
 {
+	redir->ambiguous_redirect = target->ambiguous_redirect;
+	redir->ambg_name = target->ambg_name;
 	redir->type = get_redir_type(redir_op->type);
 	if (redir_op->type == TOKEN_HEREDOC && target->is_heredoc_delim)
 	{
 		redir->quoted = is_quoted(target->value);
-		redir->target = remove_quotes(target->value);
+		redir->target = remove_quotes(target->value, NULL);
 		redir->heredoc_fd = -1;
 	}
 	else
 	{
-		redir->target = remove_quotes(target->value);
+		redir->target = remove_quotes(target->value, NULL);
 		redir->quoted = 0;
 		redir->heredoc_fd = -1;
 	}

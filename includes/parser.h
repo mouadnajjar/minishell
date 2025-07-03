@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/29 13:53:35 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/03 15:30:49 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,11 @@ typedef enum e_parse_error
 	ERR_MAX_HEREDOCS_EXCEEDED,
 }					t_parse_error;
 
+typedef struct s_inc
+{
+	size_t			i;
+	size_t			j;
+} 				t_inc;
 typedef struct s_token
 {
 	char			*value;
@@ -63,6 +68,9 @@ typedef struct s_token
 	bool			from_expansion;
 	int				start_index;
 	int				end_index;
+	int				ambiguous_redirect;
+	char			*ambg_name;
+	bool			quoted_2;
 }					t_token;
 
 typedef struct s_heredoc_extract
@@ -133,7 +141,7 @@ void				max_heredocs_exceeded(void);
 ** Quoting Utilities
 ** ========================================================== */
 
-char				*remove_quotes(const char *str);
+char				*remove_quotes(const char *str , t_token *tok);
 char				*alloc_quoted_value(const char *input, size_t start,
 						size_t len, char quote);
 char				*alloc_quoted_value_heredoc(const char *input, size_t start,
@@ -209,13 +217,12 @@ size_t				get_exit_status_len(void);
 void				copy_char(char *dst, const char *src, size_t *i, size_t *j);
 void				append_dollar(char *dst, size_t *j);
 void				expand_status(char *dst, size_t *j);
-char				*get_var_name(const char *src, size_t i, size_t *out_len);
+char				*get_var_name(const char *src, t_inc *inc, size_t *out_len);
 void				append_var_value(const char *name, char *dst, size_t *j);
-void				handle_dollar_case(const char *src, size_t *i, char *dst,
-						size_t *j);
+void				handle_dollar_case(const char *src, t_inc *inc, char *dst, t_token *tok);
 size_t				dollar_sign_len(const char *src, size_t *i);
-void				handle_variable_expansion(const char *src, size_t *i,
-						char *dst, size_t *j);
+void				handle_variable_expansion(const char *src, t_inc *inc, char *dst,
+					t_token *tok);
 
 /* ==========================================================
 ** Redirection & Heredoc

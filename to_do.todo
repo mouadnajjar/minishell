@@ -1,0 +1,5 @@
+export a="ls -l"
+minishell: $a // expected output ls -l (it will be executed)
+minishell: "$a" // expected output ls -l command not found
+u should not field split the $ ila kan west quotes
+

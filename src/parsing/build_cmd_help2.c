@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/28 18:05:25 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/03 15:47:41 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,9 @@ void	handle_word_token(t_cmd *cmd, t_token *tok, int *arg_i)
 	char	**split_args;
 	int		i;
 
-	if (tok->from_expansion)
+	if (tok->from_expansion && !tok->quoted_2)
 	{
+		printf("Expanding: %s\n", tok->value);
 		split_args = gc_split(tok->value);
 		if (split_args)
 		{
@@ -51,7 +52,7 @@ void	handle_word_token(t_cmd *cmd, t_token *tok, int *arg_i)
 		}
 	}
 	else
-		cmd->argv[(*arg_i)++] = remove_quotes(tok->value);
+		cmd->argv[(*arg_i)++] = remove_quotes(tok->value, NULL);
 }
 
 int	handle_pipe_token(t_list **tokens, t_cmd *cmd)

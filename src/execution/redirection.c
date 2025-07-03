@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 15:50:03 by monajjar          #+#    #+#             */
-/*   Updated: 2025/07/01 15:36:47 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/07/02 23:31:18 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,19 +67,20 @@ void	handle_append_redir(char *file)
 	close(fd);
 }
 
-static int	check_ambiguous(void)
+int	check_ambiguous(t_redirect *redirs)
 {
-	if (g_shell.ambiguous_redirect == 1)
+	if (redirs->ambiguous_redirect == 1)
 	{
-		ft_putstr_fd("bash: ", 2);
+		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd("$", 2);
-		ft_putstr_fd(g_shell.ambg_name, 2);
+		ft_putstr_fd(redirs->ambg_name, 2);
 		ft_putendl_fd(": ambiguous redirect", 2);
 		free_gc_memory();
 		if (g_shell.envp)
 			free_env(g_shell.envp);
 		g_shell.last_exit_status = 1;
-		g_shell.ambiguous_redirect = 0;
+		redirs->ambg_name = NULL;
+		redirs->ambiguous_redirect = 0;
 		return (1);
 	}
 	return (0);
@@ -92,8 +93,8 @@ int	apply_redirections(t_redirect *redirs)
 	i = 0;
 	while (redirs && redirs[i].target)
 	{
-		if (check_ambiguous())
-			return (1);
+		if (check_ambiguous(redirs))
+			return (0);
 		if (redirs[i].type == IN)
 			handle_input_redir(redirs[i].target);
 		else if (redirs[i].type == OUT || redirs[i].type == TRUNCATE)

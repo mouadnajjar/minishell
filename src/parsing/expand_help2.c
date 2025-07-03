@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/29 13:50:07 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/02 23:21:01 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,20 @@ void	expand_status(char *dst, size_t *j)
 		dst[(*j)++] = num[k++];
 }
 
-void	handle_variable_expansion(const char *src, size_t *i, char *dst,
-		size_t *j)
+void	handle_variable_expansion(const char *src, t_inc *inc, char *dst,
+		t_token *tok)
 {
 	size_t	len;
 	char	*name;
 
-	name = get_var_name(src, *i, &len);
-	append_var_value(name, dst, j);
+	name = get_var_name(src, inc, &len);
+	append_var_value(name, dst, &inc->j);
 	if (dst[0] == '\0' || gc_count_word(dst) > 1)
 	{
-		g_shell.ambg_name = name;
-		g_shell.ambiguous_redirect = 1;
+		tok->ambiguous_redirect = 1;
+		tok->ambg_name = gc_strdup((char *)src + 1);
 	}
-	*i += len;
+	inc->i += len;
 }
 
 size_t	get_exit_status_len(void)

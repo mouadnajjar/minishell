@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/28 18:36:35 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/03 15:47:24 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,10 @@ t_token	*create_quoted_token(char *value, size_t start, size_t end, char quote)
 	t_token	*token;
 	char	*clean_value;
 
-	clean_value = remove_quotes(value);
+	token = gc_alloc(sizeof(t_token));
+	clean_value = remove_quotes(value, token);
 	if (!clean_value)
 		return (NULL);
-	token = gc_alloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
 	token->value = clean_value;
