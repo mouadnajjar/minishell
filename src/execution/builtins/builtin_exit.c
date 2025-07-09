@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 14:51:29 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/29 12:35:14 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/08 17:18:22 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ static void	print_exit_message(const char *message)
 		write(2, message, ft_strlen(message));
 		ft_putendl_fd(": numeric argument required", 2);
 	}
+	g_shell.last_exit_status = 2;
 	free_gc_memory();
 	free_env(g_shell.envp);
 }
@@ -62,12 +63,12 @@ int	builtin_exit(char **args)
 	{
 		free_gc_memory();
 		free_env(g_shell.envp);
-		exit(g_shell.last_exit_status);
+		return (BUILTIN_EXIT);
 	}
 	if (!is_valid_exit_code(args[1]))
 	{
 		print_exit_message(args[1]);
-		exit(2);
+		return (BUILTIN_EXIT);
 	}
 	if (args[2])
 	{
@@ -77,5 +78,6 @@ int	builtin_exit(char **args)
 	exit_code = ft_atoi(args[1]);
 	free_gc_memory();
 	free_env(g_shell.envp);
-	exit(exit_code % 256);
+	g_shell.last_exit_status = exit_code % 256;
+	return (BUILTIN_EXIT);
 }

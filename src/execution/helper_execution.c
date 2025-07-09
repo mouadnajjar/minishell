@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper_execution.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 16:34:37 by monajjar          #+#    #+#             */
-/*   Updated: 2025/07/02 23:55:03 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/04 21:11:18 by monajjar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,29 +32,29 @@ int	getsize(t_cmd *lst)
 
 void	wait_pids(pid_t *pids, int cmd_counts)
 {
-	int	i;
-	int	status;
-	int	sig;
+	t_wait	w;
 
-	i = 0;
-	while (i < cmd_counts)
+	w.i = 0;
+	w.entred = 0;
+	while (w.i < cmd_counts)
 	{
-		waitpid(pids[i], &status, 0);
-		if (i == cmd_counts - 1)
+		waitpid(pids[w.i], &w.status, 0);
+		handle_sigint_output(&w, cmd_counts);
+		if (w.i == cmd_counts - 1)
 		{
-			if (WIFEXITED(status))
-				g_shell.last_exit_status = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
+			if (WIFEXITED(w.status))
+				g_shell.last_exit_status = WEXITSTATUS(w.status);
+			else if (WIFSIGNALED(w.status))
 			{
-				sig = WTERMSIG(status);
-				g_shell.last_exit_status = 128 + sig;
-				if (sig == SIGINT)
+				w.sig = WTERMSIG(w.status);
+				g_shell.last_exit_status = 128 + w.sig;
+				if (w.sig == SIGINT && w.entred == 0)
 					write(1, "\n", 1);
-				else if (sig == SIGQUIT)
+				else if (w.sig == SIGQUIT)
 					write(2, "Quit (core dumped)\n", 19);
 			}
 		}
-		i++;
+		w.i++;
 	}
 }
 

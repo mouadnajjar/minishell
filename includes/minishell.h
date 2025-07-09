@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by monajjar          #+#    #+#             */
-/*   Updated: 2025/07/02 22:14:53 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/05 19:06:47 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ typedef struct s_shell
 	int				heredoc_sigint;
 	int				ambiguous_redirect;
 	char			*ambg_name;
+	int				heredoc_pipe_fd[2];
 }					t_shell;
 
 extern t_shell		g_shell;

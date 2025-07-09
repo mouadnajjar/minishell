@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
 #include "../../includes/executor.h"
+#include "../../includes/minishell.h"
 
 void	free_2d_array(char **arr)
 {

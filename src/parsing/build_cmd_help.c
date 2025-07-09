@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/07/03 15:48:04 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/04 18:45:16 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	add_redirection(t_redirect *redir, t_token *redir_op, t_token *target)
 {
 	redir->ambiguous_redirect = target->ambiguous_redirect;
 	redir->ambg_name = target->ambg_name;
+	target->ambiguous_redirect = 0;
+	target->ambg_name = NULL;
 	redir->type = get_redir_type(redir_op->type);
 	if (redir_op->type == TOKEN_HEREDOC && target->is_heredoc_delim)
 	{

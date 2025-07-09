@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/07/02 23:21:01 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/04 18:18:11 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	handle_variable_expansion(const char *src, t_inc *inc, char *dst,
 
 	name = get_var_name(src, inc, &len);
 	append_var_value(name, dst, &inc->j);
-	if (dst[0] == '\0' || gc_count_word(dst) > 1)
+	if (tok && (dst[0] == '\0' || gc_count_word(dst) > 1) && !tok->quoted_2)
 	{
 		tok->ambiguous_redirect = 1;
 		tok->ambg_name = gc_strdup((char *)src + 1);

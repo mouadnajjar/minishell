@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/27 18:59:37 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/05 20:11:02 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ void	child_heredoc_loop(t_redirect *redir, int write_fd)
 
 void	handle_heredoc_child(t_redirect *redir, int *fd)
 {
+	g_shell.heredoc_pipe_fd[0] = fd[0];
+	g_shell.heredoc_pipe_fd[1] = fd[1];
 	signal(SIGINT, heredoc_ctrl_c);
 	signal(SIGQUIT, SIG_IGN);
 	close(fd[0]);
@@ -88,25 +90,14 @@ void	handle_heredoc_parent(t_redirect *redir, int *fd, pid_t pid)
 
 	close(fd[1]);
 	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status))
+	if ((WIFEXITED(status) && WEXITSTATUS(status) == 130)
+		|| WIFSIGNALED(status))
 	{
-		write(1, "\n", 1);
-		g_shell.last_exit_status = 130;
 		close(fd[0]);
 		redir->heredoc_fd = -1;
 		g_shell.heredoc_sigint = 1;
+		g_shell.last_exit_status = 130;
 		return ;
-	}
-	if (WIFEXITED(status))
-	{
-		g_shell.last_exit_status = WEXITSTATUS(status);
-		if (g_shell.last_exit_status == 130)
-		{
-			close(fd[0]);
-			redir->heredoc_fd = -1;
-			g_shell.heredoc_sigint = 1;
-			return ;
-		}
 	}
 	redir->heredoc_fd = fd[0];
 }
@@ -121,6 +112,8 @@ void	handle_heredoc(t_redirect *redir)
 	if (pid == -1)
 	{
 		perror("fork");
+		close(fd[0]);
+		close(fd[1]);
 		exit(EXIT_FAILURE);
 	}
 	if (pid == 0)

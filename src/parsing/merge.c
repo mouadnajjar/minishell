@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/26 22:28:38 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/04 20:56:42 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	merge_tokens(t_list *curr, t_token *a, t_token *b)
 	ft_strlcpy(merged, a->value, len);
 	ft_strlcat(merged, b->value, len);
 	a->value = merged;
-	a->can_expand &= b->can_expand;
+	if (!b->can_expand)
+		a->can_expand = 0;
 	a->end_index = b->end_index;
 	to_remove = curr->next;
 	curr->next = to_remove->next;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_helper.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:26:41 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/29 13:44:02 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/07/08 17:56:16 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ void	init_execution_context(t_exec_ctx *ctx, char ***envp)
 	ctx->envp = *envp;
 }
 
-void	process_command(t_cmd *cmd_list, pid_t *pids, int i,
-	t_exec_ctx *ctx)
+void	process_command(t_cmd *cmd_list, pid_t *pids, int i, t_exec_ctx *ctx)
 {
 	if (g_shell.heredoc_sigint)
 		return ;

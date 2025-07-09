@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extract_help2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/07/03 16:33:37 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/07/05 17:23:15 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ t_token	*alloc_word_token(const char *input, size_t start, size_t len)
 	token->start_index = start;
 	token->end_index = start + len - 1;
 	token->from_expansion = 0;
+	token->ambiguous_redirect = 0;
+	token->ambg_name = NULL;
+	token->quoted_2 = 0;
 	return (token);
 }
 
@@ -90,6 +93,9 @@ t_token	*create_quoted_token(char *value, size_t start, size_t end, char quote)
 	token->start_index = start;
 	token->end_index = end;
 	token->from_expansion = 0;
+	token->is_heredoc_delim = 0;
+	token->ambiguous_redirect = 0;
+	token->ambg_name = NULL;
 	token->is_heredoc_delim = 0;
 	return (token);
 }

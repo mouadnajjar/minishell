@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/28 15:47:00 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/04 16:36:56 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,8 @@ t_token	*extract_special(const char *input, size_t *i)
 	token->start_index = start;
 	token->end_index = *i - 1;
 	token->from_expansion = 0;
-	token->is_heredoc_delim = 0;
+	token->ambg_name = NULL;
+	init_for_extract_special(token);
 	return (token);
 }
 

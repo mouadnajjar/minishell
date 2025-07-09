@@ -8,9 +8,12 @@ PRINTF_DIR := ft_printf
 EXEC := $(SRC_DIR)/main.c \
 	   $(SRC_DIR)/execution/env.c \
 	   $(SRC_DIR)/execution/path_utils.c \
+	   $(SRC_DIR)/execution/path_helper.c \
 	   $(SRC_DIR)/execution/memory_free.c \
 	   $(SRC_DIR)/execution/executor.c \
+	   $(SRC_DIR)/execution/helper_executor.c \
 	   $(SRC_DIR)/execution/redirection.c \
+	   $(SRC_DIR)/execution/redirection_2.c \
 	   $(SRC_DIR)/execution/helper_execution.c \
 	   $(SRC_DIR)/execution/signals.c \
 	   $(SRC_DIR)/execution/execution_helper.c \
@@ -59,7 +62,7 @@ HEADER := $(INC_DIR)/minishell.h
 
 CC := cc
 INCLUDES := -I$(INC_DIR) -I$(LIBFT_DIR) -I$(PRINTF_DIR) -I/usr/local/opt/readline/include
-CFLAGS := -Wall -Wextra -Werror $(INCLUDES) -g
+CFLAGS := -Wall -Wextra -Werror $(INCLUDES)  -g3
 LDFLAGS := -lreadline -L/usr/local/opt/readline/lib
 LIBFT_A := $(LIBFT_DIR)/libft.a
 LIBFTPRINTF := $(PRINTF_DIR)/libftprintf.a

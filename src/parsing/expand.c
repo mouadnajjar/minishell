@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/07/03 15:45:13 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/04 15:58:05 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,11 @@ void	append_var_value(const char *name, char *dst, size_t *j)
 
 void	handle_dollar_case(const char *src, t_inc *inc, char *dst, t_token *tok)
 {
-	tok->ambiguous_redirect = 0;
-	tok->ambg_name = NULL;
+	if (tok)
+	{
+		tok->ambiguous_redirect = 0;
+		tok->ambg_name = NULL;
+	}
 	(inc->i)++;
 	if (src[inc->i] == '\0')
 		append_dollar(dst, &inc->j);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/07/03 16:28:37 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/07/05 18:50:12 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ int					split_quoted_token(char *input, size_t *i, t_list **tokens);
 t_token				*extract_word(const char *input, size_t *i);
 t_token				*extract_special(const char *input, size_t *i);
 t_token				*extract_quoted(char *input, size_t *i);
-
+void				init_for_extract_special(t_token *token);
 t_token				*alloc_word_token(const char *input, size_t start,
 						size_t len);
 
@@ -219,12 +219,11 @@ void				append_dollar(char *dst, size_t *j);
 void				expand_status(char *dst, size_t *j);
 char				*get_var_name(const char *src, t_inc *inc, size_t *out_len);
 void				append_var_value(const char *name, char *dst, size_t *j);
-void				handle_dollar_case(const char *src, t_inc *inc, char *dst,
-						t_token *tok);
+void				handle_dollar_case(const char *src, t_inc *inc,
+						char *dst, t_token *tok);
 size_t				dollar_sign_len(const char *src, size_t *i);
 void				handle_variable_expansion(const char *src, t_inc *inc,
-						char *dst,
-						t_token *tok);
+						char *dst, t_token *tok);
 
 /* ==========================================================
 ** Redirection & Heredoc
@@ -248,5 +247,6 @@ void				cleanup_heredoc(int *fd, char *line);
 void				heredoc_ctrl_c(int sig);
 void				handle_heredoc_parent(t_redirect *redir, int *fd,
 						pid_t pid);
+void				init_fd_sigint(t_redirect *redir);
 
 #endif

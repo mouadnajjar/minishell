@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/28 18:12:21 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/05 17:44:54 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	count_token_args(t_token *tok)
 	int		i;
 
 	count = 0;
-	if (tok->from_expansion)
+	if (tok->from_expansion && !tok->quoted_2)
 	{
 		split_args = gc_split(tok->value);
 		if (split_args)

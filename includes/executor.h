@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 12:54:44 by monajjar          #+#    #+#             */
-/*   Updated: 2025/06/30 18:52:15 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/07/08 18:10:47 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,26 @@ typedef struct s_exec_ctx
 	int		pipefd[2];
 	int		prev_fd;
 	char	**envp;
+	int		i;
 }			t_exec_ctx;
+
+typedef struct s_wait
+{
+	int	i;
+	int	status;
+	int	sig;
+	int	entred;
+}		t_wait;
 //------------------------------------------------//
+
+typedef struct s_saved
+{
+	int	saved_stdin;
+	int	saved_stdout;
+	int	status;
+}			t_saved;
+
+# define BUILTIN_EXIT 4242
 
 //---------------execution-fucntions--------------//
 void		run_command(char **argv, char **envp);
@@ -44,6 +62,7 @@ void		update_shell_level(char ***envp);
 //---------------exits--signals-------------------//
 void		set_signals(void);
 void		sigint_handler(int signum);
+void		set_default_signals(void);
 //------------------------------------------------//
 
 //---------------------HELPERS--------------------//
@@ -70,6 +89,23 @@ int			is_directory(char *pathdir);
 void		execve_error(char *cmd_path);
 void		handle_command_list(t_cmd *cmd_list, t_exec_ctx *ctx, int *i);
 int			check_heredoc(t_redirect	*redirs, int *i);
+int			restore_fds(int saved_stdin, int saved_stdout);
+int			handle_single_redir(t_redirect *redir, int *saved_stdin,
+				int *saved_stdout, int *i);
+void		handle_append_redir(char *file);
+void		handle_output_redir(char *file);
+void		handle_input_redir(char *file);
+int			check_ambiguous(t_redirect *redirs);
+void		handle_sigint_output(t_wait *w, int cmd_counts);
+void		handle_path_error(char *cmd, char **envp);
+void		exit_cmd_not_found(char **envp);
+void		cleanup_heredoc_fds(t_redirect *redirs);
+void		try_exec_path(char **argv, char **envp);
+void		try_exec_in_cwd(char **argv, char **envp);
+void		update_last_arg_var(char ***envp, char **argv);
+void		print_permission_denied(char *cmd, char **envp);
+void		print_dir_not_found(char *path, char **envp);
+void		print_command_not_found(char *cmd, char **envp);
 //-----------------------------------------------//
 
 //------------------built-in---------------------//
@@ -94,6 +130,7 @@ void		free_env_allocation(int i, char **env, char *var);
 void		free_gc_memory(void);
 void		set_and_free(void);
 int			check_heredoc_and_clean(void);
+void		free_all(void);
 //-------------------------------------------------//
 
 #endif

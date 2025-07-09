@@ -6,7 +6,7 @@
 /*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/06/26 19:06:54 by ahlahfid         ###   ########.fr       */
+/*   Updated: 2025/07/04 16:59:53 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,11 @@ int	is_word_end(char c)
 {
 	return (c == '\0' || ft_isspace(c) || c == '|' || c == '<' || c == '>'
 		|| c == '\'' || c == '"');
+}
+
+void	init_for_extract_special(t_token *token)
+{
+	token->ambiguous_redirect = 0;
+	token->quoted_2 = 0;
+	token->is_heredoc_delim = 0;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:17 by monajjar          #+#    #+#             */
-/*   Updated: 2025/07/03 16:23:52 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/07/05 16:56:51 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../includes/minishell.h"
 #include "../includes/parser.h"
 
-t_shell	g_shell;
+t_shell		g_shell;
 
 static void	setup_env(char **envp)
 {
@@ -37,14 +37,19 @@ static void	init_shell(char **envp)
 	set_signals();
 }
 
+static void	voiding_args(int argc, char **argv)
+{
+	(void)argc;
+	(void)argv;
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*input;
 	t_cmd	*cmds;
 	char	*prompt;
 
-	(void)argc;
-	(void)argv;
+	voiding_args(argc, argv);
 	prompt = GREEN_BOLD PROMPT RESET;
 	init_shell(envp);
 	while (1)

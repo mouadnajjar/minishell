@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_help2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: monajjar <monajjar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ahlahfid <ahlahfid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 09:27:00 by ahlahfid          #+#    #+#             */
-/*   Updated: 2025/07/03 16:33:45 by monajjar         ###   ########.fr       */
+/*   Updated: 2025/07/05 18:50:18 by ahlahfid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,9 @@ void	process_heredoc_line(t_redirect *redir, int write_fd, char *line)
 	if (redir->quoted == 0)
 		expanded = expand_value(line, NULL);
 	else
+	{
 		expanded = gc_strdup(line);
+	}
 	write(write_fd, expanded, ft_strlen(expanded));
 	write(write_fd, "\n", 1);
 	free(line);
